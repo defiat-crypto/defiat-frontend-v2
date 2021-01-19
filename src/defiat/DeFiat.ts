@@ -1,0 +1,67 @@
+import Web3 from 'web3'
+import { Contracts } from './lib/contracts'
+import { Account } from './lib/accounts'
+import Addresses from '../constants/addresses'
+import { provider } from 'web3-core'
+
+export class DeFiat {
+  web3:Web3
+  contracts:Contracts
+  accounts:Account[] = []
+  // defiatAddress:string
+  // pointsAddress:string
+  // governanceAddress:string
+  // secondAddress:string
+  // anystakeAddress:string
+
+  constructor(provider:provider, networkId:number, options?:any) {
+    var realProvider:any
+
+    if (typeof provider === 'string') {
+      if (provider.includes('wss')) {
+        realProvider = new Web3.providers.WebsocketProvider(
+          provider,
+          options.ethereumNodeTimeout || 10000,
+        )
+      } else {
+        realProvider = new Web3.providers.HttpProvider(
+          provider,
+          options.ethereumNodeTimeout || 10000,
+        )
+      }
+    } else {
+      realProvider = provider
+    }
+
+    this.web3 = new Web3(realProvider)
+
+
+    if (options.defaultAccount) {
+      this.web3.eth.defaultAccount = options.defaultAccount
+    }
+    this.contracts = new Contracts(realProvider, networkId, this.web3, options)
+    // this.defiatAddress = Addresses.DeFiat[networkId]
+    // this.pointsAddress = Addresses.Points[networkId]
+    // this.governanceAddress = Addresses.Governance[networkId]
+  }
+
+
+  addAccount(address:string) {
+    this.accounts.push(new Account(this.contracts, address))
+  }
+
+  setProvider(provider:any, networkId:number) {
+    this.web3.setProvider(provider)
+    this.contracts.setProvider(provider, networkId)
+    // this.operation.setNetworkId(networkId)
+  }
+
+  setDefaultAccount(account:string) {
+    this.web3.eth.defaultAccount = account
+    this.contracts.setDefaultAccount(account)
+  }
+
+  getDefaultAccount() {
+    return this.web3.eth.defaultAccount
+  }
+}

@@ -32,8 +32,8 @@ export const Footer = () => {
           <Grid item xs={12} md={4}>
             <Grid container>
               {[...SiteMap.routes, ...SiteMap.footer].map((route:any, i:number) => (
-                <Grid item xs={12} md={6}>
-                  <Link name={route.name} path={route.path} key={i} />
+                <Grid item xs={12} md={6} key={i}>
+                  <Link name={route.name} path={route.path} />
                 </Grid>
               ))}
             </Grid>

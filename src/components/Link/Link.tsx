@@ -1,10 +1,10 @@
 import { makeStyles, Typography } from '@material-ui/core'
 import React from 'react'
 import { useHistory } from 'react-router-dom'
-import { Flex } from '../Flex'
+import { Flex, FlexProps } from '../Flex'
 import LaunchIcon from '@material-ui/icons/Launch'
 
-interface LinkProps {
+interface LinkProps extends FlexProps {
   name: string,
   path?: string,
   href?: string
@@ -30,7 +30,8 @@ const useStyles = makeStyles((theme) => ({
 export const Link: React.FC<LinkProps> = ({
   name,
   path,
-  href
+  href,
+  ...props
 }) => {
   const history = useHistory()
   const classes = useStyles()
@@ -43,7 +44,7 @@ export const Link: React.FC<LinkProps> = ({
   }
 
   return (
-    <Flex>
+    <Flex {...props}>
       {!!path && (
         <Typography 
           variant="body1" 

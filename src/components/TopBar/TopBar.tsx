@@ -1,6 +1,5 @@
-import classes from '*.module.css'
-import { AppBar, Box, Container, makeStyles, Toolbar, Typography } from '@material-ui/core'
-import React, { createRef, useRef } from 'react'
+import { AppBar, Container, makeStyles, Toolbar, Typography, useMediaQuery, useTheme } from '@material-ui/core'
+import React, { createRef } from 'react'
 import { Flex } from '../Flex'
 import logo192 from '../../assets/img/logo192.png'
 import { MobileMenu } from './components/MobileMenu'
@@ -20,6 +19,8 @@ const useStyles = makeStyles((theme) => ({
 export const TopBar = () => {
   const classes = useStyles()
   const appBar = createRef()
+  const theme = useTheme()
+  const mobile = useMediaQuery(theme.breakpoints.down('sm'))
 
   return (
     <AppBar position="sticky" className={classes.appBar} ref={appBar}>
@@ -38,9 +39,8 @@ export const TopBar = () => {
               </Typography>
             </Flex>
           </Flex>
-          <Flex>
-            {/* <MobileMenu anchorRef={appBar} /> */}
-            <DesktopMenu />
+          <Flex align="center">
+            {mobile ? <MobileMenu anchorRef={appBar} /> : <DesktopMenu />}
           </Flex>
         </Toolbar>
       </Container>

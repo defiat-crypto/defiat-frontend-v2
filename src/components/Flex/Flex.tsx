@@ -1,7 +1,7 @@
 import { Box, BoxProps } from '@material-ui/core'
 import React from 'react'
 
-interface FlexProps extends BoxProps {
+export interface FlexProps extends BoxProps {
   direction?: 'row' | 'column' | undefined,
   align?: 'center' | 'flex-start' | 'flex-end' | 'baseline' | undefined,
   justify?: 'center' | 'space-between' | 'space-around' | 'flex-start' | 'flex-end' | undefined,

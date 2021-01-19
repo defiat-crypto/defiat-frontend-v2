@@ -1,4 +1,4 @@
-import { Box, Grid, makeStyles, Typography } from '@material-ui/core'
+import { Grid, makeStyles, Typography } from '@material-ui/core'
 import React from 'react'
 import { Display } from '../../../components/Display/Display'
 import { Flex } from '../../../components/Flex'
@@ -8,11 +8,22 @@ import { SocialMediaButtons } from '../../../components/SocialMediaButtons'
 const useStyles = makeStyles((theme) => ({
   subtitle: {
     color: theme.palette.primary.light
+  },
+  image: {
+    [theme.breakpoints.up('md')]: {
+      height: '320px',
+      width: 'auto'
+    },
+    [theme.breakpoints.down('sm')]: {
+      height: '160px',
+      width: 'auto'
+    },
   }
 }))
 
 export const Splash = () => {
   const classes = useStyles()
+  
 
   return (
     <Display>
@@ -31,13 +42,11 @@ export const Splash = () => {
           </Grid>
           <Grid item xs={12} md={4}>
             <Flex center>
-            <img src={logo512} alt="defiat" height="320px" width="auto" />
+              <img src={logo512} className={classes.image} alt="defiat" />
             </Flex>
-            
           </Grid>
         </Grid>
       </Flex>
-      
     </Display>
   )
 }
