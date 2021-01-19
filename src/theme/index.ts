@@ -4,24 +4,31 @@ let theme: Theme = createMuiTheme({
   palette: {
     type: 'dark',
     primary: {
-      main: '#8355ff'
+      light: "#ba84ff",
+      main: "#8355ff",
+      dark: "#4927cb",
+      contrastText: "#fff"
     },
     secondary: {
-      main: '#f4f5f7'
+      light: "#66c1ff",
+      main: "#0091f2",
+      dark: "#0064bf",
+      contrastText: "#fff"
     },
     success: {
-      main: '#00f2c3'
-    },
-    info: {
-      main: '#0091f2'
+      light: "#6afff6",
+      main: "#00f2c3",
+      dark: "#00be93",
+      contrastText: "#fff"
     },
     background: {
-      paper: '#1f2251',
-      default: '#171941'
+      paper: "#121212",//"#424242",
+      default: "#000", //"#303030"
     }
   },
   typography: {
     fontFamily: [
+      '"Poppins"',
       '"Montserrat"',
       '"Roboto"',
       '"Helvetica"',
