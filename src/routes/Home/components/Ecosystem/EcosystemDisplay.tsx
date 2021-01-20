@@ -1,5 +1,4 @@
-import classes from '*.module.css'
-import { Divider, makeStyles, Typography } from '@material-ui/core'
+import { Box, makeStyles, Typography } from '@material-ui/core'
 import React from 'react'
 import { Card } from '../../../../components/Card'
 import { Flex } from '../../../../components/Flex'
@@ -47,17 +46,20 @@ export const EcosystemDisplay: React.FC<EcosystemDisplayProps> = ({
   const classes = useStyles()
 
   return (
-    <Flex column>
+    <Box>
       <Flex center mb={3}>
         <img src={image} alt={`${title}`} className={classes.image} height="64px" />
       </Flex>
-      <Card column className={classes.card} align='center'>
+      <Card className={classes.card}>
+        <Flex column align='center'>
         <Typography variant="h5" align="center" gutterBottom>{title}</Typography>
         <TextDecoration />
-        <Flex mt={1}>
-          <Typography variant="body1" paragraph>{text}</Typography>
+          <Box mt={1}>
+            <Typography variant="body1" gutterBottom>{text}</Typography>
+          </Box>
         </Flex>
+        
       </Card>
-    </Flex>
+    </Box>
   )
 }

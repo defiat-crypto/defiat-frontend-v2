@@ -1,8 +1,8 @@
-import { BoxProps, useTheme } from '@material-ui/core'
+import { Toolbar } from '@material-ui/core'
 import React from 'react'
-import { Flex } from '../Flex'
+import { Flex, FlexProps } from '../Flex'
 
-interface DisplayProps extends BoxProps {
+interface DisplayProps extends FlexProps {
   offset?: boolean
 }
 
@@ -12,14 +12,13 @@ export const Display: React.FC<DisplayProps> = ({
   ...props 
 }) => {
 
-  const theme = useTheme()
   return (
     <Flex 
       height="100vh"
       minHeight={1}
-      marginTop={offset!! ? theme.mixins.toolbar.minHeight : undefined}
       {...props}
     >
+      {!!offset && <Toolbar />}
       {children}
     </Flex>
   )

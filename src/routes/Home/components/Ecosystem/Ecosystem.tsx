@@ -1,16 +1,21 @@
-import { Grid, Typography } from '@material-ui/core'
+import { Grid } from '@material-ui/core'
 import React from 'react'
-import { Flex } from '../../../../components/Flex'
 import { EcosystemDisplay } from './EcosystemDisplay'
 import logo512 from '../../../../assets/img/logo512.png'
 import governance256 from '../../../../assets/img/governance256.png'
 import points256 from '../../../../assets/img/points256.png'
 import services256 from '../../../../assets/img/services256.png'
+import { Display } from '../../../../components/Display/Display'
+import { Header } from '../../../../components/Header'
 
 export const Ecosystem = () => {
   return (
-    <Flex column>
-      <Typography color="primary" variant="h4" align="center" gutterBottom>The DeFiat Ecosystem</Typography>
+    <Display column center>
+      <Header 
+        title="DeFiat Ecosystem"
+        subtitle="Extendable Platform for building DeFi Services"
+        align='center'
+      />
       <Grid container spacing={3}>
         <Grid item md={6} lg={3}>
           <EcosystemDisplay
@@ -41,6 +46,6 @@ export const Ecosystem = () => {
           />
         </Grid>
       </Grid>
-    </Flex>
+    </Display>
   )
 }

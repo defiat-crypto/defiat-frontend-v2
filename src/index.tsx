@@ -7,9 +7,7 @@ import '@fontsource/roboto'
 import '@fontsource/montserrat'
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+    <App />,
   document.getElementById('root')
 );
 

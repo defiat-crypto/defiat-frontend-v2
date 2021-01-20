@@ -1,6 +1,5 @@
 import { Divider, makeStyles } from '@material-ui/core'
 import React from 'react'
-import { Flex } from '../Flex'
 
 const useStyles = makeStyles((theme) => ({
   divider: {
@@ -14,9 +13,9 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-interface TextDecorationProps {
-  gutterBottom?: boolean
-}
+// interface TextDecorationProps {
+//   gutterBottom?: boolean
+// }
 
 export const TextDecoration = () => {
   const classes = useStyles()

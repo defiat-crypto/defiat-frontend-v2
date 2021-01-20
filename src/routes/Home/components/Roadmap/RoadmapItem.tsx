@@ -45,10 +45,12 @@ export const RoadmapItem: React.FC<RoadmapItemProps> = ({
         {/* <ScrollAnimation animateIn="fadeInRight" animateOnce> */}
 
         {title && text && (
-          <Card column align={opposite ? 'flex-end' : undefined}>
-            <Typography variant="body1" gutterBottom>{title}</Typography>
-            <TextDecoration />
-            <Typography variant="body2">{text}</Typography>
+          <Card>
+            <Flex column align={opposite ? 'flex-end' : undefined}>
+              <Typography variant="body1" gutterBottom>{title}</Typography>
+              <TextDecoration />
+              <Typography variant="body2">{text}</Typography>
+            </Flex>
           </Card>
         )}
         {/* </ScrollAnimation> */}

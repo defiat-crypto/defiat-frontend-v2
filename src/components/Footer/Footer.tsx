@@ -18,7 +18,7 @@ export const Footer = () => {
   const classes = useStyles()
 
   return (
-    <Flex className={classes.footer} py={1}>
+    <Flex className={classes.footer} py={1} mt={3}>
       <Container maxWidth='lg'>
         <Grid container alignItems="center">
           <Grid item xs={12} md={4}>

@@ -2,12 +2,17 @@ import { Typography } from "@material-ui/core";
 import { Timeline } from "@material-ui/lab";
 import React from "react";
 import { Flex } from "../../../../components/Flex";
+import { Header } from "../../../../components/Header";
 import { RoadmapItem } from "./RoadmapItem";
 
 export const Roadmap = () => {
   return (
     <Flex column>
-      <Typography color="primary" variant="h4" align="center" gutterBottom>Roadmap</Typography>
+      <Header
+        title="Roadmap"
+        subtitle="Building a New Brand of Decentralized Finance"
+        align="center"
+      />
       <Timeline align="alternate">
         <RoadmapItem
           date="Aug 2020"
