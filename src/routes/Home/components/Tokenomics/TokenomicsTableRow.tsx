@@ -2,7 +2,7 @@ import { TableCell, TableRow } from '@material-ui/core'
 import React from 'react'
 
 interface TokenomicsTableRowProps {
-  i: number
+  i: string
   description: string
   supply: string
   amount: string
@@ -16,10 +16,10 @@ export const TokenomicsTableRow: React.FC<TokenomicsTableRowProps> = ({
 }) => {
   return (
     <TableRow>
-      <TableCell>{i}</TableCell>
+      <TableCell align='center'>{i}</TableCell>
       <TableCell>{description}</TableCell>
-      <TableCell>{supply}</TableCell>
-      <TableCell>{amount}</TableCell>
+      <TableCell align='right'>{supply}</TableCell>
+      <TableCell align='right'>{amount}</TableCell>
     </TableRow>
   )
 }
