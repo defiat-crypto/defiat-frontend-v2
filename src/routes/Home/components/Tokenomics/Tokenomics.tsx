@@ -17,9 +17,8 @@ export const Tokenomics = () => {
       <Grid container spacing={3} alignItems='center' justify='center'>
         <Grid item xs={12} md={5}>
           <Flex center>
-          <TokenomicsGraph />
+            <TokenomicsGraph />
           </Flex>
-          
         </Grid>
         <Grid item xs={12} md={5}>
           <Table>

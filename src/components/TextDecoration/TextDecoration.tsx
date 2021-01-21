@@ -13,17 +13,20 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-// interface TextDecorationProps {
-//   gutterBottom?: boolean
-// }
+interface TextDecorationProps {
+  width?: string
+}
 
-export const TextDecoration = () => {
+export const TextDecoration: React.FC<TextDecorationProps> = ({
+  width
+}) => {
   const classes = useStyles()
   return (
     // <Flex marginX={1}>
     <Divider
       variant='fullWidth'
       className={classes.divider}
+      style={!!width ? {width} : undefined}
     />
     // </Flex>
     

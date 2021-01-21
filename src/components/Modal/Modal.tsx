@@ -1,7 +1,7 @@
 import { Box, Typography, IconButton, makeStyles, Divider} from '@material-ui/core'
 import React from 'react'
 import CloseIcon from '@material-ui/icons/Close'
-import Dialog from '@material-ui/core/Dialog';
+import Dialog, { DialogProps } from '@material-ui/core/Dialog';
 import { Flex } from '../Flex';
 
 const useStyles = makeStyles((theme) => ({
@@ -9,6 +9,8 @@ const useStyles = makeStyles((theme) => ({
     // position: 'absolute',
     // right: theme.spacing(1),
     // top: theme.spacing(1)
+    fontSize: '1.5rem',
+    marginLeft: theme.spacing(1)
   },
   title: {
     margin: 0,
@@ -27,6 +29,7 @@ export interface ModalProps { //extends DialogProps {
   title?: string
   maxWidth?: 'sm' | 'md' | 'lg',
   fullWidth?: boolean
+  scroll?: 'paper' | 'body'
 }
 
 export const Modal: React.FC<ModalProps> = ({ 
@@ -35,6 +38,7 @@ export const Modal: React.FC<ModalProps> = ({
   title,
   maxWidth,
   fullWidth,
+  scroll,
   children,
   // ...props
 }) => {
@@ -46,8 +50,10 @@ export const Modal: React.FC<ModalProps> = ({
       onClose={onDismiss} 
       maxWidth={maxWidth || 'md'} 
       fullWidth={!!fullWidth}
+      scroll={scroll || undefined}
       classes={{root:classes.modal}}
       // {...props}
+      
     >
       <Box p={2}>
         {!!title && (
@@ -57,8 +63,7 @@ export const Modal: React.FC<ModalProps> = ({
               <IconButton 
                 aria-label="close" 
                 onClick={onDismiss} 
-                // className={classes.closeButton}
-                style={{padding: 0, fontSize: "1.5rem"}}
+                className={classes.closeButton}
               >
                 <CloseIcon />
               </IconButton>
@@ -67,9 +72,9 @@ export const Modal: React.FC<ModalProps> = ({
           </Flex>
         )}
         
-        <Flex mt={2}>
+        <Box mt={2}>
           {children}
-        </Flex>
+        </Box>
       </Box>
     </Dialog>
   )

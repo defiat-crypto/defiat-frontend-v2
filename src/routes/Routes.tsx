@@ -4,7 +4,7 @@ import { TopBar } from '../components/TopBar'
 import { Home } from './Home'
 import { Legal } from './Legal'
 import { News } from './News'
-import { SecondChance } from './SecondChance'
+import { SecondChance, SecondPool, SecondRecycler } from './SecondChance'
 import { Staking } from './Staking'
 import WhitePaperV1 from '../assets/files/DFT-DeFiat-Whitepaper-V1-August28th2020.pdf'
 import WhitePaperV2 from '../assets/files/DFT-DeFiat-Whitepaper.pdf'
@@ -26,7 +26,8 @@ export const Routes = () => {
           <Route path="/faq" component={FAQ} />
           <Route path="/legal" component={Legal} />
           <Route path="/news" component={News} />
-          <Route path="/second" component={SecondChance} />
+          <Route path="/second/pool" component={SecondPool} />
+          <Route path="/second" component={SecondRecycler} />
           <Route path="/staking" component={Staking} />
           <Route path="/whitepaper" component={WhitePaperV2} />
           <Route component={NoMatch} />

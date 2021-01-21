@@ -1,7 +1,8 @@
-import { makeStyles, Popover, Typography } from '@material-ui/core'
+import { makeStyles, Menu, MenuItem, Popover, Typography } from '@material-ui/core'
 import React, { useState } from 'react'
 import { Flex } from '../Flex'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
   link: {
@@ -14,15 +15,20 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 export const MenuLink = () => {
+  const history = useHistory()
+
   const classes = useStyles()
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
-  const handlePopoverOpen = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
+  const handleOpen = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handlePopoverClose = () => {
+  const handleClose = (path?:string) => {
     setAnchorEl(null);
+    if (!!path) {
+      history.push(path)
+    }
   };
 
   const open = Boolean(anchorEl);
@@ -30,12 +36,24 @@ export const MenuLink = () => {
   return (
     <Flex mr={0}>
       <Flex 
-        
         className={classes.link}
+        onClick={handleOpen}
       >
         <Typography variant="body1">Services</Typography>
         <ArrowDropDownIcon />
       </Flex>
+      <Menu
+        anchorEl={anchorEl}
+        getContentAnchorEl={null}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+        transformOrigin={{ vertical: "top", horizontal: "center" }}
+        open={open}
+        autoFocus={false}
+        onClose={() => handleClose()}
+      >
+        <MenuItem onClick={() => handleClose('/staking')}>AnyStake</MenuItem>
+        <MenuItem onClick={() => handleClose('/second')}>2nd Chance</MenuItem>
+      </Menu>
       {/* <Popover
         // id="mouse-over-popover"
         // className={classes.popover}
