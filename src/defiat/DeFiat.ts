@@ -8,10 +8,12 @@ export class DeFiat {
   web3:Web3
   contracts:Contracts
   accounts:Account[] = []
-  // defiatAddress:string
-  // pointsAddress:string
-  // governanceAddress:string
-  // secondAddress:string
+  DefiatAddress:string
+  PointsAddress:string
+  GovernanceAddress:string
+  SecondAddress:string
+  RugSanctuaryAddress:string
+  OracleAddress:string
   // anystakeAddress:string
 
   constructor(provider:provider, networkId:number, options?:any) {
@@ -39,10 +41,14 @@ export class DeFiat {
     if (options.defaultAccount) {
       this.web3.eth.defaultAccount = options.defaultAccount
     }
-    this.contracts = new Contracts(realProvider, networkId, this.web3, options)
-    // this.defiatAddress = Addresses.DeFiat[networkId]
-    // this.pointsAddress = Addresses.Points[networkId]
-    // this.governanceAddress = Addresses.Governance[networkId]
+    this.contracts = new Contracts(realProvider, networkId, this.web3, options);
+
+    this.DefiatAddress = Addresses.DeFiat[networkId];
+    this.PointsAddress = Addresses.Points[networkId];
+    this.GovernanceAddress = Addresses.Governance[networkId];
+    this.SecondAddress = Addresses.Second[networkId];
+    this.RugSanctuaryAddress = Addresses.RugSanctuary[networkId];
+    this.OracleAddress = Addresses.Oracle[networkId];
   }
 
 

@@ -9,9 +9,9 @@ declare global {
   }
 }
 
-const SushiProvider: React.FC = ({ children }) => {
+const DeFiatProvider: React.FC = ({ children }) => {
   const { ethereum }: { ethereum: any } = useWallet()
-  const [defiat, setDeFiat] = useState<any>()
+  const [defiat, setDeFiat] = useState<DeFiat>()
 
   // @ts-ignore
   window.defiat = defiat
@@ -20,8 +20,7 @@ const SushiProvider: React.FC = ({ children }) => {
 
   useEffect(() => {
     if (ethereum) {
-      const chainId = Number(ethereum.chainId)
-      const defiatLib = new DeFiat(ethereum, chainId, {
+      const defiatLib = new DeFiat(ethereum, 1, {
         defaultAccount: ethereum.selectedAddress,
         defaultConfirmations: 1,
         autoGasMultiplier: 1.5,
@@ -39,4 +38,4 @@ const SushiProvider: React.FC = ({ children }) => {
   return <DeFiatContext.Provider value={{ dft: defiat }}>{children}</DeFiatContext.Provider>
 }
 
-export default SushiProvider
+export default DeFiatProvider

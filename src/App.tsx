@@ -4,6 +4,7 @@ import Routes from './routes'
 import theme from './theme'
 import { UseWalletProvider } from 'use-wallet';
 import ModalProvider from './contexts/Modal';
+import DeFiatProvider from './contexts/DeFiat';
 
 const App = () => {
   const chainId = !window.location.href.includes('rinkeby') ? 1 : 4 
@@ -13,12 +14,14 @@ const App = () => {
       chainId={chainId} 
       connectors={{walletconnect: {rpcUrl: "https://mainnet.eth.aragon.network/"}}}
     >
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <ModalProvider>
-          <Routes />
-        </ModalProvider>
-      </ThemeProvider>
+      <DeFiatProvider>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <ModalProvider>
+            <Routes />
+          </ModalProvider>
+        </ThemeProvider>
+      </DeFiatProvider>
     </UseWalletProvider>    
   )
 }

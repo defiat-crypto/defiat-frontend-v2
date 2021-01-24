@@ -1,7 +1,8 @@
 import { makeStyles, useTheme } from '@material-ui/core'
-import React from 'react'
+import React, { useCallback } from 'react'
 import { Line } from 'react-chartjs-2'
 import { Card } from '../../../components/Card'
+import { useDashboard } from '../../../hooks/useDashboard'
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -29,19 +30,20 @@ const useStyles = makeStyles((theme) => ({
 export const DashboardGraphCard = () => {
   const theme = useTheme()
   const classes = useStyles()
+  const {events} = useDashboard()
 
-  const data =  (canvas:any) => {
+  const data = useCallback((canvas:any) => {
     const ctx = canvas.getContext("2d")
     const gradient = ctx.createLinearGradient(0,0,0,350);
     gradient.addColorStop(0, theme.palette.primary.light);
     gradient.addColorStop(1, theme.palette.background.paper);
     
     return {
-      labels: ['1', '2', '3', '4', '5', '6'],
+      labels: events ? events.map((_, i) => i.toString()) : [],
       datasets: [
         {
           label: 'DFT Total Supply',
-          data: [12, 19, 3, 5, 2, 3],
+          data: events ? events : [],
           fill: 'origin',
           backgroundColor: gradient,//theme.palette.primary.light,
           borderColor: theme.palette.primary.main,
@@ -49,19 +51,35 @@ export const DashboardGraphCard = () => {
         },
       ],
     }
-  }
+  }, [events, theme])
   
   const options = {
     // maintainAspectRatio: false,
     scales: {
-      yAxes: [
-        {
-          ticks: {
-            beginAtZero: true,
-          },
+      xAxes: [{
+        display: true,
+        scaleLabel: {
+          display: true,
+          labelString: 'Month',
+          
         },
-      ],
-    },
+        ticks: {
+          stepValue: 10,
+          steps: 10,
+          beginAtZero: false
+        }
+      }],
+      yAxes: [{
+        display: true,
+        ticks: {
+          beginAtZero: false,
+          min: 475000,
+          steps: 10,
+          stepValue: 5,
+          max: 500000
+        }
+      }]
+    }
   }
 
   const canvas = document.createElement('canvas');

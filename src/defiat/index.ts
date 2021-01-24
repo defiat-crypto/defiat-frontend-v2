@@ -6,5 +6,7 @@ BigNumber.config({
   DECIMAL_PLACES: 80,
 })
 
-export {DeFiat as default} from './DeFiat'
-export { Web3, BigNumber }
+export * from './api';
+export * from './utils';
+export {DeFiat as default} from './DeFiat';
+export { Web3, BigNumber };

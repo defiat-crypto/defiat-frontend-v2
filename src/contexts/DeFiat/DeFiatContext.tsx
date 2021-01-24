@@ -2,9 +2,9 @@ import React from 'react'
 import DeFiat from '../../defiat'
 
 export interface IDeFiatContext {
-  dft?: typeof DeFiat
+  dft?: DeFiat
 }
 
-export const DeFiatContext = React.createContext({
+export const DeFiatContext = React.createContext<IDeFiatContext>({
   dft: undefined
 })

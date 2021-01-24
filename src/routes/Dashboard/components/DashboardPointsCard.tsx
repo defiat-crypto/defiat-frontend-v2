@@ -3,8 +3,11 @@ import React from "react";
 import { Card } from "../../../components/Card";
 import { Flex } from "../../../components/Flex";
 import LinearProgress from "@material-ui/core/LinearProgress";
+import { useDashboard } from "../../../hooks/useDashboard";
 
 export const DashboardPointsCard = () => {
+  const {data} = useDashboard();
+
   return (
     <Card>
       <Flex align='center' justify='space-between' mb={2}>
@@ -12,8 +15,8 @@ export const DashboardPointsCard = () => {
           DeFiat Points
         </Typography>
         <Flex align='flex-end'>
-          <Typography variant="h5">55</Typography>
-          <Typography variant="h5" color="textSecondary">/100</Typography>
+          <Typography variant="h5">{data ? data.pointsBalance : '0'}</Typography>
+          <Typography variant="h5" color="textSecondary">/{data ? data.nextLevel : '0'}</Typography>
           <Typography variant="body1">DFTP</Typography>
         </Flex>
       </Flex>
@@ -22,17 +25,17 @@ export const DashboardPointsCard = () => {
       <Grid container spacing={2} alignItems="center" justify="center">
         <Grid item xs={1}>
           <Flex center>
-            <Chip label="2" color="primary" />
+            <Chip label={data ? data.discountLevel : '0'} color="primary" />
           </Flex>
         </Grid>
 
         <Grid item xs={10}>
-          <LinearProgress variant="determinate" value={60} color="primary" />
+          <LinearProgress variant="determinate" value={data ? +data.pointsBalance/+data.nextLevel : 0} color="primary" />
         </Grid>
 
         <Grid item xs={1}>
           <Flex center>
-            <Chip label="3" color="primary" />
+            <Chip label={data ? +data.discountLevel+1 : '0'} color="primary" />
           </Flex>
         </Grid>
       </Grid>

@@ -2,11 +2,14 @@ import { Box, Grid, Toolbar } from '@material-ui/core'
 import React from 'react'
 import { Flex } from '../../components/Flex'
 import { Header } from '../../components/Header'
+import { useDashboard } from '../../hooks/useDashboard'
 import { DashboardGraphCard } from './components/DashboardGraphCard'
 import { DashboardPointsCard } from './components/DashboardPointsCard'
 import { DashboardValueCard } from './components/DashboardValueCard'
 
 export const Dashboard = () => {
+  const {data} = useDashboard()
+
   return (
     <Box>
       <Toolbar />
@@ -22,21 +25,21 @@ export const Dashboard = () => {
           <Grid item xs={12} md={4}>
             <DashboardValueCard
               name="DFT Balance"
-              value="1000"
+              value={data ? data.tokenBalance : '0.00'}
               endSymbol="DFT"
             />
           </Grid>
           <Grid item xs={12} md={4}>
             <DashboardValueCard
               name="DFT Price"
-              value="1"
+              value={data ? data.tokenPrice : '0.00'}
               startSymbol="$"
             />
           </Grid>
           <Grid item xs={12} md={4}>
             <DashboardValueCard
               name="ETH Price"
-              value="1300"
+              value={data ? data.ethPrice : '0.00'}
               startSymbol="$"
             />
           </Grid>
@@ -49,21 +52,21 @@ export const Dashboard = () => {
               <Grid item xs={12}>
                 <DashboardValueCard
                   name="DFT Total Supply"
-                  value="490000"
+                  value={data ? data.tokenSupply : '0.00'}
                   endSymbol="DFT"
                 />
               </Grid>
               <Grid item xs={12}>
                 <DashboardValueCard
                   name="DFT Burn Rate"
-                  value="2.00"
+                  value={data ? data.burnRate : '0.00'}
                   endSymbol="%"
                 />
               </Grid>
               <Grid item xs={12}>
                 <DashboardValueCard
                   name="DFT Fee Rate"
-                  value="0.50"
+                  value={data ? data.feeRate : '0.00'}
                   endSymbol="%"
                 />
               </Grid>
