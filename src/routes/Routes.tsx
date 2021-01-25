@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { TopBar } from '../components/TopBar'
 import { Home } from './Home'
@@ -14,9 +14,21 @@ import { FAQ } from './FAQ'
 import { NoMatch } from './NoMatch'
 import { Dashboard } from './Dashboard'
 import { Scroll } from '../components/Scroll'
-
+import { useModal } from '../hooks/useModal'
+import { DisclaimerModal } from '../components/DisclaimerModal'
+import Cookies from 'universal-cookie'
 
 export const Routes = () => {
+  const cookies = useMemo(() => new Cookies(), []);
+  const setCookie = () => cookies.set('defiat', 'dft', { path: '/' });
+  const [onPresent] = useModal(<DisclaimerModal onAccept={setCookie} />)
+
+  useEffect(() => {
+    if (!cookies.get("defiat")) {
+      onPresent()
+    }
+  }, [cookies, onPresent])
+
   return (
     <Router basename="/">
       <Scroll />

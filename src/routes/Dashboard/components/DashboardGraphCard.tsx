@@ -55,6 +55,9 @@ export const DashboardGraphCard = () => {
   
   const options = {
     // maintainAspectRatio: false,
+    animation: {
+      duration: 2000,
+    },
     scales: {
       xAxes: [{
         display: true,

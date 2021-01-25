@@ -1,9 +1,9 @@
 import { Button, Typography } from '@material-ui/core'
 import React from 'react'
-import { Flex } from '../../../components/Flex'
-import { Modal, ModalProps } from '../../../components/Modal'
-import { usePool } from '../../../hooks/usePool'
-import { getDisplayBalance } from '../../../utils'
+import { Flex } from '../../../../components/Flex'
+import { Modal, ModalProps } from '../../../../components/Modal'
+import { usePool } from '../../../../hooks/usePool'
+import { getDisplayBalance } from '../../../../utils'
 
 export const SanctuaryPoolClaimModal: React.FC<ModalProps> = ({ 
   isOpen,

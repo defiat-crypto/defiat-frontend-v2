@@ -2,6 +2,7 @@ import { Box, Grid, Toolbar } from '@material-ui/core'
 import React from 'react'
 import { Flex } from '../../components/Flex'
 import { Header } from '../../components/Header'
+import { Web3ConnectView } from '../../components/Web3ConnectView'
 import { useDashboard } from '../../hooks/useDashboard'
 import { DashboardGraphCard } from './components/DashboardGraphCard'
 import { DashboardPointsCard } from './components/DashboardPointsCard'
@@ -11,7 +12,7 @@ export const Dashboard = () => {
   const {data} = useDashboard()
 
   return (
-    <Box>
+    <Web3ConnectView>
       <Toolbar />
       <Flex center mt={2}>
         <Header
@@ -83,6 +84,6 @@ export const Dashboard = () => {
           <DashboardPointsCard />
         </Grid>
       </Grid>
-    </Box>
+    </Web3ConnectView>
   )
 }

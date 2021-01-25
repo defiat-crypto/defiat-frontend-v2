@@ -1,10 +1,10 @@
 import { ListItem, ListItemSecondaryAction, ListItemText, Typography } from '@material-ui/core'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useWallet } from 'use-wallet'
-import { RugToken } from '../../../constants/rugs'
-import { BigNumber } from '../../../defiat'
-import { useSecond } from '../../../hooks/useSecond'
-import { getDisplayBalance } from '../../../utils'
+import { RugToken } from '../../../../constants/rugs'
+import { BigNumber } from '../../../../defiat'
+import { useSecond } from '../../../../hooks/useSecond'
+import { getDisplayBalance } from '../../../../utils'
 
 interface RuggedTokenRowProps {
   token: RugToken;

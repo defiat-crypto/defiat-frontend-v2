@@ -1,13 +1,12 @@
 import { Box, Button, Grid, Toolbar } from '@material-ui/core'
 import { Launch } from '@material-ui/icons'
 import React, { useEffect, useState } from 'react'
-import { Display } from '../../components/Display'
-// import { Display } from '../../components/Display'
 import { Flex } from '../../components/Flex'
 import { Header } from '../../components/Header'
+import { LoadingView } from '../../components/LoadingView'
 import Links from '../../constants/links'
+import { debug } from '../../utils'
 import { NewsCard } from './components/NewsCard'
-import LoadingScales from '../../assets/img/LoadingFarm.gif'
 
 export interface MediumPost {
   author: string
@@ -35,7 +34,7 @@ export const News = () => {
     })
     .then((response) => response.json())
     .then((mediumObj) => {
-      console.log(mediumObj)
+      debug(mediumObj)
       setMediumPosts(mediumObj.items)
       setLoading(false)
     });
@@ -45,9 +44,7 @@ export const News = () => {
     <Box>
       <Toolbar />
       {loading ? (
-        <Flex center minHeight="100vh" height="100%">
-          <img src={LoadingScales} alt="Loading..." />
-        </Flex>
+        <LoadingView />
       ) : (
         <Box pt={2}>
           <Header

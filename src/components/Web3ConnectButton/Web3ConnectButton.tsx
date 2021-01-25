@@ -1,11 +1,14 @@
 import React from 'react'
-import { useHistory } from 'react-router-dom'
 import { Button, ButtonProps, makeStyles } from '@material-ui/core'
 import { useModal } from '../../hooks/useModal'
 import { useWallet } from 'use-wallet'
 import { formatAddress } from '../../utils'
-// import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
+import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import { Web3ConnectModal } from '../Web3ConnectModal'
+
+interface Web3ConnectButtonProps extends ButtonProps {
+  useWalletIcon?: boolean
+}
 
 const useStyles = makeStyles((theme) => ({
   label: {
@@ -13,11 +16,13 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-export const Web3ConnectButton: React.FC<ButtonProps> = ({...props}) => {
+export const Web3ConnectButton: React.FC<Web3ConnectButtonProps> = ({
+  useWalletIcon,
+  ...props
+}) => {
   const classes = useStyles()
-  const history = useHistory()
   const [showConnectModal] = useModal(<Web3ConnectModal />)
-  const { account } = useWallet()
+  const { account, reset } = useWallet()
 
   return (
     <Button
@@ -25,13 +30,13 @@ export const Web3ConnectButton: React.FC<ButtonProps> = ({...props}) => {
       variant="outlined"
       classes={{label: classes.label}}
       onClick={!!account 
-        ? () => history.push('/account')
+        ? reset
         : showConnectModal
       }
-      // startIcon={!!account
-      //   ? <Avatar size={20} />
-      //   : <AccountBalanceWalletIcon />
-      // }
+      startIcon={useWalletIcon
+        ? <AccountBalanceWalletIcon />
+        : undefined
+      }
       {...props}
     >
       {!!account 

@@ -39,16 +39,16 @@ export const useSecond = () => {
   const fetchTokenData = useCallback(async (address:string) => {
     const values = await Promise.all([
       getBalance(address, account, ethereum),
-      getAllowance(address, SecondChance.options.address, ethereum, account),
+      // getAllowance(address, SecondChance.options.address, ethereum, account),
       getTotalSupply(address, ethereum)
     ])
 
     return {
       tokenBalance: values[0],
-      tokenAllowance: values[1],
-      tokenSupply: values[2]
+      // tokenAllowance: values[1],
+      tokenSupply: values[1]
     }
-  }, [account, ethereum, SecondChance])
+  }, [account, ethereum])
   
   const fetchData = useCallback(async () => {
     const values = await Promise.all([

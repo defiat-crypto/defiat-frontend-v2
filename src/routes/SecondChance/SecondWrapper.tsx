@@ -22,17 +22,19 @@ export const SecondWrapper: React.FC<SecondWrapperProps> = ({ children }) => {
           </Grid>
         ))}
         <Grid item>
-        <Flex>
-          <Typography variant="body2" color="textSecondary" align="center">What is 2nd Chance?</Typography>
-          <Link 
-            variant="body2" 
-            align="center" 
-            color="primary"
-            target="_blank"
-            rel="noopener,noreferrer"
-            href={DeFiatSecondChance}
-          >&nbsp;Learn More</Link>
-        </Flex>
+          <Flex>
+            <Typography variant="body2" color="textSecondary" align="center">What is 2nd Chance?</Typography>
+            <Link 
+              variant="body2" 
+              align="center" 
+              color="primary"
+              target="_blank"
+              rel="noopener,noreferrer"
+              href={DeFiatSecondChance}
+            >
+              &nbsp;Learn More
+            </Link>
+          </Flex>
         </Grid>
       </Grid>
     </Display>

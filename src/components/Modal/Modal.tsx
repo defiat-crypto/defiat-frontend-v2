@@ -1,7 +1,7 @@
 import { Box, Typography, IconButton, makeStyles, Divider} from '@material-ui/core'
 import React from 'react'
 import CloseIcon from '@material-ui/icons/Close'
-import Dialog, { DialogProps } from '@material-ui/core/Dialog';
+import Dialog from '@material-ui/core/Dialog';
 import { Flex } from '../Flex';
 
 const useStyles = makeStyles((theme) => ({
@@ -23,13 +23,14 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-export interface ModalProps { //extends DialogProps {
+export interface ModalProps {
   isOpen?: boolean
   onDismiss?: () => void
   title?: string
-  maxWidth?: 'sm' | 'md' | 'lg',
+  maxWidth?: 'sm' | 'md' | 'lg';
   fullWidth?: boolean
-  scroll?: 'paper' | 'body'
+  scroll?: 'paper' | 'body';
+  restrict?: boolean;
 }
 
 export const Modal: React.FC<ModalProps> = ({ 
@@ -40,6 +41,7 @@ export const Modal: React.FC<ModalProps> = ({
   fullWidth,
   scroll,
   children,
+  restrict,
   // ...props
 }) => {
   const classes = useStyles()
@@ -52,21 +54,23 @@ export const Modal: React.FC<ModalProps> = ({
       fullWidth={!!fullWidth}
       scroll={scroll || undefined}
       classes={{root:classes.modal}}
-      // {...props}
-      
+      disableBackdropClick={!restrict}
+      disableEscapeKeyDown={!restrict}
     >
       <Box p={2}>
         {!!title && (
           <Flex column>
             <Flex justify="space-between" align="center" m={1} marginBottom={2}>
               <Typography variant="h5" align="left" className={classes.title}><b>{title}</b></Typography>
-              <IconButton 
-                aria-label="close" 
-                onClick={onDismiss} 
-                className={classes.closeButton}
-              >
-                <CloseIcon />
-              </IconButton>
+              {!restrict && (
+                <IconButton 
+                  aria-label="close" 
+                  onClick={onDismiss} 
+                  className={classes.closeButton}
+                >
+                  <CloseIcon />
+                </IconButton>
+              )}
             </Flex>
             <Divider />
           </Flex>

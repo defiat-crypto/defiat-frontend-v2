@@ -1,10 +1,10 @@
 import { Button, InputAdornment, TextField, Typography, useTheme } from '@material-ui/core'
 import React, { useState } from 'react'
-import { Flex } from '../../../components/Flex'
-import { Modal, ModalProps } from '../../../components/Modal'
-import { BigNumber } from '../../../defiat'
-import { usePool } from '../../../hooks/usePool'
-import { getDisplayBalance, getFullDisplayBalance } from '../../../utils'
+import { Flex } from '../../../../components/Flex'
+import { Modal, ModalProps } from '../../../../components/Modal'
+import { BigNumber } from '../../../../defiat'
+import { usePool } from '../../../../hooks/usePool'
+import { getDisplayBalance, getFullDisplayBalance } from '../../../../utils'
 
 export const SanctuaryPoolModal: React.FC<ModalProps> = ({ 
   isOpen,
