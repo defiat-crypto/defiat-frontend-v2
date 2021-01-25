@@ -1,8 +1,11 @@
 import { Button, InputAdornment, TextField, Typography, useTheme } from '@material-ui/core'
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { Flex } from '../../../../components/Flex'
 import { Modal, ModalProps } from '../../../../components/Modal'
-import { BigNumber } from '../../../../defiat'
+import { BigNumber, getRugSanctuaryAddress, getSecondLpAddress } from '../../../../defiat'
+import { useApprove } from '../../../../hooks/useApprove'
+import { useDeFiat } from '../../../../hooks/useDeFiat'
+import { useNotifications } from '../../../../hooks/useNotifications'
 import { usePool } from '../../../../hooks/usePool'
 import { getDisplayBalance, getFullDisplayBalance } from '../../../../utils'
 
@@ -10,11 +13,41 @@ export const SanctuaryPoolModal: React.FC<ModalProps> = ({
   isOpen,
   onDismiss 
 }) => {
+  const notify = useNotifications()
   const theme = useTheme()
+  const DeFiat = useDeFiat()
   const {data, deposit, withdraw} = usePool()
+  const {approve, allowance} = useApprove(getSecondLpAddress(DeFiat), getRugSanctuaryAddress(DeFiat))
 
   const [depositInput, setDepositInput] = useState<string>()
   const [withdrawInput, setWithdrawInput] = useState<string>()
+
+  const handleDeposit = useCallback(async () => {
+    if (allowance.eq(0)) {
+      const approveTxHash = await approve()
+      if (!!approveTxHash) {
+        notify('Approving 2ND/ETH Tokens staking...', 'success', approveTxHash)
+      } else {
+        notify('Encountered an error while approving 2ND/ETH.', 'error')
+      }
+    }
+
+    const txHash = await deposit(new BigNumber(depositInput).times(1e18).toString())
+    if (!!txHash) {
+      notify('Depositing 2ND/ETH Tokens into the Sanctuary...', 'success', txHash)
+    } else {
+      notify('Encountered an error while depositing 2ND/ETH.', 'error')
+    }
+  }, [allowance, approve, depositInput, notify, deposit])
+
+  const handleWithdraw = useCallback(async () => {
+    const txHash = await withdraw(new BigNumber(withdrawInput).times(1e18).toString())
+    if (!!txHash) {
+      notify('Withdrawing 2ND/ETH Tokens from Sanctuary...', 'success', txHash)
+    } else {
+      notify('Encountered an error while withdrawing 2ND/ETH.', 'error')
+    }
+  }, [withdrawInput, notify, withdraw])
 
   return (
     <Modal isOpen={!!isOpen} onDismiss={onDismiss} title="Stake / Unstake 2ND/ETH UNI-V2 LP">
@@ -54,7 +87,7 @@ export const SanctuaryPoolModal: React.FC<ModalProps> = ({
             variant="contained" 
             color="primary" 
             fullWidth
-            onClick={() => deposit(depositInput)}
+            onClick={handleDeposit}
             disabled={!data || data.tokenBalance.eq(0) || !depositInput || new BigNumber(depositInput).eq(0)}
           >
             Stake 2ND/ETH UNI-V2
@@ -99,7 +132,7 @@ export const SanctuaryPoolModal: React.FC<ModalProps> = ({
             variant="contained" 
             color="primary" 
             fullWidth
-            onClick={() => withdraw(withdrawInput)}
+            onClick={handleWithdraw}
             disabled={!data || data.stakedBalance.eq(0) || !withdrawInput || new BigNumber(withdrawInput).eq(0)}
           >
             Unstake 2ND/ETH UNI-V2

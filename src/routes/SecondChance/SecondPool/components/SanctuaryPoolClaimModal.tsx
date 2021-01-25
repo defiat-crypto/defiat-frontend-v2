@@ -1,7 +1,8 @@
 import { Button, Typography } from '@material-ui/core'
-import React from 'react'
+import React, { useCallback } from 'react'
 import { Flex } from '../../../../components/Flex'
 import { Modal, ModalProps } from '../../../../components/Modal'
+import { useNotifications } from '../../../../hooks/useNotifications'
 import { usePool } from '../../../../hooks/usePool'
 import { getDisplayBalance } from '../../../../utils'
 
@@ -9,7 +10,17 @@ export const SanctuaryPoolClaimModal: React.FC<ModalProps> = ({
   isOpen,
   onDismiss 
 }) => {
+  const notify = useNotifications()
   const { data, claim } = usePool()
+
+  const handleClaim = useCallback(async () => {
+    const txHash = await claim()
+    if (!!txHash) {
+      notify('Claiming 2ND rewards from Sanctuary...', 'success', txHash)
+    } else {
+      notify('Encountered an error while claiming 2ND rewards.', 'error')
+    }
+  }, [claim, notify])
 
   return (
     <Modal fullWidth maxWidth='sm' isOpen={!!isOpen} onDismiss={onDismiss} title="Claim 2ND Rewards">
@@ -28,7 +39,7 @@ export const SanctuaryPoolClaimModal: React.FC<ModalProps> = ({
             variant="contained" 
             color="primary" 
             fullWidth
-            onClick={claim}
+            onClick={handleClaim}
             disabled={!data || data.pendingRewards.eq(0)}
           >
             Claim Rewards

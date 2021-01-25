@@ -1,14 +1,31 @@
 import Web3 from 'web3'
-import { provider } from 'web3-core'
-import { Contract } from 'web3-eth-contract'
+import { provider, TransactionReceipt } from 'web3-core'
 import { AbiItem } from 'web3-utils'
 import ERC20 from '../constants/abi/_ERC20.json'
 import BigNumber from 'bignumber.js'
+import { debug } from './config'
+import {ethers} from 'ethers'
 
 export const getContract = (provider: provider, address: string) => {
   const web3 = new Web3(provider)
   const contract = new web3.eth.Contract(ERC20 as any as AbiItem, address)
   return contract
+}
+
+export const approve = async (
+  tokenAddress:string,
+  spendingAddress:string,
+  provider:provider,
+  account:string,
+) => {
+  const tokenContract = getContract(provider, tokenAddress)
+  return tokenContract.methods
+    .approve(spendingAddress, ethers.constants.MaxUint256.toString())
+    .send({ from: account })
+    .on('transactionHash', (tx:TransactionReceipt) => {
+      debug(tx)
+      return tx.transactionHash
+    })
 }
 
 export const getAllowance = async (
@@ -24,7 +41,7 @@ export const getAllowance = async (
       .call()
     return new BigNumber(allowance)
   } catch (e) {
-    console.log('allowance', e)
+    debug(e)
     return new BigNumber(0)
   }
 }
@@ -41,7 +58,7 @@ export const getBalance = async (
       .call()
     return new BigNumber(balance)
   } catch (e) {
-    console.log('balance', e)
+    debug(e)
     return new BigNumber(0)
   }
 }
@@ -58,7 +75,7 @@ export const getTotalSupply = async (
       .call()
     return new BigNumber(balance)
   } catch (e) {
-    console.log('balance', e)
+    debug(e)
     return new BigNumber(0)
   }
 }

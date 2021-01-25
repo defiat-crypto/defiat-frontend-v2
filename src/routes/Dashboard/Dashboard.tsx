@@ -1,4 +1,4 @@
-import { Box, Grid, Toolbar } from '@material-ui/core'
+import { Grid, Toolbar } from '@material-ui/core'
 import React from 'react'
 import { Flex } from '../../components/Flex'
 import { Header } from '../../components/Header'

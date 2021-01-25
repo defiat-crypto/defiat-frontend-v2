@@ -1,5 +1,17 @@
 import { DeFiat } from "./DeFiat";
 
+export const getSecondAddress = (DeFiat?:DeFiat) => {
+  return DeFiat && DeFiat.SecondAddress;
+}
+
+export const getSecondLpAddress = (DeFiat?:DeFiat) => {
+  return DeFiat && DeFiat.SecondLpAddress;
+}
+
+export const getRugSanctuaryAddress = (DeFiat?:DeFiat) => {
+  return DeFiat && DeFiat.RugSanctuaryAddress;
+}
+
 export const getDeFiatContract = (DeFiat?:DeFiat) => {
   return DeFiat && DeFiat.contracts && DeFiat.contracts.DeFiat;
 }

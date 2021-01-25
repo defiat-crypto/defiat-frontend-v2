@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react"
 import { useWallet } from "use-wallet"
 import { provider } from "web3-core"
 import Addresses from "../constants/addresses"
-import { BigNumber, getDeFiatContract, getOracle, getPointsContract, getSupplyBurndown, getTokenPrice, viewBurnRate, viewDiscountOf, viewDiscountPointsNeeded, viewFeeRate } from "../defiat"
+import { BigNumber, getDeFiatContract, getOracle, getPointsContract, getSupplyBurndown, getTokenPrice, updateDiscountOf, viewBurnRate, viewDiscountOf, viewDiscountPointsNeeded, viewFeeRate } from "../defiat"
 import { getBalance, getDisplayBalance, getTotalSupply } from "../utils"
 import { useBlock } from "./useBlock"
 import { useDeFiat } from "./useDeFiat"
@@ -32,15 +32,14 @@ export const useDashboard = () => {
   const [data, setData] = useState<DashboardData>()
   const [events, setEvents] = useState<number[]>()
 
-  const DeFiatContract = useMemo(() => {
-    return getDeFiatContract(DeFiat)
-  }, [DeFiat]);
-
-  const PointsContract = useMemo(() => {
-    return getPointsContract(DeFiat)
-  }, [DeFiat]);
-
+  const DeFiatContract = useMemo(() => getDeFiatContract(DeFiat), [DeFiat]);
+  const PointsContract = useMemo(() => getPointsContract(DeFiat), [DeFiat]);
   const OracleContract = useMemo(() => getOracle(DeFiat), [DeFiat]);
+
+  const onUpgrade = useCallback(async () => {
+    const txHash = await updateDiscountOf(PointsContract, account)
+    return txHash
+  }, [account, PointsContract])
 
   const fetchData = useCallback(async () => {
     const values = await Promise.all([
@@ -53,7 +52,6 @@ export const useDashboard = () => {
       getTokenPrice(OracleContract, DeFiatContract.options.address),
       getTokenPrice(OracleContract, Addresses.USDT[chainId]),
     ])
-    console.log(values[6], values[7])
 
     const nextLevel = await viewDiscountPointsNeeded(PointsContract, +values[5]+1)
 
@@ -89,6 +87,7 @@ export const useDashboard = () => {
 
   return {
     data,
-    events
+    events,
+    upgrade: onUpgrade
   }
 }

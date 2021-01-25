@@ -14,8 +14,11 @@ import Rugs, { RugToken } from '../../../../constants/rugs'
 import { useWallet } from 'use-wallet'
 import { getBalance, getFullDisplayBalance, getTotalSupply } from '../../../../utils'
 import { provider } from 'web3-core'
-import { BigNumber } from '../../../../defiat'
+import { BigNumber, getSecondAddress } from '../../../../defiat'
 import { RecyclerExpandedField } from './RecyclerExpandedField'
+import { useApprove } from '../../../../hooks/useApprove'
+import { useDeFiat } from '../../../../hooks/useDeFiat'
+import { useNotifications } from '../../../../hooks/useNotifications'
 
 const useStyles = makeStyles((theme) => ({
   arrow: {
@@ -49,12 +52,15 @@ export const RecyclerCard = () => {
     chainId,
     ethereum
   }: {account:string, chainId:number, ethereum:provider} = useWallet()
-  const {data, fetchSwapRate} = useSecond()
+  const {data, fetchSwapRate, swap} = useSecond()
+  const DeFiat = useDeFiat()
+  const notify = useNotifications()
   const [onPresent] = useModal(<RuggedTokenModal onSelect={(id) => setSelected(Rugs.Tokens[chainId][id])} />)
 
   const [open, setOpen] = useState<boolean>(false)
   const [selected, setSelected] = useState<RugToken>()
   const [recyclerData, setRecyclerData] = useState<RecyclerData>()
+  const {allowance, approve} = useApprove(selected ? selected.address : undefined, getSecondAddress(DeFiat))
 
   const getMultiplier = useCallback((balance:BigNumber) => {
     if (balance.lte(new BigNumber(100).multipliedBy(1e18))) {
@@ -65,6 +71,24 @@ export const RecyclerCard = () => {
       return balance.dividedBy(1e18).toFixed(0)
     }
   }, [])
+
+  const handleApprove = useCallback(async () => {
+    const txHash = await approve();
+    if (!!txHash) {
+      notify('Approving 2ND Token Recycling...', 'success', txHash)
+    } else {
+      notify('Encountered an error while approving 2ND.', 'error')
+    }
+  }, [approve, notify])
+
+  const handleSwap = useCallback(async () => {
+    const txHash = await swap(selected.address, recyclerData.ruggedBalance.toString())
+    if (!!txHash) {
+      notify('Recycling Rugged Tokens for 2ND...', 'success', txHash)
+    } else {
+      notify('Encountered an error while recycling 2ND.', 'error')
+    }
+  }, [swap, notify, selected, recyclerData])
 
   const fetchSwapData = useCallback(async () => {
     const values = await Promise.all([
@@ -175,11 +199,11 @@ export const RecyclerCard = () => {
           }}
         />
         <Flex mt={2} mb={1}>
-          {true ? (
+          {!allowance || allowance.eq(0) ? (
             <Button 
               fullWidth
               disabled={!recyclerData || !recyclerData.swapRate || recyclerData.swapRate.eq(0)}
-              onClick={() => {}}
+              onClick={handleApprove}
               variant="contained"
               color="primary"
             >
@@ -188,9 +212,10 @@ export const RecyclerCard = () => {
           ) : (
             <Button 
               fullWidth
-              onClick={() => {}}
+              onClick={handleSwap}
               variant="contained"
-              color="primary">
+              color="primary"
+            >
               Swap for 2ND
             </Button>
           )}

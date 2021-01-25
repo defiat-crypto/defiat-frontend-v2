@@ -2,8 +2,8 @@ import { useCallback, useEffect, useMemo, useState } from "react"
 import { useWallet } from "use-wallet"
 import { provider } from "web3-core"
 import Addresses from "../constants/addresses"
-import { getRugSanctuaryContract, getSecondContract, stakedPool, pendingPool, BigNumber } from "../defiat"
-import { getBalance, getDisplayBalance } from "../utils"
+import { getRugSanctuaryContract, stakedPool, pendingPool, BigNumber, withdrawPool, depositPool } from "../defiat"
+import { getBalance } from "../utils"
 import { useBlock } from "./useBlock"
 import { useDeFiat } from "./useDeFiat"
 
@@ -24,20 +24,22 @@ export const usePool = () => {
   const block = useBlock()
   const DeFiat = useDeFiat()
   
-  // const SecondChance = useMemo(() => getSecondContract(DeFiat), [DeFiat])
   const RugSanctuary = useMemo(() => getRugSanctuaryContract(DeFiat), [DeFiat])
 
   const handleClaim = useCallback(async () => {
-
-  }, [])
+    const txHash = await withdrawPool(RugSanctuary, account, '0')
+    return txHash
+  }, [account, RugSanctuary])
 
   const handleDeposit = useCallback(async (deposit:string) => {
-
-  }, [])
+    const txHash = await depositPool(RugSanctuary, account, deposit)
+    return txHash
+  }, [account, RugSanctuary])
 
   const handleWithdraw = useCallback(async (withdraw:string) => {
-
-  }, [])
+    const txHash = await withdrawPool(RugSanctuary, account, withdraw)
+    return txHash
+  }, [account, RugSanctuary])
 
   const fetchData = useCallback(async () => {
     const values = await Promise.all([

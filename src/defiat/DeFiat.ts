@@ -12,6 +12,7 @@ export class DeFiat {
   PointsAddress:string
   GovernanceAddress:string
   SecondAddress:string
+  SecondLpAddress:string
   RugSanctuaryAddress:string
   OracleAddress:string
   // anystakeAddress:string
@@ -47,6 +48,7 @@ export class DeFiat {
     this.PointsAddress = Addresses.Points[networkId];
     this.GovernanceAddress = Addresses.Governance[networkId];
     this.SecondAddress = Addresses.Second[networkId];
+    this.SecondLpAddress = Addresses.SecondLp[networkId];
     this.RugSanctuaryAddress = Addresses.RugSanctuary[networkId];
     this.OracleAddress = Addresses.Oracle[networkId];
   }

@@ -5,6 +5,7 @@ import theme from './theme'
 import { UseWalletProvider } from 'use-wallet';
 import ModalProvider from './contexts/Modal';
 import DeFiatProvider from './contexts/DeFiat';
+import { SnackbarProvider } from 'notistack';
 
 const App = () => {
   const chainId = !window.location.href.includes('rinkeby') ? 1 : 4 
@@ -17,9 +18,11 @@ const App = () => {
       <DeFiatProvider>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-          <ModalProvider>
-            <Routes />
-          </ModalProvider>
+          <SnackbarProvider>
+            <ModalProvider>
+              <Routes />
+            </ModalProvider>
+          </SnackbarProvider>
         </ThemeProvider>
       </DeFiatProvider>
     </UseWalletProvider>    

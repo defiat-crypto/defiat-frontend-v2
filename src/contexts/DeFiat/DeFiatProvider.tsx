@@ -10,7 +10,7 @@ declare global {
 }
 
 const DeFiatProvider: React.FC = ({ children }) => {
-  const { ethereum }: { ethereum: any } = useWallet()
+  const { chainId, ethereum }: { chainId:number, ethereum: any } = useWallet()
   const [defiat, setDeFiat] = useState<DeFiat>()
 
   // @ts-ignore
@@ -20,7 +20,7 @@ const DeFiatProvider: React.FC = ({ children }) => {
 
   useEffect(() => {
     if (ethereum) {
-      const defiatLib = new DeFiat(ethereum, 1, {
+      const defiatLib = new DeFiat(ethereum, chainId, {
         defaultAccount: ethereum.selectedAddress,
         defaultConfirmations: 1,
         autoGasMultiplier: 1.5,
@@ -33,7 +33,7 @@ const DeFiatProvider: React.FC = ({ children }) => {
       setDeFiat(defiatLib)
       window.defiatBurn = defiatLib
     }
-  }, [ethereum])
+  }, [ethereum, chainId])
 
   return <DeFiatContext.Provider value={{ dft: defiat }}>{children}</DeFiatContext.Provider>
 }
