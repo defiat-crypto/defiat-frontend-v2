@@ -5,6 +5,7 @@ import logo192 from '../../assets/img/logo192.png'
 import { SocialMediaButtons } from '../SocialMediaButtons'
 import SiteMap from '../../constants/map'
 import { Link } from '../Link'
+import WhitepaperV2 from '../../assets/files/DFT-DeFiat-Whitepaper.pdf'
 
 const useStyles = makeStyles((theme) => ({
   footer: {
@@ -36,6 +37,9 @@ export const Footer = () => {
                   <Link name={route.name} path={route.path} />
                 </Grid>
               ))}
+              <Grid item xs={12} md={6}>
+                <Link name="Whitepaper" href={WhitepaperV2} footer />
+              </Grid>
             </Grid>
           </Grid>
           <Grid item xs={12} md={4}>

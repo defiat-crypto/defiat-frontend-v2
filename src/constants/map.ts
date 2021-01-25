@@ -44,10 +44,10 @@ const SiteMap ={
     }
   ],
   footer: [
-    {
-      name: 'Whitepaper',
-      path: '/whitepaper'
-    },
+    // {
+    //   name: 'Whitepaper',
+    //   path: '/whitepaper'
+    // },
     {
       name: 'Legal',
       path: '/legal'

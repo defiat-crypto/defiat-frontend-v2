@@ -8,7 +8,9 @@ const Links = {
   mediumFeed: 'https://api.rss2json.com/v1/api.json?rss_url=https://medium.com/feed/@defiat&api_key=dn3si7r0ci47vevxbubq5zs5ajqcbyggt28iddzh&count=20',
   telegram: 'https://t.me/defiat_crypto',
   twitter: 'https://twitter.com/DeFiatOfficial',
-  uniswap: 'https://info.uniswap.org/token/0xB6eE603933E024d8d53dDE3faa0bf98fE2a3d6f1'
+  uniswap: 'https://info.uniswap.org/token/0xB6eE603933E024d8d53dDE3faa0bf98fE2a3d6f1',
+  uniswapSecond: 'https://info.uniswap.org/token/0x3084807D124442f21F63212577313de6feb44b47',
+  uniswapSecondLp: 'https://app.uniswap.org/#/add/0x3084807D124442f21F63212577313de6feb44b47/ETH'
 }
 
 export default Links

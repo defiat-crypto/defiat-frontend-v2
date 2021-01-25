@@ -1,15 +1,20 @@
 import { Button, InputAdornment, TextField, Typography, useTheme } from '@material-ui/core'
-import React from 'react'
-import { useWallet } from 'use-wallet'
+import React, { useState } from 'react'
 import { Flex } from '../../../components/Flex'
 import { Modal, ModalProps } from '../../../components/Modal'
+import { BigNumber } from '../../../defiat'
+import { usePool } from '../../../hooks/usePool'
+import { getDisplayBalance, getFullDisplayBalance } from '../../../utils'
 
 export const SanctuaryPoolModal: React.FC<ModalProps> = ({ 
   isOpen,
   onDismiss 
 }) => {
-  const { account, connect } = useWallet()
   const theme = useTheme()
+  const {data, deposit, withdraw} = usePool()
+
+  const [depositInput, setDepositInput] = useState<string>()
+  const [withdrawInput, setWithdrawInput] = useState<string>()
 
   return (
     <Modal isOpen={!!isOpen} onDismiss={onDismiss} title="Stake / Unstake 2ND/ETH UNI-V2 LP">
@@ -19,13 +24,13 @@ export const SanctuaryPoolModal: React.FC<ModalProps> = ({
             Wallet Balance
           </Typography>
           <Flex align="flex-end">
-            <Typography variant="h5" align="right"><b>1000.00</b></Typography>
+            <Typography variant="h5" align="right"><b>{data ? getDisplayBalance(data.tokenBalance) : '0.00'}</b></Typography>
             <Typography variant="body1" align="right">&nbsp;2ND/ETH</Typography>
           </Flex>
         </Flex>
         <TextField 
-          // value={depositInput}
-          // onChange={(e) => setDepositInput(e.target.value)}
+          value={depositInput}
+          onChange={(e) => setDepositInput(e.target.value)}
           type="number"
           placeholder="Stake 2ND/ETH UNI-V2"
           variant="outlined"
@@ -34,7 +39,7 @@ export const SanctuaryPoolModal: React.FC<ModalProps> = ({
             endAdornment: (
               <InputAdornment position="end">
                 <Button
-                  // onClick={() => handleMax(true)}
+                  onClick={() => setDepositInput(getFullDisplayBalance(data.tokenBalance))}
                   style={{ padding: 0, backgroundColor: theme.palette.primary.light }}
                   variant="contained"
                 >
@@ -45,7 +50,13 @@ export const SanctuaryPoolModal: React.FC<ModalProps> = ({
           }}
         />
         <Flex mt={1}>
-          <Button variant="contained" color="primary" fullWidth>
+          <Button 
+            variant="contained" 
+            color="primary" 
+            fullWidth
+            onClick={() => deposit(depositInput)}
+            disabled={!data || data.tokenBalance.eq(0) || !depositInput || new BigNumber(depositInput).eq(0)}
+          >
             Stake 2ND/ETH UNI-V2
           </Button>
         </Flex>
@@ -57,13 +68,13 @@ export const SanctuaryPoolModal: React.FC<ModalProps> = ({
             Staked Balance
           </Typography>
           <Flex align="flex-end">
-            <Typography variant="h5" align="right"><b>1000.00</b></Typography>
+            <Typography variant="h5" align="right"><b>{data ? getDisplayBalance(data.stakedBalance): '0.00'}</b></Typography>
             <Typography variant="body1" align="right">&nbsp;2ND/ETH</Typography>
           </Flex>
         </Flex>
         <TextField 
-          // value={depositInput}
-          // onChange={(e) => setDepositInput(e.target.value)}
+          value={withdrawInput}
+          onChange={(e) => setWithdrawInput(e.target.value)}
           type="number"
           placeholder="Unstake 2ND/ETH UNI-V2"
           variant="outlined"
@@ -72,7 +83,7 @@ export const SanctuaryPoolModal: React.FC<ModalProps> = ({
             endAdornment: (
               <InputAdornment position="end">
                 <Button
-                  // onClick={() => handleMax(true)}
+                  onClick={() => setWithdrawInput(getFullDisplayBalance(data.stakedBalance))}
                   style={{ padding: 0, backgroundColor: theme.palette.primary.light }}
                   variant="contained"
                   
@@ -84,7 +95,13 @@ export const SanctuaryPoolModal: React.FC<ModalProps> = ({
           }}
         />
         <Flex mt={1}>
-          <Button variant="contained" color="primary" fullWidth>
+          <Button 
+            variant="contained" 
+            color="primary" 
+            fullWidth
+            onClick={() => withdraw(withdrawInput)}
+            disabled={!data || data.stakedBalance.eq(0) || !withdrawInput || new BigNumber(withdrawInput).eq(0)}
+          >
             Unstake 2ND/ETH UNI-V2
           </Button>
         </Flex>

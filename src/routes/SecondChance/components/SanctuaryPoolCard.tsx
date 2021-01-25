@@ -7,6 +7,10 @@ import { Value } from './Value'
 import { LaunchRounded } from '@material-ui/icons'
 import { useModal } from '../../../hooks/useModal'
 import { SanctuaryPoolModal } from './SanctuaryPoolModal'
+import { SanctuaryPoolClaimModal } from './SanctuaryPoolClaimModal'
+import Links from '../../../constants/links'
+import { usePool } from '../../../hooks/usePool'
+import { getDisplayBalance } from '../../../utils'
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -16,7 +20,9 @@ const useStyles = makeStyles((theme) => ({
 
 export const SanctuaryPoolCard = () => {
   const classes = useStyles()
-  const [onPresent] = useModal(<SanctuaryPoolModal />)
+  const [onPresentStake] = useModal(<SanctuaryPoolModal />)
+  const [onPresentClaim] = useModal(<SanctuaryPoolClaimModal />)
+  const {data} = usePool()
   
   return (
     <Card>
@@ -30,30 +36,47 @@ export const SanctuaryPoolCard = () => {
           <Grid item>
             <Grid container spacing={1}>
               <Grid item xs={12} md={6}>
-                <Value value={'1000.00'} name='Pending Rewards' endSymbol="2ND" />
+                <Value value={data ? getDisplayBalance(data.pendingRewards) : '0.00'} name='Pending Rewards' endSymbol="2ND" />
               </Grid>
               <Grid item xs={12} md={6}>
-                <Value value={'1000.00'} name='Staked Balance' endSymbol="2ND/ETH" />
+                <Value value={data ? getDisplayBalance(data.stakedBalance) : '0.00'} name='Staked Balance' endSymbol="2ND/ETH" />
               </Grid>
             </Grid>
           </Grid>
           <Flex mb={1}>
             <Grid container spacing={1} style={{maxHeight: '100%'}}>
               <Grid item xs={12} md={6}>
-                <Button fullWidth variant="contained" onClick={() => {}} color="primary">
+                <Button 
+                  fullWidth 
+                  variant="contained"
+                  color="primary"
+                  onClick={onPresentClaim}
+                >
                   Claim Rewards
                 </Button>
                 
               </Grid>
               <Grid item xs={12} md={6}>
-                <Button fullWidth variant="contained" onClick={onPresent} className={classes.button}>
+                <Button 
+                  fullWidth 
+                  variant="contained" 
+                  onClick={onPresentStake} 
+                  className={classes.button}
+                >
                   Stake / Unstake
                 </Button>
               </Grid>
             </Grid>
           </Flex>
           <Flex>
-            <Button fullWidth variant="contained" endIcon={<LaunchRounded />} onClick={() => {}}>
+            <Button 
+              fullWidth 
+              variant="contained" 
+              endIcon={<LaunchRounded />} 
+              href={Links.uniswapSecondLp}
+              target="_blank"
+              rel="noopener,noreferrer"
+            >
               Add 2ND/ETH Liquidity
             </Button>
           </Flex>

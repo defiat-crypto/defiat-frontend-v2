@@ -1,0 +1,40 @@
+import { Button, Typography } from '@material-ui/core'
+import React from 'react'
+import { Flex } from '../../../components/Flex'
+import { Modal, ModalProps } from '../../../components/Modal'
+import { usePool } from '../../../hooks/usePool'
+import { getDisplayBalance } from '../../../utils'
+
+export const SanctuaryPoolClaimModal: React.FC<ModalProps> = ({ 
+  isOpen,
+  onDismiss 
+}) => {
+  const { data, claim } = usePool()
+
+  return (
+    <Modal fullWidth maxWidth='sm' isOpen={!!isOpen} onDismiss={onDismiss} title="Claim 2ND Rewards">
+      <Flex mb={2} column>
+        <Flex align="flex-end" justify='space-between' mb={1}>
+          <Typography variant="h5">
+            Pending Rewards
+          </Typography>
+          <Flex align="flex-end">
+            <Typography variant="h5" align="right"><b>{data ? getDisplayBalance(data.pendingRewards) : '0.00'}</b></Typography>
+            <Typography variant="body1" align="right">&nbsp;2ND</Typography>
+          </Flex>
+        </Flex>
+        <Flex mt={1}>
+          <Button 
+            variant="contained" 
+            color="primary" 
+            fullWidth
+            onClick={claim}
+            disabled={!data || data.pendingRewards.eq(0)}
+          >
+            Claim Rewards
+          </Button>
+        </Flex>
+      </Flex>
+    </Modal>
+  )
+}

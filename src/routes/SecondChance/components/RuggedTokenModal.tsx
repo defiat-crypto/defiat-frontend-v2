@@ -1,23 +1,36 @@
-import { Box, Button, InputAdornment, TextField, useTheme } from '@material-ui/core'
+import { Box, InputAdornment, List, TextField, useTheme } from '@material-ui/core'
 import { Cancel, SearchRounded } from '@material-ui/icons'
-import React from 'react'
+import React, { useCallback, useState } from 'react'
+import { useWallet } from 'use-wallet'
 import { Flex } from '../../../components/Flex'
 import { Modal, ModalProps } from '../../../components/Modal'
+import Rugs from '../../../constants/rugs'
 import { RuggedTokenRow } from './RuggedTokenRow'
 
-export const RuggedTokenModal: React.FC<ModalProps> = ({ 
+interface RuggedTokenModalProps extends ModalProps {
+  onSelect: (id:number) => void;
+}
+
+export const RuggedTokenModal: React.FC<RuggedTokenModalProps> = ({ 
   isOpen,
-  onDismiss 
+  onDismiss,
+  onSelect
 }) => {
-  // const { account, connect } = useWallet()
+  const {chainId} = useWallet()
+  const [query, setQuery] = useState<string>()
   const theme = useTheme()
+
+  const handleSelect = useCallback((id:number) => {
+    onSelect(id)
+    onDismiss()
+  }, [onSelect, onDismiss])
 
   return (
     <Modal isOpen={!!isOpen} onDismiss={onDismiss} title="2ND Rugged Token List" scroll="paper">
       <Flex mb={2} column>
         <TextField
-          // value={depositInput}
-          // onChange={(e) => setDepositInput(e.target.value)}
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
           type="text"
           placeholder="Search Rugged Tokens"
           variant="outlined"
@@ -31,15 +44,19 @@ export const RuggedTokenModal: React.FC<ModalProps> = ({
             endAdornment: (
               <InputAdornment position="end">
                 <Cancel 
-                  onClick={() => console.log}
+                  onClick={() => setQuery('')}
                   style={{ padding: 0, color: theme.palette.grey[600] }}
                 />
               </InputAdornment>
             ),
           }}
         />
-        <Box mt={2} minHeight="300px">
-          <RuggedTokenRow symbol="HOHO" name="SantaDAO" balance="0" />
+        <Box mt={2} maxHeight="300px">
+          <List>
+          {Rugs.Tokens[chainId].map((token, i) => (
+            <RuggedTokenRow key={i} token={token} onSelect={(i) => handleSelect(i)} />
+          ))}
+          </List>
         </Box>
       </Flex>
     </Modal>

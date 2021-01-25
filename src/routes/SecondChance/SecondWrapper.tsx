@@ -1,7 +1,9 @@
-import { Grid } from '@material-ui/core'
+import { Grid, Link, Typography } from '@material-ui/core'
 import React from 'react'
 import { Display } from '../../components/Display'
 import { SecondButtonGroup } from './components/SecondButtonGroup'
+import DeFiatSecondChance from '../../assets/files/DFT-DeFiat-Second-Chance.pdf'
+import { Flex } from '../../components/Flex'
 
 interface SecondWrapperProps {
   children: React.ReactNode[]
@@ -19,7 +21,19 @@ export const SecondWrapper: React.FC<SecondWrapperProps> = ({ children }) => {
             {child}
           </Grid>
         ))}
-        
+        <Grid item>
+        <Flex>
+          <Typography variant="body2" color="textSecondary" align="center">What is 2nd Chance?</Typography>
+          <Link 
+            variant="body2" 
+            align="center" 
+            color="primary"
+            target="_blank"
+            rel="noopener,noreferrer"
+            href={DeFiatSecondChance}
+          >&nbsp;Learn More</Link>
+        </Flex>
+        </Grid>
       </Grid>
     </Display>
   )

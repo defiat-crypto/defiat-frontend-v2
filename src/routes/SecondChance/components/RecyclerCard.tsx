@@ -1,14 +1,20 @@
-import React from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Card } from '../../../components/Card'
 import { Flex } from '../../../components/Flex'
 import secondBrand from '../../../assets/img/secondBrand1320.png'
-import { Button, Grid, InputAdornment, makeStyles, TextField } from '@material-ui/core'
+import { Button, Collapse, Grid, InputAdornment, makeStyles, TextField } from '@material-ui/core'
 import { ArrowDropDownRounded, ForwardRounded, LaunchRounded } from '@material-ui/icons'
 import second256 from '../../../assets/img/second256.png'
 import rug256 from '../../../assets/img/rug256.png'
 import { useModal } from '../../../hooks/useModal'
 import { RuggedTokenModal } from './RuggedTokenModal'
-
+import Links from '../../../constants/links'
+import { useSecond } from '../../../hooks/useSecond'
+import Rugs, { RugToken } from '../../../constants/rugs'
+import { useWallet } from 'use-wallet'
+import { getBalance, getFullDisplayBalance, getTotalSupply } from '../../../utils'
+import { provider } from 'web3-core'
+import { BigNumber } from '../../../defiat'
 
 const useStyles = makeStyles((theme) => ({
   arrow: {
@@ -28,9 +34,46 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
+interface RecyclerData {
+  ruggedBalance:BigNumber;
+  ruggedSupply:BigNumber;
+  swapRate:BigNumber;
+}
+
 export const RecyclerCard = () => {
   const classes = useStyles()
-  const [onPresent] = useModal(<RuggedTokenModal />)
+  const {
+    account,
+    chainId,
+    ethereum
+  }: {account:string, chainId:number, ethereum:provider} = useWallet()
+  const {data, fetchSwapRate} = useSecond()
+  const [onPresent] = useModal(<RuggedTokenModal onSelect={(id) => setSelected(Rugs.Tokens[chainId][id])} />)
+
+  const [open, setOpen] = useState<boolean>(false)
+  const [selected, setSelected] = useState<RugToken>()
+  const [recyclerData, setRecyclerData] = useState<RecyclerData>()
+
+  const fetchSwapData = useCallback(async () => {
+    const values = await Promise.all([
+      getBalance(selected.address, account, ethereum),
+      getTotalSupply(selected.address, ethereum)
+    ])
+
+    const swapRate = await fetchSwapRate(selected.address, values[0].toString())
+
+    setRecyclerData({
+      ruggedBalance: values[0],
+      ruggedSupply: values[1],
+      swapRate
+    })
+  }, [account, ethereum, selected, fetchSwapRate])
+
+  useEffect(() => {
+    if (!!selected) {
+      fetchSwapData()
+    }
+  }, [selected, fetchSwapData])
 
   return (
     <Card>
@@ -39,13 +82,12 @@ export const RecyclerCard = () => {
           <img src={secondBrand} className={classes.image} alt="second-chance" />
         </Flex>
         <TextField 
-          // value={depositInput}
-          // onChange={(e) => setDepositInput(e.target.value)}
+          value={recyclerData ? getFullDisplayBalance(recyclerData.ruggedBalance) : undefined}
           type="number"
-          // label="Receive 2ND"
           placeholder="Deposit Rugs"
           variant="outlined"
-          // margin="dense" 
+          fullWidth
+          disabled
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -54,12 +96,49 @@ export const RecyclerCard = () => {
             ),
             endAdornment: (
               <InputAdornment position="end">
-                <Button endIcon={<ArrowDropDownRounded />} onClick={onPresent}>Select</Button>
+                <Button endIcon={<ArrowDropDownRounded />} onClick={onPresent}>
+                  {!selected ? "Select" : selected.symbol}
+                </Button>
               </InputAdornment>
             ),
-          }}
-          fullWidth 
+          }} 
         />
+        <Collapse in={open}>
+          {/* <Flex my={1}> */}
+            <TextField 
+              value={data ? getFullDisplayBalance(data.ethFee) : undefined}
+              type="number"
+              placeholder="Current Swap Fee (ETH)"
+              variant="outlined"
+              fullWidth
+              disabled
+            />
+            <TextField 
+              value={recyclerData ? getFullDisplayBalance(recyclerData.ruggedSupply, selected.decimals) : undefined}
+              type="number"
+              placeholder="Rugged Total Supply"
+              variant="outlined"
+              fullWidth
+              disabled
+            />
+            <TextField 
+              value={recyclerData ? getFullDisplayBalance(recyclerData.ruggedBalance.dividedBy(recyclerData.ruggedSupply)) : undefined}
+              type="number"
+              placeholder="% Total Supply Owned * 100"
+              variant="outlined"
+              fullWidth
+              disabled
+            />
+            <TextField 
+              value={data ? getFullDisplayBalance(data.tokenBalance) : undefined}
+              type="number"
+              placeholder="DeFiat Multiplier (earned by holding DFT)"
+              variant="outlined"
+              fullWidth
+              disabled
+            />
+          {/* </Flex> */}
+        </Collapse>
         <Flex my={1}>
           <Grid container>
             <Grid item xs={4}></Grid>
@@ -70,19 +149,23 @@ export const RecyclerCard = () => {
             </Grid>
             <Grid item xs={4}>
               <Flex justify='flex-end'>
-                <Button>See More</Button>
+                {!open ? (
+                  <Button onClick={() => setOpen(!open)}>See More</Button>
+                ) : (
+                  <Button onClick={() => setOpen(!open)}>See Less</Button>
+                )}
               </Flex>
             </Grid>
           </Grid>
         </Flex>
-        <TextField 
-          // value={depositInput}
+        <TextField
+          fullWidth
+          value={recyclerData ? getFullDisplayBalance(recyclerData.swapRate) : undefined}
           // onChange={(e) => setDepositInput(e.target.value)}
           type="number"
-          // label="Receive 2ND"
           placeholder="Receive 2ND"
           variant="outlined"
-          // margin="dense" 
+          disabled={true}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -90,14 +173,34 @@ export const RecyclerCard = () => {
               </InputAdornment>
             ),
           }}
-          fullWidth 
         />
         <Flex mt={2} mb={1}>
-          <Button fullWidth onClick={() => {}} variant="contained" color="primary">
-            Approve
-          </Button>
+          {true ? (
+            <Button 
+              fullWidth
+              disabled={!recyclerData || !recyclerData.swapRate || recyclerData.swapRate.eq(0)}
+              onClick={() => {}}
+              variant="contained"
+              color="primary"
+            >
+              Approve
+            </Button>
+          ) : (
+            <Button 
+              fullWidth
+              onClick={() => {}}
+              variant="contained"
+              color="primary">
+              Swap for 2ND
+            </Button>
+          )}
         </Flex>
-        <Button fullWidth onClick={() => {}} variant="contained" endIcon={<LaunchRounded />}>
+        <Button 
+          fullWidth 
+          variant="contained" 
+          endIcon={<LaunchRounded />}
+          href={Links.uniswapSecond}
+        >
           Trade 2ND
         </Button>
       </Flex>

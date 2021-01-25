@@ -1,11 +1,13 @@
 import { Box, Button, Grid, Toolbar } from '@material-ui/core'
 import { Launch } from '@material-ui/icons'
 import React, { useEffect, useState } from 'react'
+import { Display } from '../../components/Display'
 // import { Display } from '../../components/Display'
 import { Flex } from '../../components/Flex'
 import { Header } from '../../components/Header'
 import Links from '../../constants/links'
 import { NewsCard } from './components/NewsCard'
+import LoadingScales from '../../assets/img/LoadingFarm.gif'
 
 export interface MediumPost {
   author: string
@@ -43,7 +45,9 @@ export const News = () => {
     <Box>
       <Toolbar />
       {loading ? (
-        <div></div>
+        <Flex center minHeight="100vh" height="100%">
+          <img src={LoadingScales} alt="Loading..." />
+        </Flex>
       ) : (
         <Box pt={2}>
           <Header

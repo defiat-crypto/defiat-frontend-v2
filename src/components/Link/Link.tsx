@@ -5,9 +5,10 @@ import { Flex, FlexProps } from '../Flex'
 import LaunchIcon from '@material-ui/icons/Launch'
 
 interface LinkProps extends FlexProps {
-  name: string,
-  path?: string,
-  href?: string
+  name: string;
+  path?: string;
+  href?: string;
+  footer?: boolean;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -31,6 +32,7 @@ export const Link: React.FC<LinkProps> = ({
   name,
   path,
   href,
+  footer,
   ...props
 }) => {
   const history = useHistory()
@@ -55,9 +57,9 @@ export const Link: React.FC<LinkProps> = ({
         </Typography>
       )}
       {!!href && (
-        <Flex className={classes.external} align='center' onClick={handleExternalLink}>
+        <Flex className={footer ? classes.link : classes.external} align='center' onClick={handleExternalLink}>
           <Typography variant="body1">{name}</Typography>
-          <LaunchIcon style={{height:'0.75rem'}} />
+          {!footer && <LaunchIcon style={{height:'0.75rem'}} />}
         </Flex>
       )}
     </Flex>

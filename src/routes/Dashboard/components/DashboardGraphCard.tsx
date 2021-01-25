@@ -39,7 +39,7 @@ export const DashboardGraphCard = () => {
     gradient.addColorStop(1, theme.palette.background.paper);
     
     return {
-      labels: events ? events.map((_, i) => i.toString()) : [],
+      labels: ['Sept 20', 'Oct 20', 'Nov 20', 'Dec 20', 'Jan 21', 'Feb 21'],//events ? events.map((_, i) => i.toString()) : [],
       datasets: [
         {
           label: 'DFT Total Supply',
@@ -59,15 +59,8 @@ export const DashboardGraphCard = () => {
       xAxes: [{
         display: true,
         scaleLabel: {
-          display: true,
-          labelString: 'Month',
-          
+          display: false,
         },
-        ticks: {
-          stepValue: 10,
-          steps: 10,
-          beginAtZero: false
-        }
       }],
       yAxes: [{
         display: true,
@@ -75,7 +68,6 @@ export const DashboardGraphCard = () => {
           beginAtZero: false,
           min: 475000,
           steps: 10,
-          stepValue: 5,
           max: 500000
         }
       }]
