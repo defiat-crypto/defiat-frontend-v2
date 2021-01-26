@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react"
 import { useWallet } from "use-wallet"
 import { provider } from "web3-core"
 import Addresses from "../constants/addresses"
-import { getRugSanctuaryContract, stakedPool, pendingPool, BigNumber, withdrawPool, depositPool } from "../defiat"
+import { getRugSanctuaryContract, stakedPool, pendingPool, BigNumber, withdrawPool, depositPool, getRugSanctuaryAddress, getTokenPrice, getOracle, getSecondAddress, getSecondLpAddress, getTetherAddress } from "../defiat"
 import { getBalance } from "../utils"
 import { useBlock } from "./useBlock"
 import { useDeFiat } from "./useDeFiat"
@@ -11,6 +11,9 @@ interface PoolData {
   pendingRewards:BigNumber;
   tokenBalance:BigNumber;
   stakedBalance:BigNumber;
+  secondPrice:BigNumber;
+  secondLpPrice:BigNumber;
+  totalValueLocked:BigNumber;
 }
 
 export const usePool = () => {
@@ -25,6 +28,7 @@ export const usePool = () => {
   const DeFiat = useDeFiat()
   
   const RugSanctuary = useMemo(() => getRugSanctuaryContract(DeFiat), [DeFiat])
+  const Oracle = useMemo(() => getOracle(DeFiat), [DeFiat])
 
   const handleClaim = useCallback(async () => {
     const txHash = await withdrawPool(RugSanctuary, account, '0')
@@ -43,17 +47,24 @@ export const usePool = () => {
 
   const fetchData = useCallback(async () => {
     const values = await Promise.all([
-      getBalance(Addresses.SecondLp[chainId], account, ethereum),
+      getBalance(getSecondLpAddress(DeFiat), account, ethereum),
       stakedPool(RugSanctuary, account),
       pendingPool(RugSanctuary, account),
+      getBalance(getSecondLpAddress(DeFiat), getRugSanctuaryAddress(DeFiat), ethereum),
+      getTokenPrice(Oracle, getSecondAddress(DeFiat)),
+      getTokenPrice(Oracle, getSecondLpAddress(DeFiat)),
+      getTokenPrice(Oracle, getTetherAddress(DeFiat))
     ])
 
     setData({
       tokenBalance: values[0],
       stakedBalance: values[1],
-      pendingRewards: values[2]
+      pendingRewards: values[2],
+      secondPrice: values[6].multipliedBy(1e18).dividedBy(values[4]),
+      secondLpPrice: values[5].multipliedBy(values[6]).dividedBy(1e18),
+      totalValueLocked: values[5].multipliedBy(values[6]).multipliedBy(values[3]).dividedBy(1e36)
     })
-  }, [account, chainId, ethereum, RugSanctuary])
+  }, [account, ethereum, DeFiat, Oracle, RugSanctuary])
 
 
   useEffect(() => {

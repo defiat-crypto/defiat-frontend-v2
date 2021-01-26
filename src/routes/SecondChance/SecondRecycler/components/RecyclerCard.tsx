@@ -88,6 +88,8 @@ export const RecyclerCard = () => {
     } else {
       notify('Encountered an error while recycling 2ND.', 'error')
     }
+    setRecyclerData(undefined)
+    setSelected(undefined)
   }, [swap, notify, selected, recyclerData])
 
   const fetchSwapData = useCallback(async () => {
@@ -95,6 +97,8 @@ export const RecyclerCard = () => {
       getBalance(selected.address, account, ethereum),
       getTotalSupply(selected.address, ethereum)
     ])
+
+    console.log(values)
 
     const swapRate = await fetchSwapRate(selected.address, values[0].toString())
 
@@ -118,10 +122,11 @@ export const RecyclerCard = () => {
           <img src={secondBrand} className={classes.image} alt="second-chance" />
         </Flex>
         <TextField 
-          value={recyclerData ? getFullDisplayBalance(recyclerData.ruggedBalance) : undefined}
+          value={recyclerData && recyclerData.ruggedBalance ? getFullDisplayBalance(recyclerData.ruggedBalance) : ''}
           type="number"
           label="Deposit Rugs"
           placeholder="Select a Rugged Token to Swap"
+          // helperText="# Rugged Tokens to swap to 2ND"
           variant="outlined"
           fullWidth
           disabled
@@ -143,21 +148,25 @@ export const RecyclerCard = () => {
         <Collapse in={open}>
           <RecyclerExpandedField 
             label="Swap Fee (ETH)"
+            helperText="Dynamic Swap Fee Amount"
             data={data ? getFullDisplayBalance(data.ethFee) : ''}
             topIcon={<SwapVertRounded className={classes.icon} />}
           />
           <RecyclerExpandedField 
             label="Rugged Total Supply"
+            helperText="Total Supply of Rugged Tokens"
             data={recyclerData ? getFullDisplayBalance(recyclerData.ruggedSupply, selected.decimals) : ''}
             topIcon={<AddCircleOutlineRounded className={classes.icon} />}
           />
           <RecyclerExpandedField 
-            label="% Total Supply Owned"
-            data={recyclerData ? getFullDisplayBalance(recyclerData.ruggedBalance.dividedBy(recyclerData.ruggedSupply).multipliedBy(100), 0) : ''}
+            label="2ND Base Swap Rate"
+            helperText="% Total Supply Owned * 1000"
+            data={recyclerData ? getFullDisplayBalance(recyclerData.ruggedBalance.dividedBy(recyclerData.ruggedSupply).multipliedBy(1000), 0) : ''}
             topIcon={<CloseRounded className={classes.icon} />}
           />
           <RecyclerExpandedField 
-            label="% DeFiat Multiplier"
+            label="DeFiat Multiplier"
+            helperText="% Bonus for Holding DFT"
             data={data ? getMultiplier(data.tokenBalance) : ''}
             topIcon={<CloseRounded className={classes.icon} />}
           />
@@ -183,7 +192,7 @@ export const RecyclerCard = () => {
         </Flex>
         <TextField
           fullWidth
-          value={recyclerData ? getFullDisplayBalance(recyclerData.swapRate) : undefined}
+          value={recyclerData && recyclerData.swapRate ? getFullDisplayBalance(recyclerData.swapRate) : ''}
           // onChange={(e) => setDepositInput(e.target.value)}
           type="number"
           label="Receive 2ND"
@@ -212,6 +221,7 @@ export const RecyclerCard = () => {
           ) : (
             <Button 
               fullWidth
+              disabled={!recyclerData || !recyclerData.swapRate || recyclerData.swapRate.eq(0)}
               onClick={handleSwap}
               variant="contained"
               color="primary"

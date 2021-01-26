@@ -16,7 +16,7 @@ export const DashboardPointsCard = () => {
           <Typography variant="h5">
             DeFiat Points
           </Typography>
-          {+data.pointsBalance <= +data.nextLevel && (
+          {data && +data.pointsBalance >= +data.nextLevel && (
             <Box ml={2}>
               <Button 
                 variant="contained"
@@ -44,7 +44,7 @@ export const DashboardPointsCard = () => {
             <Chip label={data ? data.discountLevel : '0'} color="primary" />
             <Box mt={1}>
               <Typography color="textSecondary" variant="body2" align='center'>
-                {+data.discountLevel * 10}% Discount  
+                {data ? +data.discountLevel * 10 : 0}% Discount  
               </Typography>
             </Box>
           </Flex>
@@ -59,7 +59,7 @@ export const DashboardPointsCard = () => {
             <Chip label={data ? +data.discountLevel+1 : '0'} color="primary" />
             <Box mt={1}>
               <Typography color="textSecondary" variant="body2" align='center'>
-                {+data.discountLevel + 1 * 10}% Discount
+                {data ? +data.discountLevel + 1 * 10 : 0}% Discount
               </Typography>
             </Box>
           </Flex>

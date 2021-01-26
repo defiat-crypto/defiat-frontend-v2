@@ -63,8 +63,8 @@ export const useDashboard = () => {
       pointsBalance: getDisplayBalance(values[4]),
       discountLevel: values[5],
       nextLevel: getDisplayBalance(new BigNumber(nextLevel)),
-      tokenPrice: getDisplayBalance(new BigNumber(values[7]).multipliedBy(1e18).dividedBy(values[6])),
-      ethPrice: getDisplayBalance(new BigNumber(values[7]))
+      tokenPrice: getDisplayBalance(values[7].multipliedBy(1e18).dividedBy(values[6])),
+      ethPrice: getDisplayBalance(values[7])
     })
   }, [account, ethereum, DeFiatContract, PointsContract, OracleContract, chainId])
 

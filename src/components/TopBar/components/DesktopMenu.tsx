@@ -9,16 +9,16 @@ export const DesktopMenu = () => {
   return (
     <Grid container spacing={1} alignItems="center">
       {SiteMap.routes.map((route:any, i:number) => (
-        <Grid item>
-          <Link name={route.name} path={route.path} key={i} />
+        <Grid item key={i}>
+          <Link name={route.name} path={route.path} />
         </Grid>
       ))}
       <Grid item>
         <MenuLink />
       </Grid>
       {SiteMap.external.map((external:any, i:number) => (
-        <Grid item>
-          <Link name={external.name} href={external.href} key={i} />
+        <Grid item key={`a-${i}`}>
+          <Link name={external.name} href={external.href} />
         </Grid>
       ))}
       <Grid item>

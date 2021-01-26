@@ -6,12 +6,14 @@ interface RecyclerExpandedFieldProps {
   data?:string;
   placeholder?:string;
   label?:string;
+  helperText?:string;
   topIcon:React.ReactNode
 }
 
 export const RecyclerExpandedField: React.FC<RecyclerExpandedFieldProps> = ({
   data,
   label,
+  helperText,
   placeholder,
   topIcon
 }) => {
@@ -26,6 +28,7 @@ export const RecyclerExpandedField: React.FC<RecyclerExpandedFieldProps> = ({
         type="number"
         label={label || ''}
         placeholder={placeholder || ''}
+        helperText={helperText || ''}
         variant="outlined"
         fullWidth
         disabled

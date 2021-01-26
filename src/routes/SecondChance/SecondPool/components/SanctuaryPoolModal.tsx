@@ -26,7 +26,7 @@ export const SanctuaryPoolModal: React.FC<ModalProps> = ({
     if (allowance.eq(0)) {
       const approveTxHash = await approve()
       if (!!approveTxHash) {
-        notify('Approving 2ND/ETH Tokens staking...', 'success', approveTxHash)
+        notify('Approved 2ND/ETH Tokens staking.', 'success', approveTxHash)
       } else {
         notify('Encountered an error while approving 2ND/ETH.', 'error')
       }
@@ -34,7 +34,8 @@ export const SanctuaryPoolModal: React.FC<ModalProps> = ({
 
     const txHash = await deposit(new BigNumber(depositInput).times(1e18).toString())
     if (!!txHash) {
-      notify('Depositing 2ND/ETH Tokens into the Sanctuary...', 'success', txHash)
+      notify('Deposited 2ND/ETH Tokens into the Sanctuary.', 'success', txHash)
+      setDepositInput('')
     } else {
       notify('Encountered an error while depositing 2ND/ETH.', 'error')
     }
@@ -43,7 +44,8 @@ export const SanctuaryPoolModal: React.FC<ModalProps> = ({
   const handleWithdraw = useCallback(async () => {
     const txHash = await withdraw(new BigNumber(withdrawInput).times(1e18).toString())
     if (!!txHash) {
-      notify('Withdrawing 2ND/ETH Tokens from Sanctuary...', 'success', txHash)
+      notify('Withdrew 2ND/ETH Tokens from Sanctuary.', 'success', txHash)
+      setWithdrawInput('')
     } else {
       notify('Encountered an error while withdrawing 2ND/ETH.', 'error')
     }

@@ -15,16 +15,18 @@ const useStyles = makeStyles((theme) => ({
 
 interface TextDecorationProps {
   width?: string
+  fullWidth?: boolean
 }
 
 export const TextDecoration: React.FC<TextDecorationProps> = ({
-  width
+  width,
+  fullWidth
 }) => {
   const classes = useStyles()
   return (
     // <Flex marginX={1}>
     <Divider
-      variant='fullWidth'
+      variant='middle' //'fullWidth'
       className={classes.divider}
       style={!!width ? {width} : undefined}
     />

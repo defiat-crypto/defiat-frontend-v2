@@ -2,7 +2,7 @@ import React from 'react'
 import { Card } from '../../../../components/Card'
 import { Flex } from '../../../../components/Flex'
 import sanctuary256 from '../../../../assets/img/sanctuary256.png'
-import { Button, Grid, makeStyles, Typography } from '@material-ui/core'
+import { Button, Container, Grid, makeStyles, Typography } from '@material-ui/core'
 import { Value } from '../../components/Value'
 import { LaunchRounded } from '@material-ui/icons'
 import { useModal } from '../../../../hooks/useModal'
@@ -25,7 +25,8 @@ export const SanctuaryPoolCard = () => {
   const {data} = usePool()
   
   return (
-    <Card>
+
+    <Card style={{minWidth: '500px'}}>
       <Flex column>
         <Flex center>
           <img src={sanctuary256} alt='sanctuary' height="96px" />
@@ -35,6 +36,15 @@ export const SanctuaryPoolCard = () => {
         <Flex column>
           <Grid item>
             <Grid container spacing={1}>
+              <Grid item xs={12}>
+                <Value value={data ? getDisplayBalance(data.totalValueLocked) : '0.00'} name='Total Value Locked' startSymbol="$" />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <Value value={data ? getDisplayBalance(data.secondPrice) : '0.00'} name='2ND Price' startSymbol="$" />
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <Value value={data ? getDisplayBalance(data.secondLpPrice) : '0.00'} name='2ND LP Price' startSymbol="$" />
+              </Grid>
               <Grid item xs={12} md={6}>
                 <Value value={data ? getDisplayBalance(data.pendingRewards) : '0.00'} name='Pending Rewards' endSymbol="2ND" />
               </Grid>

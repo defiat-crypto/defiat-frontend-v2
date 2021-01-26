@@ -8,6 +8,10 @@ export const getSecondLpAddress = (DeFiat?:DeFiat) => {
   return DeFiat && DeFiat.SecondLpAddress;
 }
 
+export const getTetherAddress = (DeFiat?:DeFiat) => {
+  return DeFiat && DeFiat.TetherAddress;
+}
+
 export const getRugSanctuaryAddress = (DeFiat?:DeFiat) => {
   return DeFiat && DeFiat.RugSanctuaryAddress;
 }

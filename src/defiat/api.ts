@@ -104,22 +104,22 @@ export const updateDiscountOf = async (Points:Contract, address:string): Promise
 
 // Price
 
-export const getTokenPrice = async (Oracle:Contract, token:string): Promise<string> => {
+export const getTokenPrice = async (Oracle:Contract, token:string): Promise<BigNumber> => {
   try {
     const tokenPrice = await Oracle.methods
       .getUniPrice(token)
       .call()
-    return tokenPrice;
+    return new BigNumber(tokenPrice)
   } catch (e) {
     debug(e)
-    return '0';
+    return new BigNumber(0);
   }
 }
 
 // 2ND
 
 export const swapFor2ndChance = async (SecondChance:Contract, account:string, ethAmount:string, ruggedToken:string, ruggedAmount:string) => {
-  return await SecondChance.methods
+  return SecondChance.methods
     .swapfor2NDChance(ruggedToken, ruggedAmount)
     .send({ 
       from: account,
@@ -153,6 +153,16 @@ export const getEthFee = async (SecondChance:Contract) => {
     debug(e)
     return new BigNumber('0')
   }
+}
+
+export const faucet = async (Shitcoin:Contract, account:string) => {
+  return Shitcoin.methods
+    .faucet()
+    .send({ from: account })
+    .on('transactionHash', (tx:TransactionReceipt) => {
+      debug(tx)
+      return tx.transactionHash
+    })
 }
 
 
@@ -197,7 +207,6 @@ export const pendingPool = async (RugSanctuary:Contract, account:string) => {
       .call()
     return new BigNumber(result)
   } catch (e) {
-    console.log(e)
     return new BigNumber('0')
   }
 }

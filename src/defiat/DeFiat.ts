@@ -15,6 +15,7 @@ export class DeFiat {
   SecondLpAddress:string
   RugSanctuaryAddress:string
   OracleAddress:string
+  TetherAddress:string;
   // anystakeAddress:string
 
   constructor(provider:provider, networkId:number, options?:any) {
@@ -51,6 +52,7 @@ export class DeFiat {
     this.SecondLpAddress = Addresses.SecondLp[networkId];
     this.RugSanctuaryAddress = Addresses.RugSanctuary[networkId];
     this.OracleAddress = Addresses.Oracle[networkId];
+    this.TetherAddress = Addresses.USDT[networkId];
   }
 
 

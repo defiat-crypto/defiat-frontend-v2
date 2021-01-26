@@ -55,7 +55,7 @@ const Rugs:  { [key:string]: { [networkId:number]: RugToken[] }} = {
       { id: 43, name: 'CREEDV2', symbol: 'CRD', address: '0xba137a98df37b67d5db7e97a2b1cac4272b4e457', decimals: 18 },
     ],
     4: [
-      { id: 0, name: 'R_UGGED', symbol: "RUG", address: '0x3Ebbe920B18F5d38bCa5489154388aee2ebE6fF3', decimals: 18 },
+      { id: 0, name: 'R_UGGED', symbol: "RUG", address: '0xe0c7B3Ec3a986Ee518518294DB4193837bF481C2', decimals: 18 },
       { id: 1, name: 'SHIIIT', symbol: "SHIT", address: '0x4670dC4167f4D80d9597CAecAFED0F529d585589', decimals: 18 },
     ]
 

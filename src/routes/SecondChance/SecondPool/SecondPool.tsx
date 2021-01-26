@@ -9,8 +9,8 @@ export const SecondPool = () => {
     <Web3ConnectView>
       <SecondWrapper
         children={[
-          <SanctuaryPoolCard />,
-          <Typography variant="body1"  align="center">
+          <SanctuaryPoolCard key={0} />,
+          <Typography key={1} variant="body1"  align="center">
             * 10% Unstaking Fee, which is added as liquidity to Uniswap
           </Typography>
         ]}

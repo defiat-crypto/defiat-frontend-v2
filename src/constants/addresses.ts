@@ -20,7 +20,7 @@ const Addresses: { [key:string]: { [networkId:number]: string }} = {
     4: '0x2394184FefCFad8D53062A97C59F63Ba1a684489'
   },
   RugSanctuary: {
-    1: '0x3084807D124442f21F63212577313de6feb44b47',
+    1: '0x48937F2dd2b0BC8319b996E671978835e0c09685',
     4: '0xc01DF21d8268eEDB8E72eA6834192480bAB1BD29'
   },
   AnyStake: {
@@ -34,6 +34,12 @@ const Addresses: { [key:string]: { [networkId:number]: string }} = {
   USDT: {
     1: '0xdac17f958d2ee523a2206206994597c13d831ec7',
     4: ''
+  },
+  RUG: {
+    4: '0xe0c7B3Ec3a986Ee518518294DB4193837bF481C2'
+  },
+  SHIT: {
+    4: '0x4670dC4167f4D80d9597CAecAFED0F529d585589'
   }
 }
 
