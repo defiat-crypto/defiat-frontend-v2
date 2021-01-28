@@ -31,14 +31,14 @@ export const Footer = () => {
             </Flex>
           </Grid>
           <Grid item xs={12} md={4}>
-            <Grid container>
+            <Grid container >
               {[...SiteMap.routes, ...SiteMap.footer].map((route:any, i:number) => (
                 <Grid item xs={12} md={6} key={i}>
-                  <Link name={route.name} path={route.path} />
+                  <Link name={route.name} path={route.path} center />
                 </Grid>
               ))}
               <Grid item xs={12} md={6}>
-                <Link name="Whitepaper" href={WhitepaperV2} footer />
+                <Link name="Whitepaper" href={WhitepaperV2} center footer />
               </Grid>
             </Grid>
           </Grid>

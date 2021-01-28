@@ -14,8 +14,8 @@ export const Display: React.FC<DisplayProps> = ({
 
   return (
     <Flex 
-      height="100vh"
-      minHeight={1}
+      height="100%"
+      minHeight="100vh"
       {...props}
     >
       {!!offset && <Toolbar />}

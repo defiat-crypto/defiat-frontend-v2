@@ -1,4 +1,4 @@
-import { makeStyles, Menu, MenuItem, Popover, Typography } from '@material-ui/core'
+import { makeStyles, Menu, MenuItem, Typography } from '@material-ui/core'
 import React, { useState } from 'react'
 import { Flex } from '../Flex'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';

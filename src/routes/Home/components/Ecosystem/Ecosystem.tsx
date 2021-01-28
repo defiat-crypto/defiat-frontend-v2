@@ -1,4 +1,4 @@
-import { Grid } from '@material-ui/core'
+import { Box, Grid } from '@material-ui/core'
 import React from 'react'
 import { EcosystemDisplay } from './EcosystemDisplay'
 import logo512 from '../../../../assets/img/logo512.png'
@@ -10,6 +10,7 @@ import { Header } from '../../../../components/Header'
 
 export const Ecosystem = () => {
   return (
+    <Box>
     <Display column center>
       <Header 
         title="DeFiat Ecosystem"
@@ -47,5 +48,6 @@ export const Ecosystem = () => {
         </Grid>
       </Grid>
     </Display>
+    </Box>
   )
 }

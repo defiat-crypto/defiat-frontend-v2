@@ -25,8 +25,7 @@ export const SanctuaryPoolCard = () => {
   const {data} = usePool()
   
   return (
-
-    <Card style={{minWidth: '500px'}}>
+    <Card style={{minWidth: '256px'}}>
       <Flex column>
         <Flex center>
           <img src={sanctuary256} alt='sanctuary' height="96px" />
@@ -34,23 +33,21 @@ export const SanctuaryPoolCard = () => {
         <Typography variant="h5" align="center" color="primary">Rug Sanctuary</Typography>
         <Typography variant="subtitle1" align="center" color="textSecondary">Stake 2ND/ETH UNI-V2, Earn 2ND</Typography>
         <Flex column>
-          <Grid item>
-            <Grid container spacing={1}>
-              <Grid item xs={12}>
-                <Value value={data ? getDisplayBalance(data.totalValueLocked) : '0.00'} name='Total Value Locked' startSymbol="$" />
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <Value value={data ? getDisplayBalance(data.secondPrice) : '0.00'} name='2ND Price' startSymbol="$" />
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <Value value={data ? getDisplayBalance(data.secondLpPrice) : '0.00'} name='2ND LP Price' startSymbol="$" />
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <Value value={data ? getDisplayBalance(data.pendingRewards) : '0.00'} name='Pending Rewards' endSymbol="2ND" />
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <Value value={data ? getDisplayBalance(data.stakedBalance) : '0.00'} name='Staked Balance' endSymbol="2ND/ETH" />
-              </Grid>
+          <Grid container spacing={1}>
+            <Grid item xs={12}>
+              <Value value={data ? getDisplayBalance(data.totalValueLocked) : '0.00'} name='Total Value Locked' startSymbol="$" />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Value value={data ? getDisplayBalance(data.secondPrice) : '0.00'} name='2ND Price' startSymbol="$" />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Value value={data ? getDisplayBalance(data.secondLpPrice) : '0.00'} name='2ND LP Price' startSymbol="$" />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Value value={data ? getDisplayBalance(data.pendingRewards) : '0.00'} name='Pending Rewards' endSymbol="2ND" />
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <Value value={data ? getDisplayBalance(data.stakedBalance) : '0.00'} name='Staked Balance' endSymbol="2ND/ETH" />
             </Grid>
           </Grid>
           <Flex mb={1}>

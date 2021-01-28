@@ -20,13 +20,13 @@ interface TextDecorationProps {
 
 export const TextDecoration: React.FC<TextDecorationProps> = ({
   width,
-  fullWidth
+  fullWidth=true
 }) => {
   const classes = useStyles()
   return (
     // <Flex marginX={1}>
     <Divider
-      variant='middle' //'fullWidth'
+      variant={fullWidth ? 'fullWidth' : 'middle'} //'fullWidth'
       className={classes.divider}
       style={!!width ? {width} : undefined}
     />

@@ -16,18 +16,6 @@ export const DashboardPointsCard = () => {
           <Typography variant="h5">
             DeFiat Points
           </Typography>
-          {data && +data.pointsBalance >= +data.nextLevel && (
-            <Box ml={2}>
-              <Button 
-                variant="contained"
-                color="primary"
-                startIcon={<ArrowUpwardRounded />}
-                onClick={upgrade}
-              >
-                Upgrade Discount
-              </Button>
-            </Box>
-          )}
         </Flex>
         
         <Flex align='flex-end'>
@@ -37,9 +25,8 @@ export const DashboardPointsCard = () => {
         </Flex>
       </Flex>
       
-
       <Grid container spacing={2} alignItems="center" justify="center">
-        <Grid item xs={1}>
+        <Grid item xs={2}>
           <Flex center column>
             <Chip label={data ? data.discountLevel : '0'} color="primary" />
             <Box mt={1}>
@@ -50,11 +37,11 @@ export const DashboardPointsCard = () => {
           </Flex>
         </Grid>
 
-        <Grid item xs={10}>
+        <Grid item xs={8}>
           <LinearProgress variant="determinate" value={data ? (+data.pointsBalance/+data.nextLevel)*100 : 0} color="primary" />
         </Grid>
 
-        <Grid item xs={1}>
+        <Grid item xs={2}>
           <Flex center column>
             <Chip label={data ? +data.discountLevel+1 : '0'} color="primary" />
             <Box mt={1}>
@@ -65,6 +52,22 @@ export const DashboardPointsCard = () => {
           </Flex>
         </Grid>
       </Grid>
+
+      <Flex center mt={2}>
+        {/* {data && +data.pointsBalance >= +data.nextLevel && ( */}
+          <Box ml={2}>
+            <Button 
+              variant="contained"
+              color="primary"
+              startIcon={<ArrowUpwardRounded />}
+              onClick={upgrade}
+              disabled={!data || +data.pointsBalance < +data.nextLevel}
+            >
+              Upgrade Discount
+            </Button>
+          </Box>
+        {/* )} */}
+      </Flex>
     </Card>
   );
 };
