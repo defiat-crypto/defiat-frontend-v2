@@ -211,7 +211,7 @@ export const RecyclerCard = () => {
           {!allowance || allowance.eq(0) ? (
             <Button 
               fullWidth
-              disabled={!recyclerData || !recyclerData.swapRate || recyclerData.swapRate.eq(0)}
+              disabled={!recyclerData || !recyclerData.swapRate || recyclerData.swapRate.lte(new BigNumber(0))}
               onClick={handleApprove}
               variant="contained"
               color="primary"
@@ -221,7 +221,7 @@ export const RecyclerCard = () => {
           ) : (
             <Button 
               fullWidth
-              disabled={!recyclerData || !recyclerData.swapRate || recyclerData.swapRate.eq(0)}
+              disabled={!recyclerData || !recyclerData.swapRate || recyclerData.swapRate.lte(new BigNumber(0))}
               onClick={handleSwap}
               variant="contained"
               color="primary"

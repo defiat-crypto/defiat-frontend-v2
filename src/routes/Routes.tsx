@@ -17,6 +17,8 @@ import { Scroll } from '../components/Scroll'
 import { useModal } from '../hooks/useModal'
 import { DisclaimerModal } from '../components/DisclaimerModal'
 import Cookies from 'universal-cookie'
+import { Regulator } from './Regulator'
+import { Vault } from './Vault'
 
 export const Routes = () => {
   const cookies = useMemo(() => new Cookies(), []);
@@ -40,9 +42,11 @@ export const Routes = () => {
           <Route path="/faq" component={FAQ} />
           <Route path="/legal" component={Legal} />
           <Route path="/news" component={News} />
+          <Route path="/regulator" component={Regulator} />
           <Route path="/second/pool" component={SecondPool} />
           <Route path="/second" component={SecondRecycler} />
           <Route path="/staking" component={Staking} />
+          <Route path="/vault" component={Vault} />
           <Route component={NoMatch} />
         </Switch>
       </Container>

@@ -94,7 +94,7 @@ export const viewDiscountPointsNeeded = async (Points:Contract, tranche:number):
 
 export const updateDiscountOf = async (Points:Contract, address:string): Promise<string> => {
   return Points.methods
-    .updateMyDiscountOf()
+    .updateMyDiscount()
     .send({ from: address })
     .on('transactionHash', (tx:TransactionReceipt) => {
       debug(tx)

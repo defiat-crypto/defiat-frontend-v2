@@ -4,7 +4,7 @@ const Addresses: { [key:string]: { [networkId:number]: string }} = {
     4: '0xB571d40e4A7087C1B73ce6a3f29EaDfCA022C5B2'
   },
   Points: {
-    1: '0x8c9d8f5CC3427F460e20F63b36992f74AA19e27d',
+    1: '0xde3e18ecb613498b9a1483af51394ec2259bcd0a',
     4: '0x70c7d7856e1558210cfbf27b7f17853655752453'
   },
   Governance: {

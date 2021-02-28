@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { Flex } from '../Flex'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import { useHistory } from 'react-router-dom';
+import { isLocalhost } from '../../utils';
 
 const useStyles = makeStyles((theme) => ({
   link: {
@@ -52,6 +53,8 @@ export const MenuLink = () => {
         onClose={() => handleClose()}
       >
         <MenuItem onClick={() => handleClose('/staking')}>AnyStake</MenuItem>
+        {/* {isLocalhost() && <MenuItem onClick={() => handleClose('/regulator')}>Regulator</MenuItem>} */}
+        {/* {isLocalhost() && <MenuItem onClick={() => handleClose('/vault')}>Vault</MenuItem>} */}
         <MenuItem onClick={() => handleClose('/second')}>2nd Chance</MenuItem>
       </Menu>
       {/* <Popover

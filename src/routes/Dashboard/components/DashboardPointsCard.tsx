@@ -38,7 +38,15 @@ export const DashboardPointsCard = () => {
         </Grid>
 
         <Grid item xs={8}>
-          <LinearProgress variant="determinate" value={data ? (+data.pointsBalance/+data.nextLevel)*100 : 0} color="primary" />
+          <LinearProgress 
+            variant="determinate"
+            value={data 
+              ? +data.pointsBalance > +data.nextLevel 
+                ? 100
+                : (+data.pointsBalance / +data.nextLevel) * 100
+              : 0} 
+            color="primary" 
+          />
         </Grid>
 
         <Grid item xs={2}>
