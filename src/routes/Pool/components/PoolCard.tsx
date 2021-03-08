@@ -1,10 +1,16 @@
 import { Button, Grid, Typography } from "@material-ui/core";
 import { LaunchRounded } from "@material-ui/icons";
 import { Card } from "components/Card";
-import { useRegulator } from "hooks/useRegulator";
+import { Pools } from "constants/pools";
+import { usePool } from "hooks/usePool";
+import { useParams } from "react-router";
+import { useWallet } from "use-wallet";
 
-export const RegulatorCard = () => {
-  const { data } = useRegulator();
+export const PoolCard = () => {
+  const { chainId } = useWallet();
+  const { pid } = useParams<{ pid: string }>();
+  const { logo, name, symbol, address } = Pools[chainId][pid];
+  const { data } = usePool(+pid);
 
   return (
     <Card>
@@ -30,7 +36,7 @@ export const RegulatorCard = () => {
             <b>{data ? data.stakedBalance : "0.00"}</b>
           </Typography>
           <Typography variant="subtitle2" align="center" gutterBottom>
-            Staked DFTPv2
+            Staked {symbol}
           </Typography>
           <Button
             variant="contained"
@@ -44,7 +50,7 @@ export const RegulatorCard = () => {
 
         <Grid item xs={12}>
           <Button variant="contained" endIcon={<LaunchRounded />} fullWidth>
-            Get DFTPv2 on Uniswap
+            Get {symbol} on Uniswap
           </Button>
         </Grid>
       </Grid>

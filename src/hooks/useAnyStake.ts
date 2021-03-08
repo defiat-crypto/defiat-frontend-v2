@@ -2,10 +2,10 @@ import { BigNumber } from "@ethersproject/bignumber";
 import { useState } from "react";
 
 interface AnyStakeData {
-  totalValueLocked: BigNumber;
-  tokenPrice: BigNumber;
-  pendingRewards: BigNumber;
-  totalValueStaked: BigNumber;
+  totalValueLocked: string;
+  tokenPrice: string;
+  pendingRewards: string;
+  totalValueStaked: string;
   totalStakes: string;
 }
 

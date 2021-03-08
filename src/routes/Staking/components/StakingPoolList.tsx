@@ -1,11 +1,10 @@
 import { Box, Grid, Typography } from "@material-ui/core";
 import { Flex } from "components/Flex";
 import { Pools, StakingPool } from "constants/pools";
-import React from "react";
 import { useWallet } from "use-wallet";
-import { PoolCard } from "./PoolCard";
+import { StakingPoolCard } from "./StakingPoolCard";
 
-export const PoolList = () => {
+export const StakingPoolList = () => {
   const { chainId } = useWallet();
 
   return (
@@ -19,7 +18,7 @@ export const PoolList = () => {
         {chainId &&
           Pools[chainId].map((pool: StakingPool, i: number) => (
             <Grid item md={6} key={i}>
-              <PoolCard pool={pool} />
+              <StakingPoolCard pool={pool} />
             </Grid>
           ))}
       </Grid>

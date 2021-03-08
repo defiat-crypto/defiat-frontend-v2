@@ -1,10 +1,9 @@
 import { Box, Button } from "@material-ui/core";
 import { ChevronLeftRounded } from "@material-ui/icons";
-import { Card } from "components/Card";
 import { Display } from "components/Display";
 import { Flex } from "components/Flex";
 import { useHistory } from "react-router";
-import { useWallet } from "use-wallet";
+import { PoolCard } from "./components/PoolCard";
 import { PoolHeader } from "./components/PoolHeader";
 import { PoolSummary } from "./components/PoolSummary";
 
@@ -26,6 +25,9 @@ export const Pool = () => {
       <PoolHeader />
       <Box mt={2}>
         <PoolSummary />
+      </Box>
+      <Box mt={2}>
+        <PoolCard />
       </Box>
     </Display>
   );

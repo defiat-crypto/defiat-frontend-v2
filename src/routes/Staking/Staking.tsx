@@ -5,7 +5,7 @@ import { SocialMediaButtons } from "components/SocialMediaButtons";
 import { isTestnet } from "utils";
 import { Flex } from "components/Flex";
 import { StakingSummary } from "./components/StakingSummary";
-import { PoolList } from "./components/PoolList";
+import { StakingPoolList } from "./components/StakingPoolList";
 
 const useStyles = makeStyles((theme) => ({
   image: {
@@ -34,7 +34,7 @@ export const Staking = () => {
             />
           </Flex>
           <StakingSummary />
-          <PoolList />
+          <StakingPoolList />
         </Box>
       ) : (
         <Box>

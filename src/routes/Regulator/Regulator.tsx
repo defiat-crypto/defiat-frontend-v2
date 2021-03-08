@@ -5,6 +5,8 @@ import { Display } from "../../components/Display";
 import { Web3ConnectView } from "../../components/Web3ConnectView";
 import regulator from "assets/img/regulator.png";
 import { RegulatorCard } from "./components/RegulatorCard";
+import { RegulatorSummary } from "./components/RegulatorSummary";
+import { Box } from "@material-ui/core";
 
 export const Regulator = () => {
   return (
@@ -13,7 +15,12 @@ export const Regulator = () => {
         <Flex center>
           <HorizontalImage image={regulator} alt={"Regulator"} />
         </Flex>
-        <RegulatorCard />
+        <Box>
+          <RegulatorSummary />
+        </Box>
+        <Box mt={1}>
+          <RegulatorCard />
+        </Box>
       </Web3ConnectView>
     </Display>
   );

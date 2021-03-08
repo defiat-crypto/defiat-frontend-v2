@@ -12,11 +12,11 @@ import { useBlock } from "./useBlock";
 import { useDeFiat } from "./useDeFiat";
 
 interface StakingPoolData {
-  totalValueStaked: BigNumber;
-  totalStaked: BigNumber;
-  tokenPrice: BigNumber;
-  pendingRewards: BigNumber;
-  stakedTokens: BigNumber;
+  totalValueLocked: string;
+  totalStaked: string;
+  tokenPrice: string;
+  pendingRewards: string;
+  stakedBalance: string;
 }
 
 export const usePool = (pid: number) => {

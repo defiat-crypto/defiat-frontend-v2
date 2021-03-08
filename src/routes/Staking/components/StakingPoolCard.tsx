@@ -6,11 +6,11 @@ import { Card } from "components/Card";
 import { StakingPool } from "constants/pools";
 import { usePoolCard } from "hooks/usePoolCard";
 
-interface PoolCardProps {
+interface StakingPoolCardProps {
   pool: StakingPool;
 }
 
-export const PoolCard: React.FC<PoolCardProps> = ({ pool }) => {
+export const StakingPoolCard: React.FC<StakingPoolCardProps> = ({ pool }) => {
   const history = useHistory();
   const { pid, logo, name, symbol, address, decimals } = pool;
   const { data } = usePoolCard(pid);

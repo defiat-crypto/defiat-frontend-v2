@@ -1,12 +1,10 @@
-import { Grid } from "@material-ui/core";
-import { SummaryCard } from "components/SummaryCard";
-import logo192 from "assets/img/logo192.png";
-import React from "react";
+import { Box, Grid, Typography } from "@material-ui/core";
+import anystake128 from "assets/img/anystake128.png";
 import { useWallet } from "use-wallet";
 import { useParams } from "react-router";
 import { Pools } from "constants/pools";
-import { usePoolCard } from "hooks/usePoolCard";
 import { usePool } from "hooks/usePool";
+import { ValueCard } from "components/ValueCard";
 
 export const PoolSummary = () => {
   const { chainId } = useWallet();
@@ -16,37 +14,34 @@ export const PoolSummary = () => {
   const { data } = usePool(+pid);
 
   return (
-    <Grid container spacing={2}>
-      <Grid item md={4}>
-        <SummaryCard
-          id="balance"
-          header={data ? `${data.totalStaked} ${symbol}` : `0.00 ${symbol}`}
-          title="Total Tokens Staked"
-          color="info"
-          tooltip="The total amount of DFT in your connected ERC20 wallet."
-          icon={logo}
-        />
+    <Box>
+      <Box pb={2}>
+        <Typography variant="h4" align="center">
+          $<b>{data ? data.totalValueLocked : "0.00"}</b>
+        </Typography>
+        <Typography variant="subtitle2" align="center">
+          Total Value Locked
+        </Typography>
+      </Box>
+
+      <Grid container spacing={2}>
+        <Grid item md={6}>
+          <ValueCard
+            value={data ? `${data.totalStaked}` : "0.00"}
+            endSymbol={symbol}
+            name="Total Tokens Staked"
+            icon={anystake128}
+          />
+        </Grid>
+        <Grid item md={6}>
+          <ValueCard
+            value={data ? `${data.tokenPrice}` : `$0.00`}
+            startSymbol="$"
+            name={`${symbol} Price`}
+            icon={logo}
+          />
+        </Grid>
       </Grid>
-      <Grid item md={4}>
-        <SummaryCard
-          id="claimableRewards"
-          header={`$${data ? data.totalValueStaked : "0.00"}`}
-          title="Total Value Staked"
-          color="info"
-          tooltip="The total amount of DFT in your connected ERC20 wallet."
-          icon={logo192}
-        />
-      </Grid>
-      <Grid item md={4}>
-        <SummaryCard
-          id="tokenPrice"
-          header={data ? `$${data.tokenPrice}` : `$0.00`}
-          title={`${symbol} Price`}
-          color="info"
-          tooltip="The total amount of DFT in your connected ERC20 wallet."
-          icon={logo192}
-        />
-      </Grid>
-    </Grid>
+    </Box>
   );
 };

@@ -12,12 +12,14 @@ import { useBlock } from "./useBlock";
 import { useDeFiat } from "./useDeFiat";
 
 interface RegulatorData {
-  pointsPrice: BigNumber;
-  tokenPrice: BigNumber;
+  totalLocked: string;
+  totalValueLocked: string;
+  pointsPrice: string;
+  tokenPrice: string;
   peg: string;
-  pendingRewards: BigNumber;
-  tokenBalance: BigNumber;
-  stakedBalance: BigNumber;
+  pendingRewards: string;
+  tokenBalance: string;
+  stakedBalance: string;
 }
 
 export const useRegulator = () => {
