@@ -1,1 +1,1 @@
-export {Legal} from './Legal'
+export { Legal } from "./Legal";

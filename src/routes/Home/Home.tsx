@@ -1,12 +1,12 @@
-import React from 'react'
-import { Flex } from '../../components/Flex'
-import { Splash } from './components/Splash'
-import { Ecosystem } from './components/Ecosystem'
-import { Roadmap } from './components/Roadmap'
-import { About } from './components/About'
-import { Team } from './components/Team'
-import { Community } from './components/Community'
-import { Tokenomics } from './components/Tokenomics'
+import React from "react";
+import { Flex } from "../../components/Flex";
+import { Splash } from "./components/Splash";
+import { Ecosystem } from "./components/Ecosystem";
+import { Roadmap } from "./components/Roadmap";
+import { About } from "./components/About";
+import { Team } from "./components/Team";
+import { Community } from "./components/Community";
+import { Tokenomics } from "./components/Tokenomics";
 
 export const Home = () => {
   return (
@@ -19,5 +19,5 @@ export const Home = () => {
       <Tokenomics />
       <Team />
     </Flex>
-  )
-}
+  );
+};

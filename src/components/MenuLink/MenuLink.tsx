@@ -1,34 +1,34 @@
-import { makeStyles, Menu, MenuItem, Typography } from '@material-ui/core'
-import React, { useState } from 'react'
-import { Flex } from '../Flex'
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import { useHistory } from 'react-router-dom';
-import { isLocalhost } from '../../utils';
+import { makeStyles, Menu, MenuItem, Typography } from "@material-ui/core";
+import React, { useState } from "react";
+import { Flex } from "../Flex";
+import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
+import { useHistory } from "react-router-dom";
+import { isTestnet } from "../../utils";
 
 const useStyles = makeStyles((theme) => ({
   link: {
-    cursor: 'pointer',
+    cursor: "pointer",
     color: theme.palette.text.primary,
     "&:hover": {
-      color: theme.palette.text.secondary
-    }
-  }
-}))
+      color: theme.palette.text.secondary,
+    },
+  },
+}));
 
 export const MenuLink = () => {
-  const history = useHistory()
+  const history = useHistory();
 
-  const classes = useStyles()
+  const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   const handleOpen = (event: React.MouseEvent<HTMLElement, MouseEvent>) => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleClose = (path?:string) => {
+  const handleClose = (path?: string) => {
     setAnchorEl(null);
     if (!!path) {
-      history.push(path)
+      history.push(path);
     }
   };
 
@@ -36,10 +36,7 @@ export const MenuLink = () => {
 
   return (
     <Flex mr={0}>
-      <Flex 
-        className={classes.link}
-        onClick={handleOpen}
-      >
+      <Flex className={classes.link} onClick={handleOpen}>
         <Typography variant="body1">Services</Typography>
         <ArrowDropDownIcon />
       </Flex>
@@ -52,10 +49,13 @@ export const MenuLink = () => {
         autoFocus={false}
         onClose={() => handleClose()}
       >
-        <MenuItem onClick={() => handleClose('/staking')}>AnyStake</MenuItem>
-        {/* {isLocalhost() && <MenuItem onClick={() => handleClose('/regulator')}>Regulator</MenuItem>} */}
-        {/* {isLocalhost() && <MenuItem onClick={() => handleClose('/vault')}>Vault</MenuItem>} */}
-        <MenuItem onClick={() => handleClose('/second')}>2nd Chance</MenuItem>
+        <MenuItem onClick={() => handleClose("/staking")}>AnyStake</MenuItem>
+        {isTestnet() && (
+          <MenuItem onClick={() => handleClose("/regulator")}>
+            Regulator
+          </MenuItem>
+        )}
+        <MenuItem onClick={() => handleClose("/second")}>2nd Chance</MenuItem>
       </Menu>
       {/* <Popover
         // id="mouse-over-popover"
@@ -80,5 +80,5 @@ export const MenuLink = () => {
         <Typography>Service 2</Typography>
       </Popover> */}
     </Flex>
-  )
-}
+  );
+};

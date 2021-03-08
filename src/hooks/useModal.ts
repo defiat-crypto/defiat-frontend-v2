@@ -1,12 +1,12 @@
-import { useCallback, useContext } from "react"
-import {ModalContext} from '../contexts/Modal'
+import { useCallback, useContext } from "react";
+import { ModalContext } from "../contexts/Modal";
 
-export const useModal = (modal:React.ReactNode) => {
-  const { onDismiss, onPresent } = useContext(ModalContext)
+export const useModal = (modal: React.ReactNode) => {
+  const { onDismiss, onPresent } = useContext(ModalContext);
 
   const handlePresent = useCallback(() => {
-    onPresent(modal)
-  }, [modal, onPresent])
+    onPresent(modal);
+  }, [modal, onPresent]);
 
-  return [handlePresent, onDismiss]
-}
+  return [handlePresent, onDismiss];
+};

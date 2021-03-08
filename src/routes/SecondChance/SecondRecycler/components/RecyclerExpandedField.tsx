@@ -1,13 +1,13 @@
-import { Box, TextField } from '@material-ui/core'
-import React from 'react'
-import { Flex } from '../../../../components/Flex'
+import { Box, TextField } from "@material-ui/core";
+import React from "react";
+import { Flex } from "../../../../components/Flex";
 
 interface RecyclerExpandedFieldProps {
-  data?:string;
-  placeholder?:string;
-  label?:string;
-  helperText?:string;
-  topIcon:React.ReactNode
+  data?: string;
+  placeholder?: string;
+  label?: string;
+  helperText?: string;
+  topIcon: React.ReactNode;
 }
 
 export const RecyclerExpandedField: React.FC<RecyclerExpandedFieldProps> = ({
@@ -15,7 +15,7 @@ export const RecyclerExpandedField: React.FC<RecyclerExpandedFieldProps> = ({
   label,
   helperText,
   placeholder,
-  topIcon
+  topIcon,
 }) => {
   return (
     <Box>
@@ -24,16 +24,15 @@ export const RecyclerExpandedField: React.FC<RecyclerExpandedFieldProps> = ({
       </Flex>
       <TextField
         id={label}
-        value={data || ''}
+        value={data || ""}
         type="number"
-        label={label || ''}
-        placeholder={placeholder || ''}
-        helperText={helperText || ''}
+        label={label || ""}
+        placeholder={placeholder || ""}
+        helperText={helperText || ""}
         variant="outlined"
         fullWidth
         disabled
       />
     </Box>
-  )
-}
-      
+  );
+};

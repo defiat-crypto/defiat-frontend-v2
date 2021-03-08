@@ -1,17 +1,24 @@
-import { Box, Divider, Typography } from '@material-ui/core';
-import React, { useState } from 'react'
+import { Box, Divider, Typography } from "@material-ui/core";
+import React, { useState } from "react";
+import { Flex } from "components/Flex";
+import { Card } from "components/Card";
 
-import { MdInfoOutline } from 'react-icons/md'
-import { Flex } from '../components/Flex';
-import { Card } from '../components/Card'
+interface SummaryCardProps {
+  id: string;
+  header: string;
+  title: string;
+  color: string;
+  tooltip: string;
+  icon: string;
+}
 
-export const SummaryCard = ({
+export const SummaryCard: React.FC<SummaryCardProps> = ({
   id,
   header,
   title,
   color,
   tooltip,
-  icon
+  icon,
 }) => {
   const [tooltipOpen, setTooltipOpen] = useState(false);
 
@@ -26,13 +33,9 @@ export const SummaryCard = ({
         <Flex justify="space-between">
           <Flex>
             <Box mr={2}>
-              <img
-                src={icon}
-                height="36px"
-                width="auto"
-              />
+              <img src={icon} height="36px" width="auto" alt={header} />
             </Box>
-            
+
             <Typography variant="h6" align="left">
               <b>{header}</b>
             </Typography>
@@ -45,13 +48,13 @@ export const SummaryCard = ({
         </Flex>
 
         <Flex my={1}>
-          <Divider style={{width: '100%'}} />
+          <Divider style={{ width: "100%" }} />
         </Flex>
-            
+
         <Typography variant="body2" align="left">
           {title}
         </Typography>
       </Flex>
     </Card>
-  )
-}
+  );
+};

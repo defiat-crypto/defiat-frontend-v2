@@ -1,2 +1,2 @@
-export {SecondRecycler} from './SecondRecycler'
-export {SecondPool} from './SecondPool'
+export { SecondRecycler } from "./SecondRecycler";
+export { SecondPool } from "./SecondPool";

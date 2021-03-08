@@ -1,75 +1,93 @@
-import Web3 from 'web3'
-import {ConfirmationType} from './confirmationType'
-import {Contract} from 'web3-eth-contract'
-import {AbiItem} from 'web3-utils'
-import Addresses from '../../constants/addresses'
-import DeFiatToken from '../../constants/abi/DeFiat_Token.json'
-import DeFiatPoints from '../../constants/abi/DeFiat_Points.json'
-import DeFiatGovernance from '../../constants/abi/DeFiat_Gov.json'
-import SecondChanceToken from '../../constants/abi/SecondChance.json'
-import RugSanctuaryPool from '../../constants/abi/RugSanctuary.json'
-import UniswapOracle from '../../constants/abi/Uni_Price_v2.json'
+import Web3 from "web3";
+import { ConfirmationType } from "./confirmationType";
+import { Contract } from "web3-eth-contract";
+import { AbiItem } from "web3-utils";
+import Addresses from "../../constants/addresses";
+import DeFiatToken from "../../constants/abi/DeFiat_Token.json";
+import DeFiatPoints from "../../constants/abi/DeFiat_Points.json";
+import DeFiatGovernance from "../../constants/abi/DeFiat_Gov.json";
+import SecondChanceToken from "../../constants/abi/SecondChance.json";
+import RugSanctuaryPool from "../../constants/abi/RugSanctuary.json";
+import UniswapOracle from "../../constants/abi/Uni_Price_v2.json";
 
 export class Contracts {
-  web3:Web3
-  defaultConfirmations?:number
-  autoGasMultiplier?:number
-  confirmationType?:typeof ConfirmationType
-  blockGasLimit?:number
-  defaultGas?:number
-  defaultGasPrice?:number
+  web3: Web3;
+  defaultConfirmations?: number;
+  autoGasMultiplier?: number;
+  confirmationType?: typeof ConfirmationType;
+  blockGasLimit?: number;
+  defaultGas?: number;
+  defaultGasPrice?: number;
 
-  DeFiat:Contract;
-  Points:Contract;
-  Governance:Contract;
-  Second:Contract;
-  RugSanctuary:Contract;
-  Oracle:Contract;
+  DeFiat: Contract;
+  Points: Contract;
+  Governance: Contract;
+  Second: Contract;
+  RugSanctuary: Contract;
+  Oracle: Contract;
 
-  constructor(provider:any, networkId:number, web3:Web3, options:any) {
-    this.web3 = web3
-    this.defaultConfirmations = options.defaultConfirmations
-    this.autoGasMultiplier = options.autoGasMultiplier || 1.5
+  constructor(provider: any, networkId: number, web3: Web3, options: any) {
+    this.web3 = web3;
+    this.defaultConfirmations = options.defaultConfirmations;
+    this.autoGasMultiplier = options.autoGasMultiplier || 1.5;
     this.confirmationType =
-      options.confirmationType || ConfirmationType.Confirmed
-    this.defaultGas = options.defaultGas
-    this.defaultGasPrice = options.defaultGasPrice
+      options.confirmationType || ConfirmationType.Confirmed;
+    this.defaultGas = options.defaultGas;
+    this.defaultGasPrice = options.defaultGasPrice;
 
-    this.DeFiat = new this.web3.eth.Contract(DeFiatToken as AbiItem[], Addresses.DeFiat[networkId]);
-    this.Points = new this.web3.eth.Contract(DeFiatPoints as AbiItem[], Addresses.Points[networkId]);
-    this.Governance = new this.web3.eth.Contract(DeFiatGovernance as AbiItem[], Addresses.Governance[networkId]);
-    this.Second = new this.web3.eth.Contract(SecondChanceToken as AbiItem[], Addresses.Second[networkId]);
-    this.RugSanctuary = new this.web3.eth.Contract(RugSanctuaryPool as AbiItem[], Addresses.RugSanctuary[networkId]);
-    this.Oracle = new this.web3.eth.Contract(UniswapOracle as AbiItem[], Addresses.Oracle[networkId]);
+    this.DeFiat = new this.web3.eth.Contract(
+      DeFiatToken as AbiItem[],
+      Addresses.DeFiat[networkId]
+    );
+    this.Points = new this.web3.eth.Contract(
+      DeFiatPoints as AbiItem[],
+      Addresses.Points[networkId]
+    );
+    this.Governance = new this.web3.eth.Contract(
+      DeFiatGovernance as AbiItem[],
+      Addresses.Governance[networkId]
+    );
+    this.Second = new this.web3.eth.Contract(
+      SecondChanceToken as AbiItem[],
+      Addresses.Second[networkId]
+    );
+    this.RugSanctuary = new this.web3.eth.Contract(
+      RugSanctuaryPool as AbiItem[],
+      Addresses.RugSanctuary[networkId]
+    );
+    this.Oracle = new this.web3.eth.Contract(
+      UniswapOracle as AbiItem[],
+      Addresses.Oracle[networkId]
+    );
     // this.anystake = new this.web3.eth.Contract(WETHAbi)
 
     // this.setProvider(provider, networkId)
-    this.setDefaultAccount(this.web3.eth.defaultAccount!)
+    this.setDefaultAccount(this.web3.eth.defaultAccount!);
   }
 
-  setProvider(provider:any, networkId:number) {
-    const setProvider = (contract:Contract, address:string) => {
+  setProvider(provider: any, networkId: number) {
+    const setProvider = (contract: Contract, address: string) => {
       // contract.setProvider(provider)
       if (address) {
         contract.options.address = address;
       } else {
-        console.error('Contract address not found in network', networkId)
+        console.error("Contract address not found in network", networkId);
       }
-    }
+    };
 
-    setProvider(this.DeFiat, Addresses.DeFiat[networkId])
-    setProvider(this.Points, Addresses.Points[networkId])
-    setProvider(this.Governance, Addresses.Governance[networkId])
-    setProvider(this.Second, Addresses.Second[networkId])
-    setProvider(this.RugSanctuary, Addresses.RugSanctuary[networkId])
+    setProvider(this.DeFiat, Addresses.DeFiat[networkId]);
+    setProvider(this.Points, Addresses.Points[networkId]);
+    setProvider(this.Governance, Addresses.Governance[networkId]);
+    setProvider(this.Second, Addresses.Second[networkId]);
+    setProvider(this.RugSanctuary, Addresses.RugSanctuary[networkId]);
   }
 
-  setDefaultAccount(account:string) {
-    this.DeFiat.options.from = account
-    this.Points.options.from = account
-    this.Governance.options.from = account
-    this.Second.options.from = account
-    this.RugSanctuary.options.from = account
+  setDefaultAccount(account: string) {
+    this.DeFiat.options.from = account;
+    this.Points.options.from = account;
+    this.Governance.options.from = account;
+    this.Second.options.from = account;
+    this.RugSanctuary.options.from = account;
     // this.anystake.options.from = account
   }
 

@@ -1,10 +1,10 @@
-import React from 'react'
-import DeFiat from '../../defiat'
+import React from "react";
+import DeFiat from "../../defiat";
 
 export interface IDeFiatContext {
-  dft?: DeFiat
+  dft?: DeFiat;
 }
 
 export const DeFiatContext = React.createContext<IDeFiatContext>({
-  dft: undefined
-})
+  dft: undefined,
+});

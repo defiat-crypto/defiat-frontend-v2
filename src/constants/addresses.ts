@@ -5,11 +5,11 @@ const Addresses: { [key:string]: { [networkId:number]: string }} = {
   },
   Points: {
     1: '0xde3e18ecb613498b9a1483af51394ec2259bcd0a',
-    4: '0x70c7d7856e1558210cfbf27b7f17853655752453'
+    4: '0xee650cdba51a1cfa7428a4e98bc801b09f16466a'
   },
   Governance: {
     1: '0x3Aa3303877A0D1c360a9FE2693AE9f31087A1381',
-    4: '0x064fd7d9c228e8a4a2bf247b432a34d6e1cb9442'
+    4: '0xfe521318261cac118981d532c0e8d3c2bf4c1dce'
   },
   Second: {
     1: '0x3084807D124442f21F63212577313de6feb44b47',
@@ -23,9 +23,25 @@ const Addresses: { [key:string]: { [networkId:number]: string }} = {
     1: '0x48937F2dd2b0BC8319b996E671978835e0c09685',
     4: '0xc01DF21d8268eEDB8E72eA6834192480bAB1BD29'
   },
+  DeFiatLp: {
+    1: '',
+    4: '0xF7426EAcb2b00398D4cefb3E24115c91821d6fB0'
+  },
+  PointsLp: {
+    1: '',
+    4: '0xCEBF1e6b266DCE1a32ac57Ee4C0e3100d3198e56'
+  },
   AnyStake: {
     1: '',
-    4: ''
+    4: '0x7c75A485F4eE40a3dde1CD773722e1886DAe6d69'
+  },
+  Regulator: {
+    1: '',
+    4: '0x048f71f079c29b6c2321141a7b5fbc595e6d9c7a'
+  },
+  Vault: {
+    1: '',
+    4: '0x565AA2A9dcf6DbE6Cf53683a4AE5bb99f5F6eCD1'
   },
   Oracle: {
     1: '0x3fc37DC74BA34b261f95EC44ED6756D6D4D98591',
@@ -34,6 +50,12 @@ const Addresses: { [key:string]: { [networkId:number]: string }} = {
   USDT: {
     1: '0xdac17f958d2ee523a2206206994597c13d831ec7',
     4: ''
+  },
+  EIGHT: {
+    4: '0xD5D087d31dDcc58c70d0441554dff9C9874c882F'
+  },
+  FEE: {
+    4: '0x549D392c89ee87C35A75808208b0C8F383AD8B01'
   },
   RUG: {
     4: '0xe0c7B3Ec3a986Ee518518294DB4193837bF481C2'

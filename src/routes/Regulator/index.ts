@@ -1,1 +1,1 @@
-export {Regulator} from './Regulator'
+export { Regulator } from "./Regulator";

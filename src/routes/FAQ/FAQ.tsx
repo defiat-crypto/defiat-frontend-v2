@@ -3,10 +3,10 @@ import React from "react";
 import { Flex } from "../../components/Flex";
 import { Header } from "../../components/Header";
 import { FAQCard } from "./components/FAQCard";
-import logo192 from '../../assets/img/logo192.png'
-import points256 from '../../assets/img/points256.png'
-import governance256 from '../../assets/img/governance256.png'
-import second256 from '../../assets/img/second256.png'
+import logo192 from "../../assets/img/logo192.png";
+import points256 from "../../assets/img/points256.png";
+import governance256 from "../../assets/img/governance256.png";
+import second256 from "../../assets/img/second256.png";
 
 export const FAQ = () => {
   return (
@@ -73,8 +73,8 @@ export const FAQ = () => {
           />
         </Grid>
         <Grid item>
-          <FAQCard 
-            question="What are DeFiat Services?" 
+          <FAQCard
+            question="What are DeFiat Services?"
             answer="DeFiat Services are Decentralized Apps built on top of the DeFiat network. 
               The core services that DeFiat aims to provide are Staking, 2nd Chance, and AnyStake.
               Each of these services use the elements of the DeFiat Ecosystem in a unique way to participate
@@ -90,15 +90,14 @@ export const FAQ = () => {
           />
         </Grid>
         <Grid item>
-          <FAQCard 
-            question="What is 2nd Chance (2ND)?" 
+          <FAQCard
+            question="What is 2nd Chance (2ND)?"
             answer="2nd Chance is a DeFiat Service that works to clean up the DeFi ecosystem! Users can deposit their tokens
               from projects that have rugged on their users to be rewarded with 2ND ERC-20 tokens. 2ND maintains a dynamic
               transaction fee and burn to maintain its price. Users who provide liquidity to 2ND can farm these transaction
-              fees in a staking pool, the Rug Sanctuary." 
-            endImage={second256}  
-            />
-            
+              fees in a staking pool, the Rug Sanctuary."
+            endImage={second256}
+          />
         </Grid>
         <Grid item>
           <FAQCard
@@ -117,8 +116,9 @@ export const FAQ = () => {
         </Grid>
       </Grid>
       <Flex mt={3} center>
-        <Typography variant="body1" align='center' color="textSecondary">
-          Please reach out to us through any of our communities if you have any additional questions!
+        <Typography variant="body1" align="center" color="textSecondary">
+          Please reach out to us through any of our communities if you have any
+          additional questions!
         </Typography>
       </Flex>
     </Box>

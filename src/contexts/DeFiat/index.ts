@@ -1,2 +1,2 @@
-export {default} from './DeFiatProvider'
-export {DeFiatContext} from './DeFiatContext'
+export { default } from "./DeFiatProvider";
+export { DeFiatContext } from "./DeFiatContext";

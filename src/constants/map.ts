@@ -1,22 +1,22 @@
-import Links from "./links"
+import Links from "./links";
 
-const SiteMap ={
+const SiteMap = {
   routes: [
     {
-      name: 'Home',
-      path: '/'
+      name: "Home",
+      path: "/",
     },
     {
-      name: 'FAQ',
-      path: '/faq'
+      name: "FAQ",
+      path: "/faq",
     },
     {
-      name: 'News',
-      path: '/news'
+      name: "News",
+      path: "/news",
     },
     {
-      name: 'Dashboard',
-      path: '/dashboard'
+      name: "Dashboard",
+      path: "/dashboard",
     },
     // {
     //   name: 'Staking',
@@ -25,23 +25,23 @@ const SiteMap ={
   ],
   services: [
     {
-      name: 'AnyStake',
-      path: '/staking'
+      name: "AnyStake",
+      path: "/staking",
     },
     {
-      name: '2ND Chance',
-      path: '/second'
+      name: "2ND Chance",
+      path: "/second",
     },
   ],
   external: [
     {
-      name: 'Trade DFT',
-      href: Links.uniswap
+      name: "Trade DFT",
+      href: Links.uniswap,
     },
     {
-      name: 'Chart DFT',
-      href: Links.chartex
-    }
+      name: "Chart DFT",
+      href: Links.chartex,
+    },
   ],
   footer: [
     // {
@@ -49,10 +49,10 @@ const SiteMap ={
     //   path: '/whitepaper'
     // },
     {
-      name: 'Legal',
-      path: '/legal'
-    }
-  ]
-} 
+      name: "Legal",
+      path: "/legal",
+    },
+  ],
+};
 
-export default SiteMap
+export default SiteMap;

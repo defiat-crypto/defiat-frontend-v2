@@ -1,7 +1,8 @@
-import { Box, Grid, Typography } from '@material-ui/core'
-import React from 'react'
-import { Flex } from '../components/Flex'
-import { SummaryCard } from './SummaryCard'
+import { Box, Grid, Typography } from "@material-ui/core";
+import { Flex } from "components/Flex";
+import React from "react";
+import { SummaryCard } from "./SummaryCard";
+import logo192 from "assets/img/logo192.png";
 
 export const Summary = () => {
   return (
@@ -14,7 +15,7 @@ export const Summary = () => {
           Total Value Locked
         </Typography>
       </Box>
-      
+
       <Grid container spacing={2}>
         <Grid item md={6}>
           <SummaryCard
@@ -23,7 +24,7 @@ export const Summary = () => {
             title="DFT Balance"
             color="info"
             tooltip="The total amount of DFT in your connected ERC20 wallet."
-            icon={require("assets/img/dft-logo.png")}
+            icon={logo192}
           />
         </Grid>
         <Grid item md={6}>
@@ -33,7 +34,7 @@ export const Summary = () => {
             title="Claimable Rewards"
             color="info"
             tooltip="The total amount of DFT in your connected ERC20 wallet."
-            icon={require("assets/img/dft-logo.png")}
+            icon={logo192}
           />
         </Grid>
         <Grid item md={6}>
@@ -43,7 +44,7 @@ export const Summary = () => {
             title="My Staked Liquidity Value"
             color="info"
             tooltip="The total amount of DFT in your connected ERC20 wallet."
-            icon={require("assets/img/eth-logo.png")}
+            icon={logo192}
           />
         </Grid>
         <Grid item md={6}>
@@ -53,10 +54,10 @@ export const Summary = () => {
             title="My Active AnyStakes"
             color="info"
             tooltip="The total amount of DFT in your connected ERC20 wallet."
-            icon={require("assets/img/spinner-solid.png")}
+            icon={logo192}
           />
         </Grid>
       </Grid>
     </Flex>
-  )
-}
+  );
+};

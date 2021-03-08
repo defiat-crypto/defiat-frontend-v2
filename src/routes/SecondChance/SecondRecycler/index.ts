@@ -1,1 +1,1 @@
-export {SecondRecycler} from './SecondRecycler'
+export { SecondRecycler } from "./SecondRecycler";

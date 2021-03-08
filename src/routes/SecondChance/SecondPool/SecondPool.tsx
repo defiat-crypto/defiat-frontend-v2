@@ -1,8 +1,7 @@
-import { Typography } from '@material-ui/core'
-import React from 'react'
-import { Web3ConnectView } from '../../../components/Web3ConnectView'
-import { SanctuaryPoolCard } from './components/SanctuaryPoolCard'
-import { SecondWrapper } from '../SecondWrapper'
+import { Typography } from "@material-ui/core";
+import { Web3ConnectView } from "../../../components/Web3ConnectView";
+import { SanctuaryPoolCard } from "./components/SanctuaryPoolCard";
+import { SecondWrapper } from "../SecondWrapper";
 
 export const SecondPool = () => {
   return (
@@ -10,11 +9,11 @@ export const SecondPool = () => {
       <SecondWrapper
         children={[
           <SanctuaryPoolCard key={0} />,
-          <Typography key={1} variant="body1"  align="center">
+          <Typography key={1} variant="body1" align="center">
             * 10% Unstaking Fee, which is added as liquidity to Uniswap
-          </Typography>
+          </Typography>,
         ]}
       />
     </Web3ConnectView>
-  )
-}
+  );
+};
