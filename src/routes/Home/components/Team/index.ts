@@ -1,1 +1,1 @@
-export {Team} from './Team'
+export { Team } from "./Team";

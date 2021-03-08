@@ -1,27 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useHistory } from "react-router-dom";
 import { Box, Button, Typography } from "@material-ui/core";
 import { Flex } from "components/Flex";
 import { Card } from "components/Card";
 import { StakingPool } from "constants/pools";
+import { usePoolCard } from "hooks/usePoolCard";
 
 interface PoolCardProps {
   pool: StakingPool;
 }
 
 export const PoolCard: React.FC<PoolCardProps> = ({ pool }) => {
-  const { id, logo, name, symbol, address, decimals } = pool;
-
   const history = useHistory();
-  const [poolApr, setPoolApr] = useState((0).toFixed(2));
-
-  // const totalStaked = "1,000 " + stakedSymbol;
-
-  const [isOpen, setOpen] = useState(false);
-  function toggle() {
-    setOpen(!isOpen);
-    return;
-  }
+  const { pid, logo, name, symbol, address, decimals } = pool;
+  const { data } = usePoolCard(pid);
 
   return (
     <Card>
@@ -41,7 +33,7 @@ export const PoolCard: React.FC<PoolCardProps> = ({ pool }) => {
       <Flex justify="space-around" my={2}>
         <Box>
           <Typography variant="h5" align="center">
-            <b>1,000.00</b>
+            <b>{data ? data.totalStaked : "0.00"}</b>
           </Typography>
           <Typography variant="subtitle2" align="center">
             Total Staked
@@ -49,32 +41,18 @@ export const PoolCard: React.FC<PoolCardProps> = ({ pool }) => {
         </Box>
         <Box>
           <Typography variant="h5" align="center">
-            <b>100%</b>
+            <b>{data ? `${data.apr}%` : "0%"}</b>
           </Typography>
           <Typography variant="subtitle2" align="center">
             APR
           </Typography>
         </Box>
       </Flex>
-      {/* {isPoolClosed && <h3 className="mb-1">Pool is Closed</h3>} */}
-      {/* <Collapse isOpen={isOpen}>
-            <div className="mt-2 mb-2">
-              {!isPoolClosed && <DisplayRow title="Total Staked:" value={totalStaked} />}
-
-              <DisplayRow title="Pool Opens:" value={poolOpen} />
-              <DisplayRow title="Pool Closes:" value={poolClose} />
-
-              <DisplayRow title="Entry Fee:" value={poolFee} />
-
-              {!isPoolClosed && <DisplayRow title="APR:" value={poolApr + "%"} />}
-            </div>
-          </Collapse> */}
       <Button
-        onClick={() => history.push(`/dashboard/staking/${id}`)}
+        onClick={() => history.push(`/staking/${pid}`)}
         color="primary"
         variant="contained"
         fullWidth
-        // disabled={!isPoolOpen || poolMetrics.rewards === 0}
       >
         Go To Pool
       </Button>

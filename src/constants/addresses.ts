@@ -49,7 +49,7 @@ const Addresses: { [key: string]: { [networkId: number]: string } } = {
   },
   USDT: {
     1: "0xdac17f958d2ee523a2206206994597c13d831ec7",
-    4: "",
+    4: "0x3B00Ef435fA4FcFF5C209a37d1f3dcff37c705aD",
   },
   EIGHT: {
     4: "0xD5D087d31dDcc58c70d0441554dff9C9874c882F",

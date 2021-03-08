@@ -1,10 +1,10 @@
-import { Grid, Table, TableBody, TableHead } from '@material-ui/core'
-import React from 'react'
-import { Display } from '../../../../components/Display'
-import { Flex } from '../../../../components/Flex'
-import { Header } from '../../../../components/Header'
-import { TokenomicsGraph } from './TokenomicsGraph'
-import { TokenomicsTableRow } from './TokenomicsTableRow'
+import { Grid, Table, TableBody, TableHead } from "@material-ui/core";
+import React from "react";
+import { Display } from "components/Display";
+import { Flex } from "components/Flex";
+import { Header } from "components/Header";
+import { TokenomicsGraph } from "./TokenomicsGraph";
+import { TokenomicsTableRow } from "./TokenomicsTableRow";
 
 export const Tokenomics = () => {
   return (
@@ -14,7 +14,7 @@ export const Tokenomics = () => {
         subtitle="Distributed to promote Long-Term Growth & Sustainability"
         align="center"
       />
-      <Grid container spacing={3} alignItems='center' justify='center'>
+      <Grid container spacing={3} alignItems="center" justify="center">
         <Grid item xs={12} md={5}>
           <Flex center>
             <TokenomicsGraph />
@@ -72,5 +72,5 @@ export const Tokenomics = () => {
         </Grid>
       </Grid>
     </Display>
-  )
-}
+  );
+};

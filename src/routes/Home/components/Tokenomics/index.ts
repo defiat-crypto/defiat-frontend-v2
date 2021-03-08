@@ -1,1 +1,1 @@
-export {Tokenomics} from './Tokenomics'
+export { Tokenomics } from "./Tokenomics";

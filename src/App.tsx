@@ -6,9 +6,10 @@ import { UseWalletProvider } from "use-wallet";
 import ModalProvider from "./contexts/Modal";
 import DeFiatProvider from "./contexts/DeFiat";
 import { SnackbarProvider } from "notistack";
+import { isTestnet } from "utils";
 
 const App = () => {
-  const chainId = !window.location.href.includes("rinkeby") ? 1 : 4;
+  const chainId = isTestnet() ? 4 : 1;
 
   return (
     <UseWalletProvider

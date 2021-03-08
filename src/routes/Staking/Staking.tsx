@@ -1,12 +1,10 @@
-import React from "react";
-import { Display } from "../../components/Display";
+import { Display } from "components/Display";
 import anystakeBrand from "assets/img/anystakeBrand.png";
 import { Box, makeStyles, Typography } from "@material-ui/core";
-import { SocialMediaButtons } from "../../components/SocialMediaButtons";
-import { isLocalhost, isTestnet } from "utils";
-import { HorizontalImage } from "components/HorizontalImage";
+import { SocialMediaButtons } from "components/SocialMediaButtons";
+import { isTestnet } from "utils";
 import { Flex } from "components/Flex";
-import { Summary } from "./components/Summary";
+import { StakingSummary } from "./components/StakingSummary";
 import { PoolList } from "./components/PoolList";
 
 const useStyles = makeStyles((theme) => ({
@@ -35,7 +33,7 @@ export const Staking = () => {
               alt="anystake-brand"
             />
           </Flex>
-          <Summary />
+          <StakingSummary />
           <PoolList />
         </Box>
       ) : (

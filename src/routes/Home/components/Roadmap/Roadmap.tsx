@@ -1,8 +1,6 @@
-import { Typography } from "@material-ui/core";
 import { Timeline } from "@material-ui/lab";
-import React from "react";
-import { Flex } from "../../../../components/Flex";
-import { Header } from "../../../../components/Header";
+import { Flex } from "components/Flex";
+import { Header } from "components/Header";
 import { RoadmapItem } from "./RoadmapItem";
 
 export const Roadmap = () => {

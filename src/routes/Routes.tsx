@@ -45,7 +45,7 @@ export const Routes = () => {
           <Route path="/regulator" component={Regulator} />
           <Route path="/second/pool" component={SecondPool} />
           <Route path="/second" component={SecondRecycler} />
-          <Route path="/staking/:id" component={Pool} />
+          <Route path="/staking/:pid" component={Pool} />
           <Route path="/staking" component={Staking} />
           <Route component={NoMatch} />
         </Switch>

@@ -1,4 +1,3 @@
-import React from "react";
 import { Flex } from "../../components/Flex";
 import { Splash } from "./components/Splash";
 import { Ecosystem } from "./components/Ecosystem";

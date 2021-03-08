@@ -1,1 +1,1 @@
-export {Ecosystem} from './Ecosystem'
+export { Ecosystem } from "./Ecosystem";

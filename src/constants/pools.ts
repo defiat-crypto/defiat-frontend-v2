@@ -4,7 +4,7 @@ import eightLogo from "assets/img/8ball.png";
 import feeLogo from "assets/img/1fee.png";
 
 export interface StakingPool {
-  id: number;
+  pid: number;
   logo: string;
   name: string;
   symbol: string;
@@ -15,7 +15,7 @@ export interface StakingPool {
 export const Pools = {
   1: [
     {
-      id: 0,
+      pid: 0,
       logo: tokenLogo,
       name: "DeFiat Liquidity",
       symbol: "DFT/ETH LP",
@@ -23,7 +23,7 @@ export const Pools = {
       decimals: 18,
     },
     {
-      id: 1,
+      pid: 1,
       logo: pointsLogo,
       name: "DeFiat Points v2 Liquidity",
       symbol: "DFTPv2/ETH LP",
@@ -33,7 +33,7 @@ export const Pools = {
   ],
   4: [
     {
-      id: 0,
+      pid: 0,
       logo: tokenLogo,
       name: "DeFiat Liquidity",
       symbol: "DFT/ETH LP",
@@ -41,7 +41,7 @@ export const Pools = {
       decimals: 18,
     },
     {
-      id: 1,
+      pid: 1,
       logo: pointsLogo,
       name: "DeFiat Points v2 Liquidity",
       symbol: "DFTPv2/ETH LP",
@@ -49,7 +49,7 @@ export const Pools = {
       decimals: 18,
     },
     {
-      id: 2,
+      pid: 2,
       logo: eightLogo,
       name: "8 Ball Token",
       symbol: "8BALL",
@@ -57,7 +57,7 @@ export const Pools = {
       decimals: 8,
     },
     {
-      id: 3,
+      pid: 3,
       logo: feeLogo,
       name: "1% Fee Token",
       symbol: "1FEE",

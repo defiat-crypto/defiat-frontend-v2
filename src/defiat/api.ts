@@ -233,35 +233,86 @@ export const pendingPool = async (RugSanctuary: Contract, account: string) => {
 
 // AnyStake
 
-export const claimAnyStake = async (AnyStake: Contract, account: string) => {};
+export const claimAnyStake = async (
+  AnyStake: Contract,
+  account: string,
+  pid: number
+) => {
+  return await AnyStake.methods
+    .claim(pid)
+    .send({ from: account })
+    .on("transactionHash", (tx: TransactionReceipt) => {
+      debug(tx);
+      return tx.transactionHash;
+    });
+};
 
 export const depositAnyStake = async (
   AnyStake: Contract,
   account: string,
+  pid: number,
   amount: string
-) => {};
+) => {
+  return await AnyStake.methods
+    .deposit(pid, amount)
+    .send({ from: account })
+    .on("transactionHash", (tx: TransactionReceipt) => {
+      debug(tx);
+      return tx.transactionHash;
+    });
+};
 
 export const withdrawAnyStake = async (
   AnyStake: Contract,
   account: string,
+  pid: number,
   amount: string
-) => {};
+) => {
+  return await AnyStake.methods
+    .withdraw(pid, amount)
+    .send({ from: account })
+    .on("transactionHash", (tx: TransactionReceipt) => {
+      debug(tx);
+      return tx.transactionHash;
+    });
+};
 
 // Regulator
 
-export const claimRegulator = async (
-  Regulator: Contract,
-  account: string
-) => {};
+export const claimRegulator = async (Regulator: Contract, account: string) => {
+  return await Regulator.methods
+    .claim()
+    .send({ from: account })
+    .on("transactionHash", (tx: TransactionReceipt) => {
+      debug(tx);
+      return tx.transactionHash;
+    });
+};
 
 export const depositRegulator = async (
   Regulator: Contract,
   account: string,
   amount: string
-) => {};
+) => {
+  return await Regulator.methods
+    .deposit(amount)
+    .send({ from: account })
+    .on("transactionHash", (tx: TransactionReceipt) => {
+      debug(tx);
+      return tx.transactionHash;
+    });
+};
 
 export const withdrawRegulator = async (
   Regulator: Contract,
   account: string,
   amount: string
-) => {};
+) => {
+  return await Regulator.methods
+    .withdraw(amount)
+    .send({ from: account })
+    .on("transactionHash", (tx: TransactionReceipt) => {
+      debug(tx);
+      return tx.transactionHash;
+    });
+};

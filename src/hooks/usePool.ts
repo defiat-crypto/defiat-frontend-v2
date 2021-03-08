@@ -1,3 +1,4 @@
+import { BigNumber } from "@ethersproject/bignumber";
 import {
   claimAnyStake,
   depositAnyStake,
@@ -10,9 +11,15 @@ import { provider } from "web3-core";
 import { useBlock } from "./useBlock";
 import { useDeFiat } from "./useDeFiat";
 
-interface StakingPoolData {}
+interface StakingPoolData {
+  totalValueStaked: BigNumber;
+  totalStaked: BigNumber;
+  tokenPrice: BigNumber;
+  pendingRewards: BigNumber;
+  stakedTokens: BigNumber;
+}
 
-export const usePool = () => {
+export const usePool = (pid: number) => {
   const [data, setData] = useState<StakingPoolData>();
 
   const {
@@ -24,22 +31,25 @@ export const usePool = () => {
 
   const AnyStake = useMemo(() => getAnyStakeContract(DeFiat), [DeFiat]);
 
-  const handleClaim = useCallback(async () => {
-    const txHash = await claimAnyStake(AnyStake, account);
-    return txHash;
-  }, [account, AnyStake]);
+  const handleClaim = useCallback(
+    async (pid: number) => {
+      const txHash = await claimAnyStake(AnyStake, account, pid);
+      return txHash;
+    },
+    [account, AnyStake]
+  );
 
   const handleDeposit = useCallback(
-    async (deposit: string) => {
-      const txHash = await depositAnyStake(AnyStake, account, deposit);
+    async (amount: string) => {
+      const txHash = await depositAnyStake(AnyStake, account, pid, amount);
       return txHash;
     },
     [account, AnyStake]
   );
 
   const handleWithdraw = useCallback(
-    async (withdraw: string) => {
-      const txHash = await withdrawAnyStake(AnyStake, account, withdraw);
+    async (amount: string) => {
+      const txHash = await withdrawAnyStake(AnyStake, account, pid, amount);
       return txHash;
     },
     [account, AnyStake]
