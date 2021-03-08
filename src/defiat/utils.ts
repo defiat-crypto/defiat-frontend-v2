@@ -16,6 +16,14 @@ export const getRugSanctuaryAddress = (DeFiat?: DeFiat) => {
   return DeFiat && DeFiat.RugSanctuaryAddress;
 };
 
+export const getAnyStakeAddress = (DeFiat?: DeFiat) => {
+  return DeFiat && DeFiat.AnyStakeAddress;
+};
+
+export const getRegulatorAddress = (DeFiat?: DeFiat) => {
+  return DeFiat && DeFiat.RegulatorAddress;
+};
+
 export const getDeFiatContract = (DeFiat?: DeFiat) => {
   return DeFiat && DeFiat.contracts && DeFiat.contracts.DeFiat;
 };
@@ -38,4 +46,16 @@ export const getRugSanctuaryContract = (DeFiat?: DeFiat) => {
 
 export const getOracle = (DeFiat?: DeFiat) => {
   return DeFiat && DeFiat.contracts && DeFiat.contracts.Oracle;
+};
+
+export const getAnyStakeContract = (DeFiat?: DeFiat) => {
+  return DeFiat && DeFiat.contracts && DeFiat.contracts.AnyStake;
+};
+
+export const getRegulatorContract = (DeFiat?: DeFiat) => {
+  return DeFiat && DeFiat.contracts && DeFiat.contracts.Regulator;
+};
+
+export const getVaultContract = (DeFiat?: DeFiat) => {
+  return DeFiat && DeFiat.contracts && DeFiat.contracts.Vault;
 };

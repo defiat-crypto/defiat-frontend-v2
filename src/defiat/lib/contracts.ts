@@ -25,6 +25,9 @@ export class Contracts {
   Second: Contract;
   RugSanctuary: Contract;
   Oracle: Contract;
+  AnyStake: Contract;
+  Regulator: Contract;
+  Vault: Contract;
 
   constructor(provider: any, networkId: number, web3: Web3, options: any) {
     this.web3 = web3;
@@ -59,7 +62,18 @@ export class Contracts {
       UniswapOracle as AbiItem[],
       Addresses.Oracle[networkId]
     );
-    // this.anystake = new this.web3.eth.Contract(WETHAbi)
+    this.AnyStake = new this.web3.eth.Contract(
+      UniswapOracle as AbiItem[],
+      Addresses.AnyStake[networkId]
+    );
+    this.Regulator = new this.web3.eth.Contract(
+      UniswapOracle as AbiItem[],
+      Addresses.Regulator[networkId]
+    );
+    this.Vault = new this.web3.eth.Contract(
+      UniswapOracle as AbiItem[],
+      Addresses.Vault[networkId]
+    );
 
     // this.setProvider(provider, networkId)
     this.setDefaultAccount(this.web3.eth.defaultAccount!);
@@ -80,6 +94,10 @@ export class Contracts {
     setProvider(this.Governance, Addresses.Governance[networkId]);
     setProvider(this.Second, Addresses.Second[networkId]);
     setProvider(this.RugSanctuary, Addresses.RugSanctuary[networkId]);
+    setProvider(this.Oracle, Addresses.Second[networkId]);
+    setProvider(this.AnyStake, Addresses.RugSanctuary[networkId]);
+    setProvider(this.Regulator, Addresses.Second[networkId]);
+    setProvider(this.Vault, Addresses.RugSanctuary[networkId]);
   }
 
   setDefaultAccount(account: string) {
@@ -88,7 +106,10 @@ export class Contracts {
     this.Governance.options.from = account;
     this.Second.options.from = account;
     this.RugSanctuary.options.from = account;
-    // this.anystake.options.from = account
+    this.Oracle.options.from = account;
+    this.AnyStake.options.from = account;
+    this.Regulator.options.from = account;
+    this.Vault.options.from = account;
   }
 
   // async callContractFunction(method, options) {

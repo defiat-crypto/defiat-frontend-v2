@@ -6,21 +6,11 @@ import { useDashboard } from "../../../hooks/useDashboard";
 
 const useStyles = makeStyles((theme) => ({
   card: {
-    // [theme.breakpoints.up('lg')]: {
-
-    // }
-    // flex: '1'
-    // maxHeight: '380px'height: '128px'
     [theme.breakpoints.up("md")]: {
       height: "432px",
     },
   },
   graph: {
-    // [theme.breakpoints.up('lg')]: {
-
-    // }
-    // flex: '1'
-    // maxHeight: '380px'height: '128px'
     [theme.breakpoints.up("md")]: {
       height: "380px",
     },
@@ -40,7 +30,16 @@ export const DashboardGraphCard = () => {
       gradient.addColorStop(1, theme.palette.background.paper);
 
       return {
-        labels: ["Sept 20", "Oct 20", "Nov 20", "Dec 20", "Jan 21", "Feb 21"], //events ? events.map((_, i) => i.toString()) : [],
+        labels: [
+          "Sept 20",
+          "Oct 20",
+          "Nov 20",
+          "Dec 20",
+          "Jan 21",
+          "Feb 21",
+          "Mar 21",
+          "",
+        ], //events ? events.map((_, i) => i.toString()) : [],
         datasets: [
           {
             label: "DFT Total Supply",

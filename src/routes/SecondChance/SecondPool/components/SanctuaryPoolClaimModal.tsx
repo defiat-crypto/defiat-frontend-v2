@@ -1,17 +1,17 @@
 import { Button, Typography } from "@material-ui/core";
 import React, { useCallback } from "react";
-import { Flex } from "../../../../components/Flex";
-import { Modal, ModalProps } from "../../../../components/Modal";
-import { useNotifications } from "../../../../hooks/useNotifications";
-import { usePool } from "../../../../hooks/usePool";
-import { getDisplayBalance } from "../../../../utils";
+import { Flex } from "components/Flex";
+import { Modal, ModalProps } from "components/Modal";
+import { useNotifications } from "hooks/useNotifications";
+import { useSecondPool } from "hooks/useSecondPool";
+import { getDisplayBalance } from "utils";
 
 export const SanctuaryPoolClaimModal: React.FC<ModalProps> = ({
   isOpen,
   onDismiss,
 }) => {
   const notify = useNotifications();
-  const { data, claim } = usePool();
+  const { data, claim } = useSecondPool();
 
   const handleClaim = useCallback(async () => {
     const txHash = await claim();

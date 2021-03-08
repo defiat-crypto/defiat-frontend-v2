@@ -1,16 +1,16 @@
 import React from "react";
-import { Card } from "../../../../components/Card";
-import { Flex } from "../../../../components/Flex";
-import sanctuary256 from "../../../../assets/img/sanctuary256.png";
+import { Card } from "components/Card";
+import { Flex } from "components/Flex";
+import sanctuary256 from "assets/img/sanctuary256.png";
 import { Button, Grid, makeStyles, Typography } from "@material-ui/core";
-import { Value } from "../../components/Value";
+import { Value } from "components/Value";
 import { LaunchRounded } from "@material-ui/icons";
-import { useModal } from "../../../../hooks/useModal";
+import { useModal } from "hooks/useModal";
 import { SanctuaryPoolModal } from "./SanctuaryPoolModal";
 import { SanctuaryPoolClaimModal } from "./SanctuaryPoolClaimModal";
-import Links from "../../../../constants/links";
-import { usePool } from "../../../../hooks/usePool";
-import { getDisplayBalance } from "../../../../utils";
+import Links from "constants/links";
+import { useSecondPool } from "hooks/useSecondPool";
+import { getDisplayBalance } from "utils";
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -22,7 +22,7 @@ export const SanctuaryPoolCard = () => {
   const classes = useStyles();
   const [onPresentStake] = useModal(<SanctuaryPoolModal />);
   const [onPresentClaim] = useModal(<SanctuaryPoolClaimModal />);
-  const { data } = usePool();
+  const { data } = useSecondPool();
 
   return (
     <Card style={{ minWidth: "256px" }}>

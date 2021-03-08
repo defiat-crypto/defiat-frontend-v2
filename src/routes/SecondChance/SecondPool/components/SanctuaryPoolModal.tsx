@@ -6,18 +6,14 @@ import {
   useTheme,
 } from "@material-ui/core";
 import React, { useCallback, useState } from "react";
-import { Flex } from "../../../../components/Flex";
-import { Modal, ModalProps } from "../../../../components/Modal";
-import {
-  BigNumber,
-  getRugSanctuaryAddress,
-  getSecondLpAddress,
-} from "../../../../defiat";
-import { useApprove } from "../../../../hooks/useApprove";
-import { useDeFiat } from "../../../../hooks/useDeFiat";
-import { useNotifications } from "../../../../hooks/useNotifications";
-import { usePool } from "../../../../hooks/usePool";
-import { getDisplayBalance, getFullDisplayBalance } from "../../../../utils";
+import { Flex } from "components/Flex";
+import { Modal, ModalProps } from "components/Modal";
+import { BigNumber, getRugSanctuaryAddress, getSecondLpAddress } from "defiat";
+import { useApprove } from "hooks/useApprove";
+import { useDeFiat } from "hooks/useDeFiat";
+import { useNotifications } from "hooks/useNotifications";
+import { useSecondPool } from "hooks/useSecondPool";
+import { getDisplayBalance, getFullDisplayBalance } from "utils";
 
 export const SanctuaryPoolModal: React.FC<ModalProps> = ({
   isOpen,
@@ -26,7 +22,7 @@ export const SanctuaryPoolModal: React.FC<ModalProps> = ({
   const notify = useNotifications();
   const theme = useTheme();
   const DeFiat = useDeFiat();
-  const { data, deposit, withdraw } = usePool();
+  const { data, deposit, withdraw } = useSecondPool();
   const { approve, allowance } = useApprove(
     getSecondLpAddress(DeFiat),
     getRugSanctuaryAddress(DeFiat)

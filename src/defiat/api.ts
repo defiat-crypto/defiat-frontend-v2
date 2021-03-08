@@ -32,7 +32,7 @@ export const getSupplyBurndown = async (
 ) => {
   try {
     const earliestBlock = 10749554;
-    const dataPoints = 6;
+    const dataPoints = 8;
 
     const supplyBurndown = await DeFiat.getPastEvents("Transfer", {
       fromBlock: earliestBlock,

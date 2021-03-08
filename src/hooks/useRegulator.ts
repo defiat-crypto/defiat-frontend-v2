@@ -1,8 +1,9 @@
+import BigNumber from "bignumber.js";
 import {
-  claimAnyStake,
-  depositAnyStake,
-  getAnyStakeContract,
-  withdrawAnyStake,
+  claimRegulator,
+  depositRegulator,
+  getRegulatorContract,
+  withdrawRegulator,
 } from "defiat";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useWallet } from "use-wallet";
@@ -10,10 +11,17 @@ import { provider } from "web3-core";
 import { useBlock } from "./useBlock";
 import { useDeFiat } from "./useDeFiat";
 
-interface StakingPoolData {}
+interface RegulatorData {
+  pointsPrice: BigNumber;
+  tokenPrice: BigNumber;
+  peg: string;
+  pendingRewards: BigNumber;
+  tokenBalance: BigNumber;
+  stakedBalance: BigNumber;
+}
 
-export const usePool = () => {
-  const [data, setData] = useState<StakingPoolData>();
+export const useRegulator = () => {
+  const [data, setData] = useState<RegulatorData>();
 
   const {
     account,
@@ -22,27 +30,27 @@ export const usePool = () => {
   const block = useBlock();
   const DeFiat = useDeFiat();
 
-  const AnyStake = useMemo(() => getAnyStakeContract(DeFiat), [DeFiat]);
+  const Regulator = useMemo(() => getRegulatorContract(DeFiat), [DeFiat]);
 
   const handleClaim = useCallback(async () => {
-    const txHash = await claimAnyStake(AnyStake, account);
+    const txHash = await claimRegulator(Regulator, account);
     return txHash;
-  }, [account, AnyStake]);
+  }, [account, Regulator]);
 
   const handleDeposit = useCallback(
     async (deposit: string) => {
-      const txHash = await depositAnyStake(AnyStake, account, deposit);
+      const txHash = await depositRegulator(Regulator, account, deposit);
       return txHash;
     },
-    [account, AnyStake]
+    [account, Regulator]
   );
 
   const handleWithdraw = useCallback(
     async (withdraw: string) => {
-      const txHash = await withdrawAnyStake(AnyStake, account, withdraw);
+      const txHash = await withdrawRegulator(Regulator, account, withdraw);
       return txHash;
     },
-    [account, AnyStake]
+    [account, Regulator]
   );
 
   const getData = useCallback(async () => {

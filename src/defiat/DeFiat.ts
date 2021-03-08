@@ -16,7 +16,9 @@ export class DeFiat {
   RugSanctuaryAddress: string;
   OracleAddress: string;
   TetherAddress: string;
-  // anystakeAddress:string
+  AnyStakeAddress: string;
+  RegulatorAddress: string;
+  VaultAddress: string;
 
   constructor(provider: provider, networkId: number, options?: any) {
     var realProvider: any;
@@ -52,6 +54,9 @@ export class DeFiat {
     this.RugSanctuaryAddress = Addresses.RugSanctuary[networkId];
     this.OracleAddress = Addresses.Oracle[networkId];
     this.TetherAddress = Addresses.USDT[networkId];
+    this.AnyStakeAddress = Addresses.AnyStake[networkId];
+    this.RegulatorAddress = Addresses.Regulator[networkId];
+    this.VaultAddress = Addresses.Vault[networkId];
   }
 
   addAccount(address: string) {
