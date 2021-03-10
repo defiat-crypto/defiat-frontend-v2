@@ -2,11 +2,13 @@ import BigNumber from "bignumber.js";
 import {
   claimRegulator,
   depositRegulator,
+  getPointsAddress,
   getRegulatorContract,
   withdrawRegulator,
 } from "defiat";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useWallet } from "use-wallet";
+import { getBalance } from "utils";
 import { provider } from "web3-core";
 import { useBlock } from "./useBlock";
 import { useDeFiat } from "./useDeFiat";
@@ -57,7 +59,9 @@ export const useRegulator = () => {
 
   const getData = useCallback(async () => {
     // const userInfo = await getRegulatorInfo()
-    const values = await Promise.all([]);
+    const values = await Promise.all([
+      getBalance(getPointsAddress(DeFiat), account, ethereum),
+    ]);
 
     if (values) {
       // setData({

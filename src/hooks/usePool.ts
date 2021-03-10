@@ -17,6 +17,7 @@ interface StakingPoolData {
   tokenPrice: string;
   pendingRewards: string;
   stakedBalance: string;
+  tokenBalance: string;
 }
 
 export const usePool = (pid: number) => {
@@ -44,7 +45,7 @@ export const usePool = (pid: number) => {
       const txHash = await depositAnyStake(AnyStake, account, pid, amount);
       return txHash;
     },
-    [account, AnyStake]
+    [account, AnyStake, pid]
   );
 
   const handleWithdraw = useCallback(
@@ -52,7 +53,7 @@ export const usePool = (pid: number) => {
       const txHash = await withdrawAnyStake(AnyStake, account, pid, amount);
       return txHash;
     },
-    [account, AnyStake]
+    [account, AnyStake, pid]
   );
 
   const getData = useCallback(async () => {

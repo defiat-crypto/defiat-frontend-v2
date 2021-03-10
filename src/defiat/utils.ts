@@ -1,5 +1,9 @@
 import { DeFiat } from "./DeFiat";
 
+export const getPointsAddress = (DeFiat?: DeFiat) => {
+  return DeFiat && DeFiat.PointsAddress;
+};
+
 export const getSecondAddress = (DeFiat?: DeFiat) => {
   return DeFiat && DeFiat.SecondAddress;
 };

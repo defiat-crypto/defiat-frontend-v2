@@ -2,15 +2,21 @@ import { Button, Grid, Typography } from "@material-ui/core";
 import { LaunchRounded } from "@material-ui/icons";
 import { Card } from "components/Card";
 import { Pools } from "constants/pools";
+import { useModal } from "hooks/useModal";
 import { usePool } from "hooks/usePool";
 import { useParams } from "react-router";
 import { useWallet } from "use-wallet";
+import { PoolClaimModal } from "./PoolClaimModal";
+import { PoolStakeModal } from "./PoolStakeModal";
 
 export const PoolCard = () => {
   const { chainId } = useWallet();
   const { pid } = useParams<{ pid: string }>();
   const { logo, name, symbol, address } = Pools[chainId][pid];
   const { data } = usePool(+pid);
+
+  const [onPresentStake] = useModal(<PoolStakeModal pid={+pid} />);
+  const [onPresentClaim] = useModal(<PoolClaimModal pid={+pid} />);
 
   return (
     <Card>
@@ -25,7 +31,7 @@ export const PoolCard = () => {
           <Button
             variant="contained"
             color="primary"
-            onClick={() => console.log}
+            onClick={onPresentClaim}
             fullWidth
           >
             Claim Rewards
@@ -41,7 +47,7 @@ export const PoolCard = () => {
           <Button
             variant="contained"
             color="primary"
-            onClick={() => console.log}
+            onClick={onPresentStake}
             fullWidth
           >
             Stake / Unstake

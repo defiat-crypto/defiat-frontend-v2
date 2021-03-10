@@ -1,10 +1,16 @@
 import { Button, Grid, Typography } from "@material-ui/core";
 import { LaunchRounded } from "@material-ui/icons";
 import { Card } from "components/Card";
+import { useModal } from "hooks/useModal";
 import { useRegulator } from "hooks/useRegulator";
+import { useCallback } from "react";
+import { RegulatorClaimModal } from "./RegulatorClaimModal";
+import { RegulatorStakeModal } from "./RegulatorStakeModal";
 
 export const RegulatorCard = () => {
   const { data } = useRegulator();
+  const [onPresentStake] = useModal(<RegulatorStakeModal />);
+  const [onPresentClaim] = useModal(<RegulatorClaimModal />);
 
   return (
     <Card>
@@ -19,7 +25,7 @@ export const RegulatorCard = () => {
           <Button
             variant="contained"
             color="primary"
-            onClick={() => console.log}
+            onClick={onPresentClaim}
             fullWidth
           >
             Claim Rewards
@@ -35,7 +41,7 @@ export const RegulatorCard = () => {
           <Button
             variant="contained"
             color="primary"
-            onClick={() => console.log}
+            onClick={onPresentStake}
             fullWidth
           >
             Stake / Unstake

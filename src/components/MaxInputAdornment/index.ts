@@ -1,0 +1,1 @@
+export { MaxInputAdornment } from "./MaxInputAdornment";
