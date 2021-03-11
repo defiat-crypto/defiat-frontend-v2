@@ -16,7 +16,7 @@ export const RegulatorSummary = () => {
     <Box>
       <Box pb={2}>
         <Typography variant="h4" align="center">
-          $<b>{data ? data.totalValueLocked : "0.00"}</b>
+          $<b>{data ? getDisplayBalance(data.totalValueLocked) : "0.00"}</b>
         </Typography>
         <Typography variant="subtitle2" align="center">
           Total Value Locked
@@ -35,7 +35,7 @@ export const RegulatorSummary = () => {
           </Grid>
           <Grid item xs={12} md={6}>
             <ValueCard
-              value={data ? data.totalLocked : "0.00"}
+              value={data ? getDisplayBalance(data.totalLocked) : "0.00"}
               name="Total DFTP Staked"
               endSymbol="DFTPv2"
               icon={points256}
@@ -44,7 +44,7 @@ export const RegulatorSummary = () => {
 
           <Grid item xs={12} md={6}>
             <ValueCard
-              value={data ? data.tokenPrice : "0.00"}
+              value={data ? getDisplayBalance(data.tokenPrice) : "0.00"}
               name="DFT Price"
               startSymbol="$"
               icon={logo192}
@@ -52,7 +52,7 @@ export const RegulatorSummary = () => {
           </Grid>
           <Grid item xs={12} md={6}>
             <ValueCard
-              value={data ? data.pointsPrice : "0.00"}
+              value={data ? getDisplayBalance(data.pointsPrice) : "0.00"}
               name="DFTPv2 Price"
               startSymbol="$"
               icon={points256}

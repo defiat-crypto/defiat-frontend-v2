@@ -57,7 +57,7 @@ export const PoolClaimModal: React.FC<PoolClaimModalProps> = ({
             <Typography variant="h5" align="right">
               <b>
                 {data
-                  ? getDisplayBalance(new BigNumber(data.pendingRewards))
+                  ? getDisplayBalance(data.pendingRewards, decimals)
                   : "0.00"}
               </b>
             </Typography>
@@ -72,7 +72,7 @@ export const PoolClaimModal: React.FC<PoolClaimModalProps> = ({
             color="primary"
             fullWidth
             onClick={handleClaim}
-            disabled={!data || new BigNumber(data.pendingRewards).eq(0)}
+            disabled={!data || data.pendingRewards.eq(0)}
           >
             Claim Rewards
           </Button>

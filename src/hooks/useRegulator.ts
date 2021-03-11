@@ -2,26 +2,33 @@ import BigNumber from "bignumber.js";
 import {
   claimRegulator,
   depositRegulator,
+  getOracle,
   getPointsAddress,
   getRegulatorContract,
+  getTokenPrice,
   withdrawRegulator,
+  totalStakedRegulator,
+  getDeFiatAddress,
+  multiplierRegulator,
+  stakedRegulator,
+  pendingRegulator,
 } from "defiat";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useWallet } from "use-wallet";
-import { getBalance } from "utils";
+import { getBalance, getDisplayBalance } from "utils";
 import { provider } from "web3-core";
 import { useBlock } from "./useBlock";
 import { useDeFiat } from "./useDeFiat";
 
 interface RegulatorData {
-  totalLocked: string;
-  totalValueLocked: string;
-  pointsPrice: string;
-  tokenPrice: string;
-  peg: string;
-  pendingRewards: string;
-  tokenBalance: string;
-  stakedBalance: string;
+  totalLocked: BigNumber;
+  totalValueLocked: BigNumber;
+  pointsPrice: BigNumber;
+  tokenPrice: BigNumber;
+  peg: number;
+  pendingRewards: BigNumber;
+  tokenBalance: BigNumber;
+  stakedBalance: BigNumber;
 }
 
 export const useRegulator = () => {
@@ -35,6 +42,7 @@ export const useRegulator = () => {
   const DeFiat = useDeFiat();
 
   const Regulator = useMemo(() => getRegulatorContract(DeFiat), [DeFiat]);
+  const Oracle = useMemo(() => getOracle(DeFiat), [DeFiat]);
 
   const handleClaim = useCallback(async () => {
     const txHash = await claimRegulator(Regulator, account);
@@ -58,16 +66,27 @@ export const useRegulator = () => {
   );
 
   const getData = useCallback(async () => {
-    // const userInfo = await getRegulatorInfo()
     const values = await Promise.all([
       getBalance(getPointsAddress(DeFiat), account, ethereum),
+      totalStakedRegulator(Regulator),
+      multiplierRegulator(Regulator),
+      stakedRegulator(Regulator, account),
+      pendingRegulator(Regulator, account),
+      getTokenPrice(Oracle, getPointsAddress(DeFiat)),
+      getTokenPrice(Oracle, getDeFiatAddress(DeFiat)),
     ]);
 
-    if (values) {
-      // setData({
-      // })
-    }
-  }, []);
+    setData({
+      totalLocked: values[1],
+      totalValueLocked: new BigNumber("0"),
+      pointsPrice: new BigNumber("0"),
+      tokenPrice: new BigNumber("0"),
+      tokenBalance: values[0],
+      peg: +values[2] / 1000,
+      pendingRewards: values[4],
+      stakedBalance: values[3],
+    });
+  }, [account, ethereum, DeFiat, Oracle, Regulator]);
 
   useEffect(() => {
     if (!!account && !!DeFiat) {

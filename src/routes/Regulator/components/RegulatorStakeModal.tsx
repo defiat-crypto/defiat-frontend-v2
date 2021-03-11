@@ -8,7 +8,7 @@ import { useDeFiat } from "hooks/useDeFiat";
 import { useNotifications } from "hooks/useNotifications";
 import { useRegulator } from "hooks/useRegulator";
 import React, { useCallback, useState } from "react";
-import { getFullDisplayBalance } from "utils";
+import { getDisplayBalance, getFullDisplayBalance } from "utils";
 
 export const RegulatorStakeModal: React.FC<ModalProps> = ({
   isOpen,
@@ -75,7 +75,7 @@ export const RegulatorStakeModal: React.FC<ModalProps> = ({
           <Typography variant="h5">Wallet Balance</Typography>
           <Flex align="flex-end">
             <Typography variant="h5" align="right">
-              <b>{data ? data.tokenBalance : "0.00"}</b>
+              <b>{data ? getDisplayBalance(data.tokenBalance) : "0.00"}</b>
             </Typography>
             <Typography variant="body1" align="right">
               &nbsp;DFTPv2
@@ -93,9 +93,7 @@ export const RegulatorStakeModal: React.FC<ModalProps> = ({
             endAdornment: (
               <MaxInputAdornment
                 onClick={() =>
-                  setDepositInput(
-                    getFullDisplayBalance(new BigNumber(data.tokenBalance))
-                  )
+                  setDepositInput(getFullDisplayBalance(data.tokenBalance))
                 }
               />
             ),
@@ -109,7 +107,7 @@ export const RegulatorStakeModal: React.FC<ModalProps> = ({
             onClick={handleDeposit}
             disabled={
               !data ||
-              new BigNumber(data.tokenBalance).eq(0) ||
+              data.tokenBalance.eq(0) ||
               !depositInput ||
               new BigNumber(depositInput).eq(0)
             }
@@ -124,7 +122,7 @@ export const RegulatorStakeModal: React.FC<ModalProps> = ({
           <Typography variant="h5">Staked Balance</Typography>
           <Flex align="flex-end">
             <Typography variant="h5" align="right">
-              <b>{data ? data.stakedBalance : "0.00"}</b>
+              <b>{data ? getDisplayBalance(data.stakedBalance) : "0.00"}</b>
             </Typography>
             <Typography variant="body1" align="right">
               &nbsp;DFTPv2
@@ -142,9 +140,7 @@ export const RegulatorStakeModal: React.FC<ModalProps> = ({
             endAdornment: (
               <MaxInputAdornment
                 onClick={() =>
-                  setDepositInput(
-                    getFullDisplayBalance(new BigNumber(data.stakedBalance))
-                  )
+                  setWithdrawInput(getFullDisplayBalance(data.stakedBalance))
                 }
               />
             ),
@@ -158,7 +154,7 @@ export const RegulatorStakeModal: React.FC<ModalProps> = ({
             onClick={handleWithdraw}
             disabled={
               !data ||
-              new BigNumber(data.stakedBalance).eq(0) ||
+              data.stakedBalance.eq(0) ||
               !withdrawInput ||
               new BigNumber(withdrawInput).eq(0)
             }

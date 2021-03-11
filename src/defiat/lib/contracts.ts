@@ -9,6 +9,9 @@ import DeFiatGovernance from "../../constants/abi/DeFiat_Gov.json";
 import SecondChanceToken from "../../constants/abi/SecondChance.json";
 import RugSanctuaryPool from "../../constants/abi/RugSanctuary.json";
 import UniswapOracle from "../../constants/abi/Uni_Price_v2.json";
+import AnyStakeAbi from "../../constants/abi/AnyStake.json";
+import RegulatorAbi from "../../constants/abi/AnyStakeRegulator.json";
+import VaultAbi from "../../constants/abi/AnyStakeVault.json";
 
 export class Contracts {
   web3: Web3;
@@ -63,15 +66,15 @@ export class Contracts {
       Addresses.Oracle[networkId]
     );
     this.AnyStake = new this.web3.eth.Contract(
-      UniswapOracle as AbiItem[],
+      AnyStakeAbi as AbiItem[],
       Addresses.AnyStake[networkId]
     );
     this.Regulator = new this.web3.eth.Contract(
-      UniswapOracle as AbiItem[],
+      RegulatorAbi as AbiItem[],
       Addresses.Regulator[networkId]
     );
     this.Vault = new this.web3.eth.Contract(
-      UniswapOracle as AbiItem[],
+      VaultAbi as AbiItem[],
       Addresses.Vault[networkId]
     );
 

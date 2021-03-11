@@ -6,13 +6,14 @@ import { useModal } from "hooks/useModal";
 import { usePool } from "hooks/usePool";
 import { useParams } from "react-router";
 import { useWallet } from "use-wallet";
+import { getDisplayBalance } from "utils";
 import { PoolClaimModal } from "./PoolClaimModal";
 import { PoolStakeModal } from "./PoolStakeModal";
 
 export const PoolCard = () => {
   const { chainId } = useWallet();
   const { pid } = useParams<{ pid: string }>();
-  const { logo, name, symbol, address } = Pools[chainId][pid];
+  const { address, symbol, decimals } = Pools[chainId][pid];
   const { data } = usePool(+pid);
 
   const [onPresentStake] = useModal(<PoolStakeModal pid={+pid} />);
@@ -23,7 +24,7 @@ export const PoolCard = () => {
       <Grid container spacing={2}>
         <Grid item md={6}>
           <Typography variant="h4" align="center">
-            <b>{data ? data.pendingRewards : "0.00"}</b>
+            <b>{data ? getDisplayBalance(data.pendingRewards) : "0.00"}</b>
           </Typography>
           <Typography variant="subtitle2" align="center" gutterBottom>
             Pending DFT Rewards
@@ -39,7 +40,9 @@ export const PoolCard = () => {
         </Grid>
         <Grid item md={6}>
           <Typography variant="h4" align="center">
-            <b>{data ? data.stakedBalance : "0.00"}</b>
+            <b>
+              {data ? getDisplayBalance(data.stakedBalance, decimals) : "0.00"}
+            </b>
           </Typography>
           <Typography variant="subtitle2" align="center" gutterBottom>
             Staked {symbol}
@@ -55,7 +58,18 @@ export const PoolCard = () => {
         </Grid>
 
         <Grid item xs={12}>
-          <Button variant="contained" endIcon={<LaunchRounded />} fullWidth>
+          <Button
+            variant="contained"
+            endIcon={<LaunchRounded />}
+            fullWidth
+            href={
+              +pid < 2
+                ? `https://uniswap.info/pair/${address}`
+                : `https://uniswap.info/token/${address}`
+            }
+            target="_blank"
+            rel="noopener,noreferrer"
+          >
             Get {symbol} on Uniswap
           </Button>
         </Grid>

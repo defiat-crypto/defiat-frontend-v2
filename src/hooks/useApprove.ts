@@ -5,7 +5,7 @@ import { approve, getAllowance } from "../utils/erc20";
 import { provider } from "web3-core";
 import { useBlock } from "./useBlock";
 
-export const useApprove = (tokenAddress?: string, spenderAddress?: string) => {
+export const useApprove = (tokenAddress: string, spenderAddress: string) => {
   const {
     account,
     ethereum,
@@ -30,13 +30,14 @@ export const useApprove = (tokenAddress?: string, spenderAddress?: string) => {
       ethereum,
       account
     );
+    console.log("ALLOWANCE", allowance.toString());
     if (allowance) {
       setAllowance(allowance);
     }
   }, [account, ethereum, tokenAddress, spenderAddress]);
 
   useEffect(() => {
-    if (!!account && !!ethereum && !!tokenAddress && !!spenderAddress) {
+    if (!!account && !!ethereum) {
       fetchAllowance();
     }
   }, [account, block, ethereum, tokenAddress, spenderAddress, fetchAllowance]);

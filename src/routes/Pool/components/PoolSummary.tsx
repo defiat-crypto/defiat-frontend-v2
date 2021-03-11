@@ -5,6 +5,7 @@ import { useParams } from "react-router";
 import { Pools } from "constants/pools";
 import { usePool } from "hooks/usePool";
 import { ValueCard } from "components/ValueCard";
+import { getDisplayBalance } from "utils";
 
 export const PoolSummary = () => {
   const { chainId } = useWallet();
@@ -17,7 +18,7 @@ export const PoolSummary = () => {
     <Box>
       <Box pb={2}>
         <Typography variant="h4" align="center">
-          $<b>{data ? data.totalValueLocked : "0.00"}</b>
+          $<b>{data ? getDisplayBalance(data.totalValueLocked) : "0.00"}</b>
         </Typography>
         <Typography variant="subtitle2" align="center">
           Total Value Locked
@@ -27,7 +28,7 @@ export const PoolSummary = () => {
       <Grid container spacing={2}>
         <Grid item md={6}>
           <ValueCard
-            value={data ? `${data.totalStaked}` : "0.00"}
+            value={data ? getDisplayBalance(data.totalLocked) : "0.00"}
             endSymbol={symbol}
             name="Total Tokens Staked"
             icon={anystake128}
@@ -35,7 +36,7 @@ export const PoolSummary = () => {
         </Grid>
         <Grid item md={6}>
           <ValueCard
-            value={data ? `${data.tokenPrice}` : `$0.00`}
+            value={data ? getDisplayBalance(data.tokenPrice) : `$0.00`}
             startSymbol="$"
             name={`${symbol} Price`}
             icon={logo}

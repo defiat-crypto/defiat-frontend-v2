@@ -10,7 +10,7 @@ import { useNotifications } from "hooks/useNotifications";
 import { usePool } from "hooks/usePool";
 import React, { useCallback, useState } from "react";
 import { useWallet } from "use-wallet";
-import { getFullDisplayBalance } from "utils";
+import { getDisplayBalance, getFullDisplayBalance } from "utils";
 
 interface PoolStakeModalProps extends ModalProps {
   pid: number;
@@ -46,7 +46,9 @@ export const PoolStakeModal: React.FC<PoolStakeModalProps> = ({
     }
 
     const txHash = await deposit(
-      new BigNumber(depositInput).times(1e18).toString()
+      new BigNumber(depositInput)
+        .times(new BigNumber(10).pow(decimals))
+        .toString()
     );
     if (!!txHash) {
       notify(`Deposited ${symbol} into AnyStake.`, "success", txHash);
@@ -57,11 +59,13 @@ export const PoolStakeModal: React.FC<PoolStakeModalProps> = ({
         "error"
       );
     }
-  }, [allowance, depositInput, symbol, approve, notify, deposit]);
+  }, [allowance, decimals, depositInput, symbol, approve, notify, deposit]);
 
   const handleWithdraw = useCallback(async () => {
     const txHash = await withdraw(
-      new BigNumber(withdrawInput).times(1e18).toString()
+      new BigNumber(withdrawInput)
+        .times(new BigNumber(10).pow(decimals))
+        .toString()
     );
     if (!!txHash) {
       notify(`Withdrew ${symbol} from AnyStake.`, "success", txHash);
@@ -72,7 +76,7 @@ export const PoolStakeModal: React.FC<PoolStakeModalProps> = ({
         "error"
       );
     }
-  }, [symbol, withdrawInput, notify, withdraw]);
+  }, [symbol, decimals, withdrawInput, notify, withdraw]);
 
   return (
     <Modal
@@ -85,7 +89,9 @@ export const PoolStakeModal: React.FC<PoolStakeModalProps> = ({
           <Typography variant="h5">Wallet Balance</Typography>
           <Flex align="flex-end">
             <Typography variant="h5" align="right">
-              <b>{data ? data.tokenBalance : "0.00"}</b>
+              <b>
+                {data ? getDisplayBalance(data.tokenBalance, decimals) : "0.00"}
+              </b>
             </Typography>
             <Typography variant="body1" align="right">
               &nbsp;{symbol}
@@ -104,10 +110,7 @@ export const PoolStakeModal: React.FC<PoolStakeModalProps> = ({
               <MaxInputAdornment
                 onClick={() =>
                   setDepositInput(
-                    getFullDisplayBalance(
-                      new BigNumber(data.tokenBalance),
-                      decimals
-                    )
+                    getFullDisplayBalance(data.tokenBalance, decimals)
                   )
                 }
               />
@@ -122,7 +125,7 @@ export const PoolStakeModal: React.FC<PoolStakeModalProps> = ({
             onClick={handleDeposit}
             disabled={
               !data ||
-              new BigNumber(data.tokenBalance).eq(0) ||
+              data.tokenBalance.eq(0) ||
               !depositInput ||
               new BigNumber(depositInput).eq(0)
             }
@@ -137,7 +140,11 @@ export const PoolStakeModal: React.FC<PoolStakeModalProps> = ({
           <Typography variant="h5">Staked Balance</Typography>
           <Flex align="flex-end">
             <Typography variant="h5" align="right">
-              <b>{data ? data.stakedBalance : "0.00"}</b>
+              <b>
+                {data
+                  ? getDisplayBalance(data.stakedBalance, decimals)
+                  : "0.00"}
+              </b>
             </Typography>
             <Typography variant="body1" align="right">
               &nbsp;{symbol}
@@ -155,11 +162,8 @@ export const PoolStakeModal: React.FC<PoolStakeModalProps> = ({
             endAdornment: (
               <MaxInputAdornment
                 onClick={() =>
-                  setDepositInput(
-                    getFullDisplayBalance(
-                      new BigNumber(data.stakedBalance),
-                      decimals
-                    )
+                  setWithdrawInput(
+                    getFullDisplayBalance(data.stakedBalance, decimals)
                   )
                 }
               />
@@ -174,7 +178,7 @@ export const PoolStakeModal: React.FC<PoolStakeModalProps> = ({
             onClick={handleWithdraw}
             disabled={
               !data ||
-              new BigNumber(data.stakedBalance).eq(0) ||
+              data.stakedBalance.eq(0) ||
               !withdrawInput ||
               new BigNumber(withdrawInput).eq(0)
             }
@@ -182,6 +186,14 @@ export const PoolStakeModal: React.FC<PoolStakeModalProps> = ({
             Unstake {symbol}
           </Button>
         </Flex>
+      </Flex>
+      <Flex mt={2} column>
+        <Typography variant="h6" gutterBottom align="center">
+          <b>Unstaking {symbol} incurs a 5% fee to buyback DFT</b>
+        </Typography>
+        <Typography align="center">
+          Staking / Unstaking automatically claim pending rewards
+        </Typography>
       </Flex>
     </Modal>
   );

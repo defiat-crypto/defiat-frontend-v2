@@ -1,3 +1,4 @@
+import { ImportsNotUsedAsValues } from "typescript";
 import { TransactionReceipt } from "web3-core";
 import { Contract } from "web3-eth-contract";
 import { BigNumber } from ".";
@@ -277,6 +278,43 @@ export const withdrawAnyStake = async (
     });
 };
 
+export const totalStakedAnyStake = async (AnyStake: Contract, pid: number) => {
+  try {
+    const result = await AnyStake.methods.poolInfo(pid).call();
+    return new BigNumber(result.totalStaked);
+  } catch (e) {
+    debug(e);
+    return new BigNumber(0);
+  }
+};
+
+export const stakedAnyStake = async (
+  AnyStake: Contract,
+  pid: number,
+  account: string
+) => {
+  try {
+    const result = await AnyStake.methods.userInfo(pid, account).call();
+    return new BigNumber(result.amount);
+  } catch (e) {
+    debug(e);
+    return new BigNumber("0");
+  }
+};
+
+export const pendingAnyStake = async (
+  RugSanctuary: Contract,
+  pid: number,
+  account: string
+) => {
+  try {
+    const result = await RugSanctuary.methods.pending(pid, account).call();
+    return new BigNumber(result);
+  } catch (e) {
+    return new BigNumber("0");
+  }
+};
+
 // Regulator
 
 export const claimRegulator = async (Regulator: Contract, account: string) => {
@@ -315,4 +353,54 @@ export const withdrawRegulator = async (
       debug(tx);
       return tx.transactionHash;
     });
+};
+
+export const totalStakedRegulator = async (Regulator: Contract) => {
+  try {
+    const result = await Regulator.methods.totalShares().call();
+    return new BigNumber(result);
+  } catch (e) {
+    debug(e);
+    return new BigNumber(0);
+  }
+};
+
+export const multiplierRegulator = async (Regulator: Contract) => {
+  try {
+    const result = await Regulator.methods.priceMultiplier().call();
+    return result;
+  } catch (e) {
+    debug(e);
+    return 0;
+  }
+};
+
+export const stakedRegulator = async (Regulator: Contract, account: string) => {
+  try {
+    const result = await Regulator.methods.userInfo(account).call();
+    return new BigNumber(result.amount);
+  } catch (e) {
+    debug(e);
+    return new BigNumber("0");
+  }
+};
+
+export const pendingRegulator = async (
+  Regulator: Contract,
+  account: string
+) => {
+  try {
+    // const result = await Regulator.methods.pending(account).call();
+    const values = await Promise.all([
+      Regulator.methods.userInfo(account).call(),
+      Regulator.methods.rewardsPerShare().call(),
+    ]);
+
+    return new BigNumber(values[0].amount)
+      .times(values[1])
+      .div(1e18)
+      .minus(values[0].rewardDebt);
+  } catch (e) {
+    return new BigNumber("0");
+  }
 };
