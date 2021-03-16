@@ -55,11 +55,7 @@ export const PoolClaimModal: React.FC<PoolClaimModalProps> = ({
           <Typography variant="h5">Pending Rewards</Typography>
           <Flex align="flex-end">
             <Typography variant="h5" align="right">
-              <b>
-                {data
-                  ? getDisplayBalance(data.pendingRewards, decimals)
-                  : "0.00"}
-              </b>
+              <b>{data ? getDisplayBalance(data.pendingRewards) : "0.00"}</b>
             </Typography>
             <Typography variant="body1" align="right">
               &nbsp;DFT
@@ -72,7 +68,7 @@ export const PoolClaimModal: React.FC<PoolClaimModalProps> = ({
             color="primary"
             fullWidth
             onClick={handleClaim}
-            disabled={!data || data.pendingRewards.eq(0)}
+            disabled={!data || data.stakedBalance.eq(0)}
           >
             Claim Rewards
           </Button>

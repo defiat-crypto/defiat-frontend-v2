@@ -102,7 +102,7 @@ export const PoolStakeModal: React.FC<PoolStakeModalProps> = ({
           value={depositInput}
           onChange={(e) => setDepositInput(e.target.value)}
           type="number"
-          placeholder="Stake 2ND/ETH UNI-V2"
+          placeholder={`Stake ${symbol}`}
           variant="outlined"
           fullWidth
           InputProps={{
@@ -127,7 +127,10 @@ export const PoolStakeModal: React.FC<PoolStakeModalProps> = ({
               !data ||
               data.tokenBalance.eq(0) ||
               !depositInput ||
-              new BigNumber(depositInput).eq(0)
+              new BigNumber(depositInput).eq(0) ||
+              new BigNumber(depositInput)
+                .times(new BigNumber(10).pow(decimals))
+                .gt(data.tokenBalance)
             }
           >
             Stake {symbol}
@@ -155,7 +158,7 @@ export const PoolStakeModal: React.FC<PoolStakeModalProps> = ({
           value={withdrawInput}
           onChange={(e) => setWithdrawInput(e.target.value)}
           type="number"
-          placeholder="Unstake 2ND/ETH UNI-V2"
+          placeholder={`Unstake ${symbol}`}
           variant="outlined"
           fullWidth
           InputProps={{
@@ -180,7 +183,10 @@ export const PoolStakeModal: React.FC<PoolStakeModalProps> = ({
               !data ||
               data.stakedBalance.eq(0) ||
               !withdrawInput ||
-              new BigNumber(withdrawInput).eq(0)
+              new BigNumber(withdrawInput).eq(0) ||
+              new BigNumber(withdrawInput)
+                .times(new BigNumber(10).pow(decimals))
+                .gt(data.stakedBalance)
             }
           >
             Unstake {symbol}
@@ -188,9 +194,11 @@ export const PoolStakeModal: React.FC<PoolStakeModalProps> = ({
         </Flex>
       </Flex>
       <Flex mt={2} column>
-        <Typography variant="h6" gutterBottom align="center">
-          <b>Unstaking {symbol} incurs a 5% fee to buyback DFT</b>
-        </Typography>
+        {data && data.chargeFee && (
+          <Typography variant="h6" gutterBottom align="center">
+            <b>Unstaking {symbol} incurs a 5% fee to buyback DFT</b>
+          </Typography>
+        )}
         <Typography align="center">
           Staking / Unstaking automatically claim pending rewards
         </Typography>

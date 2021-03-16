@@ -2,7 +2,7 @@ import { Button, TextField, Typography } from "@material-ui/core";
 import { Flex } from "components/Flex";
 import { MaxInputAdornment } from "components/MaxInputAdornment";
 import { Modal, ModalProps } from "components/Modal";
-import { BigNumber, getAnyStakeAddress, getPointsAddress } from "defiat";
+import { BigNumber, getPointsAddress, getRegulatorAddress } from "defiat";
 import { useApprove } from "hooks/useApprove";
 import { useDeFiat } from "hooks/useDeFiat";
 import { useNotifications } from "hooks/useNotifications";
@@ -19,7 +19,7 @@ export const RegulatorStakeModal: React.FC<ModalProps> = ({
   const { data, deposit, withdraw } = useRegulator();
   const { approve, allowance } = useApprove(
     getPointsAddress(DeFiat),
-    getAnyStakeAddress(DeFiat)
+    getRegulatorAddress(DeFiat)
   );
 
   const [depositInput, setDepositInput] = useState<string>();
@@ -109,7 +109,8 @@ export const RegulatorStakeModal: React.FC<ModalProps> = ({
               !data ||
               data.tokenBalance.eq(0) ||
               !depositInput ||
-              new BigNumber(depositInput).eq(0)
+              new BigNumber(depositInput).eq(0) ||
+              new BigNumber(depositInput).times(1e18).gt(data.tokenBalance)
             }
           >
             Stake DFTPv2
@@ -156,7 +157,8 @@ export const RegulatorStakeModal: React.FC<ModalProps> = ({
               !data ||
               data.stakedBalance.eq(0) ||
               !withdrawInput ||
-              new BigNumber(withdrawInput).eq(0)
+              new BigNumber(withdrawInput).eq(0) ||
+              new BigNumber(withdrawInput).times(1e18).gt(data.stakedBalance)
             }
           >
             Unstake DFTPv2

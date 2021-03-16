@@ -10,7 +10,7 @@ import { getDisplayBalance } from "utils";
 export const PoolSummary = () => {
   const { chainId } = useWallet();
   const { pid } = useParams<{ pid: string }>();
-  const { logo, name, symbol, address } = Pools[chainId][pid];
+  const { logo, name, symbol, address, decimals } = Pools[chainId][pid];
 
   const { data } = usePool(+pid);
 
@@ -28,7 +28,9 @@ export const PoolSummary = () => {
       <Grid container spacing={2}>
         <Grid item md={6}>
           <ValueCard
-            value={data ? getDisplayBalance(data.totalLocked) : "0.00"}
+            value={
+              data ? getDisplayBalance(data.totalLocked, decimals) : "0.00"
+            }
             endSymbol={symbol}
             name="Total Tokens Staked"
             icon={anystake128}

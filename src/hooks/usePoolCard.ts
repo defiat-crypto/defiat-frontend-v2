@@ -58,7 +58,7 @@ export const usePoolCard = (pid: number) => {
     setData({
       totalStaked: getDisplayBalance(values[0], Pools[chainId][pid].decimals),
       totalValueStaked: getDisplayBalance(totalValueStaked), //new BigNumber(values[0]),
-      apr: "100", //values[1],
+      apr: "N/A", //values[1],
     });
   }, [chainId, ethereum, pid, AnyStakeAddress, TetherAddress, Oracle]);
 

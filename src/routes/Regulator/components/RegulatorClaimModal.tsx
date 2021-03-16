@@ -52,7 +52,7 @@ export const RegulatorClaimModal: React.FC<ModalProps> = ({
             color="primary"
             fullWidth
             onClick={handleClaim}
-            disabled={!data || new BigNumber(data.pendingRewards).eq(0)}
+            disabled={!data || data.stakedBalance.eq(0)}
           >
             Claim Rewards
           </Button>

@@ -32,8 +32,8 @@ export const getSupplyBurndown = async (
   endBlock: number
 ) => {
   try {
-    const earliestBlock = 10749554;
-    const dataPoints = 8;
+    const earliestBlock = 10949554;
+    const dataPoints = 7;
 
     const supplyBurndown = await DeFiat.getPastEvents("Transfer", {
       fromBlock: earliestBlock,
@@ -285,6 +285,16 @@ export const totalStakedAnyStake = async (AnyStake: Contract, pid: number) => {
   } catch (e) {
     debug(e);
     return new BigNumber(0);
+  }
+};
+
+export const chargeFeeAnyStake = async (AnyStake: Contract, pid: number) => {
+  try {
+    const result = await AnyStake.methods.poolInfo(pid).call();
+    return !!result.chargeFee;
+  } catch (e) {
+    debug(e);
+    return false;
   }
 };
 

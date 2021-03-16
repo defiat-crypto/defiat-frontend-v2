@@ -5,7 +5,7 @@ const Addresses: { [key: string]: { [networkId: number]: string } } = {
   },
   Points: {
     1: "0xde3e18ecb613498b9a1483af51394ec2259bcd0a",
-    4: "0xee650cdba51a1cfa7428a4e98bc801b09f16466a",
+    4: "0xb8b8B746ab4B983C0960501146ba6079c1fd2Af3",
   },
   Governance: {
     1: "0x3Aa3303877A0D1c360a9FE2693AE9f31087A1381",
@@ -29,19 +29,19 @@ const Addresses: { [key: string]: { [networkId: number]: string } } = {
   },
   PointsLp: {
     1: "0xde3e18ecb613498b9a1483af51394ec2259bcd0a",
-    4: "0xCEBF1e6b266DCE1a32ac57Ee4C0e3100d3198e56",
+    4: "0x23A4c03d18666970200A202116Aa8752fbB5a2FB",
   },
   AnyStake: {
     1: "",
-    4: "0x7c75A485F4eE40a3dde1CD773722e1886DAe6d69",
+    4: "0x2F0531e34d93E84E404DFe48C641db5070847e48",
   },
   Regulator: {
     1: "",
-    4: "0x048f71f079c29b6c2321141a7b5fbc595e6d9c7a",
+    4: "0xebCe5b1c64D7E9378882e6d4Eca531FD079c7420",
   },
   Vault: {
     1: "",
-    4: "0x565AA2A9dcf6DbE6Cf53683a4AE5bb99f5F6eCD1",
+    4: "0x64c24Adf6b776eb599a4D99C90Bc198f1397dE6E",
   },
   Oracle: {
     1: "0x3fc37DC74BA34b261f95EC44ED6756D6D4D98591",

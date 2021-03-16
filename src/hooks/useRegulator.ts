@@ -12,6 +12,7 @@ import {
   multiplierRegulator,
   stakedRegulator,
   pendingRegulator,
+  getTetherAddress,
 } from "defiat";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useWallet } from "use-wallet";
@@ -74,13 +75,18 @@ export const useRegulator = () => {
       pendingRegulator(Regulator, account),
       getTokenPrice(Oracle, getPointsAddress(DeFiat)),
       getTokenPrice(Oracle, getDeFiatAddress(DeFiat)),
+      getTokenPrice(Oracle, getTetherAddress(DeFiat)),
     ]);
+
+    const tokenPrice = values[7].multipliedBy(1e18).dividedBy(values[6]);
+    const pointsPrice = values[7].multipliedBy(1e18).dividedBy(values[5]);
+    const totalValueLocked = pointsPrice.times(values[1]).div(1e18);
 
     setData({
       totalLocked: values[1],
-      totalValueLocked: new BigNumber("0"),
-      pointsPrice: new BigNumber("0"),
-      tokenPrice: new BigNumber("0"),
+      totalValueLocked,
+      pointsPrice,
+      tokenPrice,
       tokenBalance: values[0],
       peg: +values[2] / 1000,
       pendingRewards: values[4],

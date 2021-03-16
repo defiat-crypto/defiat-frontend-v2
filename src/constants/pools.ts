@@ -2,6 +2,10 @@ import tokenLogo from "assets/img/logo192.png";
 import pointsLogo from "assets/img/points256.png";
 import eightLogo from "assets/img/8ball.png";
 import feeLogo from "assets/img/1fee.png";
+import linkLogo from "assets/img/link256.png";
+import uniLogo from "assets/img/uni256.png";
+import usdtLogo from "assets/img/usdt256.png";
+import usdcLogo from "assets/img/usdc256.png";
 
 export interface StakingPool {
   pid: number;
@@ -30,6 +34,38 @@ export const Pools = {
       address: "0xde3e18ecb613498b9a1483af51394ec2259bcd0a",
       decimals: 18,
     },
+    {
+      pid: 2,
+      logo: usdcLogo,
+      name: "USD Coin",
+      symbol: "USDC",
+      address: "0xD5D087d31dDcc58c70d0441554dff9C9874c882F",
+      decimals: 6,
+    },
+    {
+      pid: 3,
+      logo: usdtLogo,
+      name: "Tether",
+      symbol: "USDT",
+      address: "0x549D392c89ee87C35A75808208b0C8F383AD8B01",
+      decimals: 6,
+    },
+    {
+      pid: 4,
+      logo: uniLogo,
+      name: "Uniswap",
+      symbol: "UNI",
+      address: "0xD5D087d31dDcc58c70d0441554dff9C9874c882F",
+      decimals: 8,
+    },
+    {
+      pid: 5,
+      logo: linkLogo,
+      name: "Chainlink",
+      symbol: "LINK",
+      address: "0x549D392c89ee87C35A75808208b0C8F383AD8B01",
+      decimals: 18,
+    },
   ],
   4: [
     {
@@ -45,7 +81,7 @@ export const Pools = {
       logo: pointsLogo,
       name: "DeFiat Points v2 Liquidity",
       symbol: "DFTPv2/ETH LP",
-      address: "0xCEBF1e6b266DCE1a32ac57Ee4C0e3100d3198e56",
+      address: "0x23A4c03d18666970200A202116Aa8752fbB5a2FB",
       decimals: 18,
     },
     {
