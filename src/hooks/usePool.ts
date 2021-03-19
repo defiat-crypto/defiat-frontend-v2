@@ -81,7 +81,10 @@ export const usePool = (pid: number) => {
       // getTokenPrice(Oracle, getDeFiatAddress(DeFiat)),
     ]);
 
+    console.log(await Pools[chainId][pid].address);
     const tokenPrice = values[6].multipliedBy(1e18).dividedBy(values[5]);
+
+    console.log(tokenPrice.toString());
     const totalValueLocked = tokenPrice
       .times(values[1])
       .div(new BigNumber(10).pow(Pools[chainId][pid].decimals));

@@ -1,8 +1,11 @@
+import { Value } from "components/Value";
+import { StakingPool } from "constants/pools";
 import { ImportsNotUsedAsValues } from "typescript";
 import { TransactionReceipt } from "web3-core";
 import { Contract } from "web3-eth-contract";
-import { BigNumber } from ".";
+import { BigNumber, getTetherAddress } from ".";
 import { debug } from "../utils";
+import { DeFiat } from "./DeFiat";
 
 // Token
 
@@ -288,6 +291,22 @@ export const totalStakedAnyStake = async (AnyStake: Contract, pid: number) => {
   }
 };
 
+export const totalStakedAllPoolsAnyStake = async (Oracle: Contract, Defiat: DeFiat, AnyStake: Contract, pools: StakingPool[]) => {
+  try {
+    const tetherprice = await getTokenPrice(Oracle, getTetherAddress(Defiat));
+    var totalAllPools: BigNumber = new BigNumber(0);
+    for (const pool of pools) {
+      const result = await AnyStake.methods.poolInfo(pool.pid).call();
+      const tokenprice = await getTokenPrice(Oracle, pool.address);
+      totalAllPools = totalAllPools.plus(tetherprice.dividedBy(tokenprice).multipliedBy(result.totalStaked).dividedBy(new BigNumber(10).pow(pool.decimals)));
+    };
+    return totalAllPools;
+  } catch (e) {
+    debug(e);
+    return new BigNumber(0);
+  }
+};
+
 export const chargeFeeAnyStake = async (AnyStake: Contract, pid: number) => {
   try {
     const result = await AnyStake.methods.poolInfo(pid).call();
@@ -312,6 +331,37 @@ export const stakedAnyStake = async (
   }
 };
 
+export const totalValueStakedAnyStake = async (Oracle: Contract, Defiat: DeFiat, AnyStake: Contract, pools: StakingPool[], account: string) => {
+  try {
+    const tetherprice = await getTokenPrice(Oracle, getTetherAddress(Defiat));
+    var totalAllPools: BigNumber = new BigNumber(0);
+    for (const pool of pools) {
+      const userinfo = await AnyStake.methods.userInfo(pool.pid, account).call();
+      const tokenprice = await getTokenPrice(Oracle, pool.address);
+      totalAllPools = totalAllPools.plus(tetherprice.dividedBy(tokenprice).multipliedBy(userinfo.amount).dividedBy(new BigNumber(10).pow(pool.decimals)));
+    }
+    return new BigNumber(totalAllPools);
+  } catch (e) {
+    debug(e);
+    return new BigNumber("0");
+  }
+};
+
+export const totalPoolsStakedAnyStake = async (AnyStake: Contract, pools: StakingPool[], account: string) => {
+  try {
+    var totalAllPools: number = 0;
+    for (const pool of pools) {
+      const userinfo = await AnyStake.methods.userInfo(pool.pid, account).call();
+      if (userinfo.amount > 0)
+        totalAllPools++;
+    }
+    return totalAllPools.toString();
+  } catch (e) {
+    debug(e);
+    return "0";
+  }
+};
+
 export const pendingAnyStake = async (
   RugSanctuary: Contract,
   pid: number,
@@ -324,6 +374,20 @@ export const pendingAnyStake = async (
     return new BigNumber("0");
   }
 };
+
+export const totalPendingAnyStake = async (AnyStake: Contract, pools: StakingPool[], account: string) => {
+  try {
+    var totalPending: BigNumber = new BigNumber(0);
+    for (const pool of pools) {
+      const result = await AnyStake.methods.pending(pool.pid, account).call();
+      totalPending = totalPending.plus(result);
+    }
+    return new BigNumber(totalPending);
+  } catch (e) {
+    return new BigNumber("0");
+  }
+};
+
 
 // Regulator
 
