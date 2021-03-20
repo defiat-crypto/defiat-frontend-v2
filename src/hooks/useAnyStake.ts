@@ -1,7 +1,7 @@
 import BigNumber from "bignumber.js";
 import { Pools } from "constants/pools";
 import DeFiat from "contexts/DeFiat";
-import { getTokenPrice, getOracle, getDeFiatAddress, getAnyStakeContract, pendingAnyStake, getTetherAddress, totalStakedAnyStake, totalStakedAllPoolsAnyStake, totalPendingAnyStake, totalValueStakedAnyStake, totalPoolsStakedAnyStake } from "defiat";
+import { getTokenPrice, getOracle, getDeFiatAddress, getAnyStakeContract, pendingAnyStake, getTetherAddress, totalStakedAnyStake, totalValueStakedAllPoolsAnyStake, totalPendingAnyStake, totalValueStakedAnyStake, totalPoolsStakedAnyStake } from "defiat";
 import { useEffect, useMemo } from "react";
 import { useCallback, useState } from "react";
 import { useWallet } from "use-wallet";
@@ -36,7 +36,7 @@ export const useAnyStake = () => {
       getTokenPrice(Oracle, getDeFiatAddress(DeFiat)),
       getTokenPrice(Oracle, getTetherAddress(DeFiat)),
       totalPendingAnyStake(AnyStake, Pools[chainId], account),
-      totalStakedAllPoolsAnyStake(Oracle, DeFiat, AnyStake, Pools[chainId]),
+      totalValueStakedAllPoolsAnyStake(Oracle, DeFiat, AnyStake, Pools[chainId]),
       totalValueStakedAnyStake(Oracle, DeFiat, AnyStake, Pools[chainId], account),
       totalPoolsStakedAnyStake(AnyStake, Pools[chainId], account)
     ]);

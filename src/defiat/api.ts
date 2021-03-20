@@ -6,6 +6,7 @@ import { Contract } from "web3-eth-contract";
 import { BigNumber, getTetherAddress } from ".";
 import { debug } from "../utils";
 import { DeFiat } from "./DeFiat";
+import { getDeFiatAddress } from "./utils";
 
 // Token
 
@@ -291,16 +292,26 @@ export const totalStakedAnyStake = async (AnyStake: Contract, pid: number) => {
   }
 };
 
-export const totalStakedAllPoolsAnyStake = async (Oracle: Contract, Defiat: DeFiat, AnyStake: Contract, pools: StakingPool[]) => {
+export const totalValueStakedAllPoolsAnyStake = async (Oracle: Contract, Defiat: DeFiat, AnyStake: Contract, pools: StakingPool[]) => {
   try {
-    const tetherprice = await getTokenPrice(Oracle, getTetherAddress(Defiat));
+    //const tetherprice = await getTokenPrice(Oracle, getTetherAddress(Defiat));
     var totalAllPools: BigNumber = new BigNumber(0);
     for (const pool of pools) {
-      const result = await AnyStake.methods.poolInfo(pool.pid).call();
-      const tokenprice = await getTokenPrice(Oracle, pool.address);
-      totalAllPools = totalAllPools.plus(tetherprice.dividedBy(tokenprice).multipliedBy(result.totalStaked).dividedBy(new BigNumber(10).pow(pool.decimals)));
+      totalAllPools = totalAllPools.plus(await totalValueStakedPoolAnyStake(Oracle, Defiat, AnyStake, pool));
     };
     return totalAllPools;
+  } catch (e) {
+    debug(e);
+    return new BigNumber(0);
+  }
+};
+
+export const totalValueStakedPoolAnyStake = async (Oracle: Contract, Defiat: DeFiat, AnyStake: Contract, pool: StakingPool) => {
+  try {
+    const tetherprice = await getTokenPrice(Oracle, getTetherAddress(Defiat));
+    const result = await AnyStake.methods.poolInfo(pool.pid).call();
+    const tokenprice = await getTokenPrice(Oracle, pool.address);
+    return tetherprice.dividedBy(tokenprice).multipliedBy(result.totalStaked).dividedBy(new BigNumber(10).pow(pool.decimals));
   } catch (e) {
     debug(e);
     return new BigNumber(0);
@@ -388,6 +399,22 @@ export const totalPendingAnyStake = async (AnyStake: Contract, pools: StakingPoo
   }
 };
 
+export const getPoolApr = async (Oracle: Contract, Defiat: DeFiat, Vault: Contract, AnyStake: Contract, pools: StakingPool[], pid: number) => {
+  try {
+    const valuePool = await totalValueStakedPoolAnyStake(Oracle, Defiat, AnyStake, pools[pid]);
+    const totalAlloc = new BigNumber(await AnyStake.methods.totalAllocPoint().call());
+    const poolAlloc = new BigNumber((await AnyStake.methods.poolInfo(pid).call()).allocPoint);
+    const bondedRewards = new BigNumber(await Vault.methods.bondedRewardsPerBlock().call());
+    const dftprice = await getTokenPrice(Oracle, getDeFiatAddress(Defiat));
+    const tetherprice = await getTokenPrice(Oracle, getTetherAddress(Defiat));
+
+    const rewardsperyear = (tetherprice.dividedBy(dftprice)).multipliedBy(poolAlloc.dividedBy(totalAlloc)).multipliedBy(bondedRewards).multipliedBy(new BigNumber(0.7)).multipliedBy(new BigNumber(2073600)).multipliedBy(1e2);
+    const apy = rewardsperyear.dividedBy(valuePool);
+    return apy;
+  } catch (e) {
+    return new BigNumber("0");
+  }
+}
 
 // Regulator
 
