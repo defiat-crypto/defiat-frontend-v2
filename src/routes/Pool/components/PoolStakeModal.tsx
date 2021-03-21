@@ -1,3 +1,5 @@
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button, TextField, Typography } from "@material-ui/core";
 import { Flex } from "components/Flex";
 import { MaxInputAdornment } from "components/MaxInputAdornment";
@@ -34,48 +36,65 @@ export const PoolStakeModal: React.FC<PoolStakeModalProps> = ({
 
   const [depositInput, setDepositInput] = useState<string>();
   const [withdrawInput, setWithdrawInput] = useState<string>();
-
+  const [isDepositing, setIsDepositing] = useState<boolean>(false);
+  const [isWithdrawing, setIsWithdrawing] = useState<boolean>(false);
   const handleDeposit = useCallback(async () => {
     if (allowance.eq(0)) {
-      const approveTxHash = await approve();
-      if (!!approveTxHash) {
-        notify(`Approve ${symbol} AnyStake staking.`, "success", approveTxHash, chainId);
-      } else {
+      setIsDepositing(true);
+      try {
+        const approveTxHash = await approve();
+        if (!!approveTxHash) {
+          notify(`Approve ${symbol} AnyStake staking.`, "success", approveTxHash, chainId);
+        }
+      }
+      catch {
         notify(`Encountered an error while approving ${symbol}.`, "error");
       }
+      setIsDepositing(false);
     }
 
-    const txHash = await deposit(
-      new BigNumber(depositInput)
-        .times(new BigNumber(10).pow(decimals))
-        .toString()
-    );
-    if (!!txHash) {
-      notify(`Deposited ${symbol} into AnyStake.`, "success", txHash, chainId);
-      setDepositInput("");
-    } else {
+    setIsDepositing(true);
+    try {
+      const txHash = await deposit(
+        new BigNumber(depositInput)
+          .times(new BigNumber(10).pow(decimals))
+          .toString()
+      );
+      if (!!txHash) {
+        notify(`Deposited ${symbol} into AnyStake.`, "success", txHash, chainId);
+        setDepositInput("");
+      }
+    }
+    catch {
       notify(
         `Encountered an error while depositing ${symbol} into AnyStake`,
         "error"
       );
     }
+    setIsDepositing(false);
   }, [allowance, decimals, depositInput, symbol, approve, notify, deposit]);
 
   const handleWithdraw = useCallback(async () => {
-    const txHash = await withdraw(
-      new BigNumber(withdrawInput)
-        .times(new BigNumber(10).pow(decimals))
-        .toString()
-    );
-    if (!!txHash) {
-      notify(`Withdrew ${symbol} from AnyStake.`, "success", txHash, chainId);
-      setWithdrawInput("");
-    } else {
+    setIsWithdrawing(true);
+    try {
+      const txHash = await withdraw(
+        new BigNumber(withdrawInput)
+          .times(new BigNumber(10).pow(decimals))
+          .toString()
+      );
+      if (!!txHash) {
+        notify(`Withdrew ${symbol} from AnyStake.`, "success", txHash, chainId);
+        setWithdrawInput("");
+      }
+    }
+    catch {
       notify(
         `Encountered an error while withdrawing ${symbol} from AnyStake.`,
         "error"
       );
     }
+
+    setIsWithdrawing(false);
   }, [symbol, decimals, withdrawInput, notify, withdraw]);
 
   return (
@@ -124,7 +143,7 @@ export const PoolStakeModal: React.FC<PoolStakeModalProps> = ({
             fullWidth
             onClick={handleDeposit}
             disabled={
-              !data ||
+              !data || isDepositing || isWithdrawing ||
               data.tokenBalance.eq(0) ||
               !depositInput ||
               new BigNumber(depositInput).eq(0) ||
@@ -134,6 +153,9 @@ export const PoolStakeModal: React.FC<PoolStakeModalProps> = ({
             }
           >
             Stake {symbol}
+            {isDepositing && (
+              <FontAwesomeIcon icon={faSpinner} className="fa-spin" style={{ marginLeft: "5px" }} />
+            )}
           </Button>
         </Flex>
       </Flex>
@@ -180,7 +202,7 @@ export const PoolStakeModal: React.FC<PoolStakeModalProps> = ({
             fullWidth
             onClick={handleWithdraw}
             disabled={
-              !data ||
+              !data || isDepositing || isWithdrawing ||
               data.stakedBalance.eq(0) ||
               !withdrawInput ||
               new BigNumber(withdrawInput).eq(0) ||
@@ -190,6 +212,9 @@ export const PoolStakeModal: React.FC<PoolStakeModalProps> = ({
             }
           >
             Unstake {symbol}
+            {isWithdrawing && (
+              <FontAwesomeIcon icon={faSpinner} className="fa-spin" style={{ marginLeft: "5px" }} />
+            )}
           </Button>
         </Flex>
       </Flex>
