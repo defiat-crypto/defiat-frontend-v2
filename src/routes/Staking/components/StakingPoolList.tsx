@@ -17,7 +17,7 @@ export const StakingPoolList = () => {
       <Grid container spacing={2}>
         {chainId &&
           Pools[chainId].map((pool: StakingPool, i: number) => (
-            <Grid item md={6} key={i}>
+            <Grid item md={6} xs={12} key={i}>
               <StakingPoolCard pool={pool} />
             </Grid>
           ))}

@@ -26,7 +26,7 @@ export const PoolSummary = () => {
       </Box>
 
       <Grid container spacing={2}>
-        <Grid item md={6}>
+        <Grid item md={6} xs={12}>
           <ValueCard
             value={
               data ? getDisplayBalance(data.totalLocked, decimals) : "0.00"
@@ -36,7 +36,7 @@ export const PoolSummary = () => {
             icon={anystake128}
           />
         </Grid>
-        <Grid item md={6}>
+        <Grid item md={6} xs={12}>
           <ValueCard
             value={data ? getDisplayBalance(data.tokenPrice) : `$0.00`}
             startSymbol="$"
