@@ -5,6 +5,7 @@ import { Modal, ModalProps } from "components/Modal";
 import { useNotifications } from "hooks/useNotifications";
 import { useRegulator } from "hooks/useRegulator";
 import React, { useCallback } from "react";
+import { useWallet } from "use-wallet";
 import { getDisplayBalance } from "utils";
 
 export const RegulatorClaimModal: React.FC<ModalProps> = ({
@@ -13,11 +14,11 @@ export const RegulatorClaimModal: React.FC<ModalProps> = ({
 }) => {
   const notify = useNotifications();
   const { data, claim } = useRegulator();
-
+  const { chainId } = useWallet();
   const handleClaim = useCallback(async () => {
     const txHash = await claim();
     if (!!txHash) {
-      notify("Claimed DFT rewards from Regulator.", "success", txHash);
+      notify("Claimed DFT rewards from Regulator.", "success", txHash, chainId);
     } else {
       notify(
         "Encountered an error while claiming DFT rewards from Regulator.",

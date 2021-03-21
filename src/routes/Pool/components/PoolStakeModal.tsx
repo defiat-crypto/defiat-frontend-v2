@@ -39,7 +39,7 @@ export const PoolStakeModal: React.FC<PoolStakeModalProps> = ({
     if (allowance.eq(0)) {
       const approveTxHash = await approve();
       if (!!approveTxHash) {
-        notify(`Approve ${symbol} AnyStake staking.`, "success", approveTxHash);
+        notify(`Approve ${symbol} AnyStake staking.`, "success", approveTxHash, chainId);
       } else {
         notify(`Encountered an error while approving ${symbol}.`, "error");
       }
@@ -51,7 +51,7 @@ export const PoolStakeModal: React.FC<PoolStakeModalProps> = ({
         .toString()
     );
     if (!!txHash) {
-      notify(`Deposited ${symbol} into AnyStake.`, "success", txHash);
+      notify(`Deposited ${symbol} into AnyStake.`, "success", txHash, chainId);
       setDepositInput("");
     } else {
       notify(
@@ -68,7 +68,7 @@ export const PoolStakeModal: React.FC<PoolStakeModalProps> = ({
         .toString()
     );
     if (!!txHash) {
-      notify(`Withdrew ${symbol} from AnyStake.`, "success", txHash);
+      notify(`Withdrew ${symbol} from AnyStake.`, "success", txHash, chainId);
       setWithdrawInput("");
     } else {
       notify(

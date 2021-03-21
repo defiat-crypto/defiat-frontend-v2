@@ -8,6 +8,7 @@ import { useDeFiat } from "hooks/useDeFiat";
 import { useNotifications } from "hooks/useNotifications";
 import { useRegulator } from "hooks/useRegulator";
 import React, { useCallback, useState } from "react";
+import { useWallet } from "use-wallet";
 import { getDisplayBalance, getFullDisplayBalance } from "utils";
 
 export const RegulatorStakeModal: React.FC<ModalProps> = ({
@@ -16,6 +17,7 @@ export const RegulatorStakeModal: React.FC<ModalProps> = ({
 }) => {
   const notify = useNotifications();
   const DeFiat = useDeFiat();
+  const { chainId } = useWallet();
   const { data, deposit, withdraw } = useRegulator();
   const { approve, allowance } = useApprove(
     getPointsAddress(DeFiat),
@@ -29,7 +31,7 @@ export const RegulatorStakeModal: React.FC<ModalProps> = ({
     if (allowance.eq(0)) {
       const approveTxHash = await approve();
       if (!!approveTxHash) {
-        notify("Approved DFTPv2 Regulator staking.", "success", approveTxHash);
+        notify("Approved DFTPv2 Regulator staking.", "success", approveTxHash, chainId);
       } else {
         notify("Encountered an error while approving DFTPv2.", "error");
       }
@@ -39,7 +41,7 @@ export const RegulatorStakeModal: React.FC<ModalProps> = ({
       new BigNumber(depositInput).times(1e18).toString()
     );
     if (!!txHash) {
-      notify("Deposited DFTPv2 into the Regulator.", "success", txHash);
+      notify("Deposited DFTPv2 into the Regulator.", "success", txHash, chainId);
       setDepositInput("");
     } else {
       notify(
@@ -54,7 +56,7 @@ export const RegulatorStakeModal: React.FC<ModalProps> = ({
       new BigNumber(withdrawInput).times(1e18).toString()
     );
     if (!!txHash) {
-      notify("Withdrew DFTPv2 from the Regulator.", "success", txHash);
+      notify("Withdrew DFTPv2 from the Regulator.", "success", txHash, chainId);
       setWithdrawInput("");
     } else {
       notify(

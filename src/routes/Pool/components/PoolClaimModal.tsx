@@ -32,7 +32,8 @@ export const PoolClaimModal: React.FC<PoolClaimModalProps> = ({
       notify(
         `Claimed DFT rewards from AnyStake ${symbol} Pool.`,
         "success",
-        txHash
+        txHash,
+        chainId
       );
     } else {
       notify(
