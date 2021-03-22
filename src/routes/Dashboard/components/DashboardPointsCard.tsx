@@ -61,7 +61,7 @@ export const DashboardPointsCard = () => {
             />
             <Box mt={1}>
               <Typography color="textSecondary" variant="body2" align="center">
-                {data ? +data.discountLevel + 1 * 10 : 0}% Discount
+                {data ? (+data.discountLevel + 1) * 10 : 0}% Discount
               </Typography>
             </Box>
           </Flex>
