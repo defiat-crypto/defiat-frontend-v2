@@ -4,8 +4,10 @@ import {
   getAnyStakeAddress,
   getAnyStakeContract,
   getOracle,
+  getPoolApr,
   getTetherAddress,
   getTokenPrice,
+  getVaultContract,
 } from "defiat";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useWallet } from "use-wallet";
@@ -35,21 +37,19 @@ export const usePoolCard = (pid: number) => {
 
   const Oracle = useMemo(() => getOracle(DeFiat), [DeFiat]);
   const AnyStake = useMemo(() => getAnyStakeContract(DeFiat), [DeFiat]);
+  const Vault = useMemo(() => getVaultContract(DeFiat), [DeFiat]);
 
   const getPoolValueStaked = async () => {
     return "0";
   };
 
-  const getPoolApr = async () => {
-    return "0";
-  };
 
   const getData = useCallback(async () => {
     const values = await Promise.all([
       getBalance(Pools[chainId][pid].address, AnyStakeAddress, ethereum),
       getTokenPrice(Oracle, Pools[chainId][pid].address),
       getTokenPrice(Oracle, TetherAddress),
-      // getPoolApr,
+      getPoolApr(Oracle, DeFiat, Vault, AnyStake, Pools[chainId], pid),
     ]);
 
     const tokenPrice = values[2].times(1e18).div(values[1]);
@@ -58,7 +58,7 @@ export const usePoolCard = (pid: number) => {
     setData({
       totalStaked: getDisplayBalance(values[0], Pools[chainId][pid].decimals),
       totalValueStaked: getDisplayBalance(totalValueStaked), //new BigNumber(values[0]),
-      apr: "N/A", //values[1],
+      apr: values[3].dividedBy(1e18).decimalPlaces(2).toString(),
     });
   }, [chainId, ethereum, pid, AnyStakeAddress, TetherAddress, Oracle]);
 

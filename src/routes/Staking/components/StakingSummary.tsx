@@ -22,7 +22,7 @@ export const StakingSummary = () => {
       </Box>
 
       <Grid container spacing={2}>
-        <Grid item md={6}>
+        <Grid item md={6} xs={12}>
           <ValueCard
             value={data ? data.tokenPrice : "0.00"}
             startSymbol="$"
@@ -30,7 +30,7 @@ export const StakingSummary = () => {
             icon={logo192}
           />
         </Grid>
-        <Grid item md={6}>
+        <Grid item md={6} xs={12}>
           <ValueCard
             value={data ? data.pendingRewards : "0.00"}
             name="My Claimable Rewards"
@@ -38,7 +38,7 @@ export const StakingSummary = () => {
             icon={logo192}
           />
         </Grid>
-        <Grid item md={6}>
+        <Grid item md={6} xs={12}>
           <ValueCard
             value={data ? data.totalValueStaked : "0.00"}
             startSymbol="$"
@@ -46,7 +46,7 @@ export const StakingSummary = () => {
             icon={anystake128}
           />
         </Grid>
-        <Grid item md={6}>
+        <Grid item md={6} xs={12}>
           <ValueCard
             value={data ? data.totalStakes : "0"}
             name="My Active AnyStakes"

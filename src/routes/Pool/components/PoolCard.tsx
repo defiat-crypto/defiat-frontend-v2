@@ -22,7 +22,7 @@ export const PoolCard = () => {
   return (
     <Card>
       <Grid container spacing={2}>
-        <Grid item md={6}>
+        <Grid item md={6} xs={12}>
           <Typography variant="h4" align="center">
             <b>{data ? getDisplayBalance(data.pendingRewards) : "0.00"}</b>
           </Typography>
@@ -38,7 +38,7 @@ export const PoolCard = () => {
             Claim Rewards
           </Button>
         </Grid>
-        <Grid item md={6}>
+        <Grid item md={6} xs={12}>
           <Typography variant="h4" align="center">
             <b>
               {data ? getDisplayBalance(data.stakedBalance, decimals) : "0.00"}
