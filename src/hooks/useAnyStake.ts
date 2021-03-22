@@ -40,16 +40,16 @@ export const useAnyStake = () => {
       totalValueStakedAnyStake(Oracle, DeFiat, AnyStake, Pools[chainId], account),
       totalPoolsStakedAnyStake(AnyStake, Pools[chainId], account)
     ]);
-    const tokenPrice = values[1].dividedBy(values[0]).decimalPlaces(2);
-    const totalPending = values[2].dividedBy(1e18).decimalPlaces(6);
-    const totalValueLocked = values[3].decimalPlaces(0);
-    const totalValueStaked = values[4].decimalPlaces(0);
+    const tokenPrice = values[1].dividedBy(values[0]).multipliedBy(1e18);
+    const totalPending = values[2];
+    const totalValueLocked = values[3].multipliedBy(1e18);
+    const totalValueStaked = values[4].multipliedBy(1e18);
 
     setData({
-      totalValueLocked: totalValueLocked.toString(),
-      tokenPrice: tokenPrice.toString(),
-      pendingRewards: totalPending.toString(),
-      totalValueStaked: totalValueStaked.toString(),
+      totalValueLocked: getDisplayBalance(totalValueLocked),
+      tokenPrice: getDisplayBalance(tokenPrice),
+      pendingRewards: getDisplayBalance(totalPending),
+      totalValueStaked: getDisplayBalance(totalValueStaked),
       totalStakes: values[5]
     });
   }, [account, ethereum, DeFiat, Oracle, AnyStake]);

@@ -29,6 +29,7 @@ export const PoolHeader = () => {
         color="primary"
         endIcon={<LaunchRounded />}
         href={getEtherscanAddress(chainId, address)}
+        target="_blank"
       >
         {formatAddress(address)}
       </Button>

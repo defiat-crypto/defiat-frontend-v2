@@ -1,17 +1,30 @@
-import { Box, Grid, Typography } from "@material-ui/core";
+import { Box, Button, Grid, Typography } from "@material-ui/core";
 import { Flex } from "components/Flex";
-import { SummaryCard } from "components/SummaryCard";
 import logo192 from "assets/img/logo192.png";
 import anystake128 from "assets/img/anystake128.png";
 import spinner256 from "assets/img/spinner256.png";
 import { useAnyStake } from "hooks/useAnyStake";
 import { ValueCard } from "components/ValueCard";
+import { formatAddress, getEtherscanAddress } from "utils";
+import { LaunchRounded } from "@material-ui/icons";
+import { useWallet } from "use-wallet";
+import addresses from "constants/addresses";
 
 export const StakingSummary = () => {
   const { data } = useAnyStake();
+  const { chainId } = useWallet();
 
   return (
-    <Flex direction="column">
+    <Flex center direction="column">
+      <Button
+        variant="text"
+        color="primary"
+        endIcon={<LaunchRounded />}
+        href={getEtherscanAddress(chainId, addresses.AnyStake[chainId])}
+        target="_blank"
+      >
+        {formatAddress(addresses.AnyStake[chainId])}
+      </Button>
       <Box pb={2}>
         <Typography variant="h4" align="center">
           $<b>{data ? data.totalValueLocked : "0.00"}</b>
