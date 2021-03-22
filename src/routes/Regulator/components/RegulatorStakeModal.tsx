@@ -1,4 +1,9 @@
-import { Button, TextField, Typography } from "@material-ui/core";
+import {
+  Button,
+  CircularProgress,
+  TextField,
+  Typography,
+} from "@material-ui/core";
 import { Flex } from "components/Flex";
 import { MaxInputAdornment } from "components/MaxInputAdornment";
 import { Modal, ModalProps } from "components/Modal";
@@ -8,6 +13,7 @@ import { useDeFiat } from "hooks/useDeFiat";
 import { useNotifications } from "hooks/useNotifications";
 import { useRegulator } from "hooks/useRegulator";
 import React, { useCallback, useState } from "react";
+import { useWallet } from "use-wallet";
 import { getDisplayBalance, getFullDisplayBalance } from "utils";
 
 export const RegulatorStakeModal: React.FC<ModalProps> = ({
@@ -16,53 +22,83 @@ export const RegulatorStakeModal: React.FC<ModalProps> = ({
 }) => {
   const notify = useNotifications();
   const DeFiat = useDeFiat();
+  const { chainId } = useWallet();
   const { data, deposit, withdraw } = useRegulator();
   const { approve, allowance } = useApprove(
     getPointsAddress(DeFiat),
     getRegulatorAddress(DeFiat)
   );
-
+  const [isDepositing, setIsDepositing] = useState<boolean>(false);
+  const [isWithdrawing, setIsWithdrawing] = useState<boolean>(false);
   const [depositInput, setDepositInput] = useState<string>();
   const [withdrawInput, setWithdrawInput] = useState<string>();
 
   const handleDeposit = useCallback(async () => {
     if (allowance.eq(0)) {
-      const approveTxHash = await approve();
-      if (!!approveTxHash) {
-        notify("Approved DFTPv2 Regulator staking.", "success", approveTxHash);
-      } else {
+      setIsDepositing(true);
+      try {
+        const approveTxHash = await approve();
+
+        if (!!approveTxHash) {
+          notify(
+            "Approved DFTPv2 Regulator staking.",
+            "success",
+            approveTxHash,
+            chainId
+          );
+        }
+      } catch {
         notify("Encountered an error while approving DFTPv2.", "error");
       }
+      setIsDepositing(false);
     }
+    setIsDepositing(true);
+    try {
+      const txHash = await deposit(
+        new BigNumber(depositInput).times(1e18).toString()
+      );
 
-    const txHash = await deposit(
-      new BigNumber(depositInput).times(1e18).toString()
-    );
-    if (!!txHash) {
-      notify("Deposited DFTPv2 into the Regulator.", "success", txHash);
-      setDepositInput("");
-    } else {
+      if (!!txHash) {
+        notify(
+          "Deposited DFTPv2 into the Regulator.",
+          "success",
+          txHash,
+          chainId
+        );
+        setDepositInput("");
+      }
+    } catch {
       notify(
         "Encountered an error while depositing DFTPv2 into the Regulator",
         "error"
       );
     }
-  }, [allowance, approve, depositInput, notify, deposit]);
+    setIsDepositing(false);
+  }, [allowance, chainId, approve, depositInput, notify, deposit]);
 
   const handleWithdraw = useCallback(async () => {
-    const txHash = await withdraw(
-      new BigNumber(withdrawInput).times(1e18).toString()
-    );
-    if (!!txHash) {
-      notify("Withdrew DFTPv2 from the Regulator.", "success", txHash);
-      setWithdrawInput("");
-    } else {
+    setIsWithdrawing(true);
+    try {
+      const txHash = await withdraw(
+        new BigNumber(withdrawInput).times(1e18).toString()
+      );
+      if (!!txHash) {
+        notify(
+          "Withdrew DFTPv2 from the Regulator.",
+          "success",
+          txHash,
+          chainId
+        );
+        setWithdrawInput("");
+      }
+    } catch {
       notify(
         "Encountered an error while withdrawing DFTPv2 from the Regulator.",
         "error"
       );
     }
-  }, [withdrawInput, notify, withdraw]);
+    setIsWithdrawing(false);
+  }, [chainId, withdrawInput, notify, withdraw]);
 
   return (
     <Modal
@@ -107,13 +143,22 @@ export const RegulatorStakeModal: React.FC<ModalProps> = ({
             onClick={handleDeposit}
             disabled={
               !data ||
+              isDepositing ||
+              isWithdrawing ||
               data.tokenBalance.eq(0) ||
               !depositInput ||
-              new BigNumber(depositInput).eq(0) ||
+              new BigNumber(depositInput).lte(0) ||
               new BigNumber(depositInput).times(1e18).gt(data.tokenBalance)
             }
           >
             Stake DFTPv2
+            {isDepositing && (
+              <CircularProgress
+                size={16}
+                style={{ marginLeft: "4px" }}
+                color="inherit"
+              />
+            )}
           </Button>
         </Flex>
       </Flex>
@@ -155,13 +200,22 @@ export const RegulatorStakeModal: React.FC<ModalProps> = ({
             onClick={handleWithdraw}
             disabled={
               !data ||
+              isWithdrawing ||
+              isDepositing ||
               data.stakedBalance.eq(0) ||
               !withdrawInput ||
-              new BigNumber(withdrawInput).eq(0) ||
+              new BigNumber(withdrawInput).lte(0) ||
               new BigNumber(withdrawInput).times(1e18).gt(data.stakedBalance)
             }
           >
             Unstake DFTPv2
+            {isWithdrawing && (
+              <CircularProgress
+                size={16}
+                style={{ marginLeft: "4px" }}
+                color="inherit"
+              />
+            )}
           </Button>
         </Flex>
       </Flex>

@@ -312,6 +312,56 @@
       },
       {
         "indexed": true,
+        "internalType": "uint256",
+        "name": "pid",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "stakingFee",
+        "type": "uint256"
+      }
+    ],
+    "name": "PoolStakingFeeUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "pid",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "vipAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "PoolVipAmountUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      },
+      {
+        "indexed": true,
         "internalType": "address",
         "name": "token",
         "type": "address"
@@ -343,6 +393,37 @@
       }
     ],
     "name": "TokenUpdated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "user",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "router",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "weth",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "factory",
+        "type": "address"
+      }
+    ],
+    "name": "UniswapUpdated",
     "type": "event"
   },
   {
@@ -459,9 +540,14 @@
         "type": "uint256"
       },
       {
-        "internalType": "bool",
-        "name": "withUpdate",
-        "type": "bool"
+        "internalType": "uint256",
+        "name": "vipAmount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "stakingFee",
+        "type": "uint256"
       }
     ],
     "name": "addPool",
@@ -487,9 +573,14 @@
         "type": "uint256[]"
       },
       {
-        "internalType": "bool",
-        "name": "withUpdate",
-        "type": "bool"
+        "internalType": "uint256[]",
+        "name": "vipAmounts",
+        "type": "uint256[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "stakingFees",
+        "type": "uint256[]"
       }
     ],
     "name": "addPoolBatch",
@@ -519,13 +610,6 @@
       }
     ],
     "name": "claim",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "claimAll",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -669,13 +753,6 @@
       }
     ],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "massUpdatePools",
-    "outputs": [],
-    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -825,6 +902,16 @@
         "internalType": "uint256",
         "name": "lastRewardBlock",
         "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "vipAmount",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "stakingFee",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -936,12 +1023,61 @@
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "_pid",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_stakingFee",
+        "type": "uint256"
+      }
+    ],
+    "name": "setPoolChargeFee",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "_pid",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_vipAmount",
+        "type": "uint256"
+      }
+    ],
+    "name": "setPoolVipAmount",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "_token",
         "type": "address"
       }
     ],
     "name": "setToken",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_router",
+        "type": "address"
+      }
+    ],
+    "name": "setUniswap",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"
@@ -957,19 +1093,6 @@
     "name": "setVault",
     "outputs": [],
     "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "stakingFee",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
     "type": "function"
   },
   {

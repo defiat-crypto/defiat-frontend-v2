@@ -1,10 +1,10 @@
-import { Button, Typography } from "@material-ui/core";
-import BigNumber from "bignumber.js";
+import { Button, CircularProgress, Typography } from "@material-ui/core";
 import { Flex } from "components/Flex";
 import { Modal, ModalProps } from "components/Modal";
 import { useNotifications } from "hooks/useNotifications";
 import { useRegulator } from "hooks/useRegulator";
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
+import { useWallet } from "use-wallet";
 import { getDisplayBalance } from "utils";
 
 export const RegulatorClaimModal: React.FC<ModalProps> = ({
@@ -13,18 +13,28 @@ export const RegulatorClaimModal: React.FC<ModalProps> = ({
 }) => {
   const notify = useNotifications();
   const { data, claim } = useRegulator();
-
+  const { chainId } = useWallet();
+  const [isTransacting, setIsTransacting] = useState<boolean>(false);
   const handleClaim = useCallback(async () => {
-    const txHash = await claim();
-    if (!!txHash) {
-      notify("Claimed DFT rewards from Regulator.", "success", txHash);
-    } else {
+    setIsTransacting(true);
+    try {
+      const txHash = await claim();
+      if (!!txHash) {
+        notify(
+          "Claimed DFT rewards from Regulator.",
+          "success",
+          txHash,
+          chainId
+        );
+      }
+    } catch {
       notify(
         "Encountered an error while claiming DFT rewards from Regulator.",
         "error"
       );
     }
-  }, [claim, notify]);
+    setIsTransacting(false);
+  }, [chainId, claim, notify]);
 
   return (
     <Modal
@@ -52,9 +62,16 @@ export const RegulatorClaimModal: React.FC<ModalProps> = ({
             color="primary"
             fullWidth
             onClick={handleClaim}
-            disabled={!data || data.stakedBalance.eq(0)}
+            disabled={!data || data.stakedBalance.eq(0) || isTransacting}
           >
             Claim Rewards
+            {isTransacting && (
+              <CircularProgress
+                size={16}
+                style={{ marginLeft: "4px" }}
+                color="inherit"
+              />
+            )}
           </Button>
         </Flex>
       </Flex>

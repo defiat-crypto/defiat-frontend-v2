@@ -6,6 +6,7 @@ import { Pools } from "constants/pools";
 import { usePool } from "hooks/usePool";
 import { ValueCard } from "components/ValueCard";
 import { getDisplayBalance } from "utils";
+import { Flex } from "components/Flex";
 
 export const PoolSummary = () => {
   const { chainId } = useWallet();
@@ -16,6 +17,12 @@ export const PoolSummary = () => {
 
   return (
     <Box>
+      {data && data.vipAmount.gt(0) && (
+        <Flex center pb={2}>
+          VIP Pool: {getDisplayBalance(data.vipAmount)} DFT Stake Required to
+          Enter
+        </Flex>
+      )}
       <Box pb={2}>
         <Typography variant="h4" align="center">
           $<b>{data ? getDisplayBalance(data.totalValueLocked) : "0.00"}</b>
@@ -26,7 +33,7 @@ export const PoolSummary = () => {
       </Box>
 
       <Grid container spacing={2}>
-        <Grid item md={6}>
+        <Grid item md={6} xs={12}>
           <ValueCard
             value={
               data ? getDisplayBalance(data.totalLocked, decimals) : "0.00"
@@ -36,9 +43,9 @@ export const PoolSummary = () => {
             icon={anystake128}
           />
         </Grid>
-        <Grid item md={6}>
+        <Grid item md={6} xs={12}>
           <ValueCard
-            value={data ? getDisplayBalance(data.tokenPrice) : `$0.00`}
+            value={data ? getDisplayBalance(data.tokenPrice) : `0.00`}
             startSymbol="$"
             name={`${symbol} Price`}
             icon={logo}
