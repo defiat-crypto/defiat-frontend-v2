@@ -10,9 +10,10 @@ import {
   pendingAnyStake,
   stakedAnyStake,
   totalStakedAnyStake,
-  chargeFeeAnyStake,
+  stakingFeeAnyStake,
   withdrawAnyStake,
   getTetherAddress,
+  vipAmountAnyStake,
 } from "defiat";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useWallet } from "use-wallet";
@@ -28,7 +29,8 @@ interface StakingPoolData {
   pendingRewards: BigNumber;
   stakedBalance: BigNumber;
   tokenBalance: BigNumber;
-  chargeFee: boolean;
+  stakingFee: number;
+  vipAmount: BigNumber;
 }
 
 export const usePool = (pid: number) => {
@@ -73,11 +75,12 @@ export const usePool = (pid: number) => {
     const values = await Promise.all([
       getBalance(Pools[chainId][pid].address, account, ethereum),
       totalStakedAnyStake(AnyStake, pid),
-      chargeFeeAnyStake(AnyStake, pid),
+      stakingFeeAnyStake(AnyStake, pid),
       stakedAnyStake(AnyStake, pid, account),
       pendingAnyStake(AnyStake, pid, account),
       getTokenPrice(Oracle, Pools[chainId][pid].address),
       getTokenPrice(Oracle, getTetherAddress(DeFiat)),
+      vipAmountAnyStake(AnyStake, pid),
       // getTokenPrice(Oracle, getDeFiatAddress(DeFiat)),
     ]);
 
@@ -89,11 +92,12 @@ export const usePool = (pid: number) => {
     setData({
       tokenBalance: values[0],
       totalLocked: values[1],
-      chargeFee: values[2],
+      stakingFee: values[2].div(10).toNumber(),
       tokenPrice,
       totalValueLocked,
       stakedBalance: values[3],
       pendingRewards: values[4],
+      vipAmount: values[7],
     });
   }, [account, chainId, pid, ethereum, Oracle, AnyStake, DeFiat]);
 

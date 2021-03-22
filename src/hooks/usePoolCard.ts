@@ -8,6 +8,7 @@ import {
   getTetherAddress,
   getTokenPrice,
   getVaultContract,
+  vipAmountAnyStake,
 } from "defiat";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useWallet } from "use-wallet";
@@ -20,6 +21,7 @@ interface PoolCardData {
   totalStaked: string;
   totalValueStaked: string;
   apr: string;
+  vipAmount: BigNumber;
 }
 
 export const usePoolCard = (pid: number) => {
@@ -39,17 +41,13 @@ export const usePoolCard = (pid: number) => {
   const AnyStake = useMemo(() => getAnyStakeContract(DeFiat), [DeFiat]);
   const Vault = useMemo(() => getVaultContract(DeFiat), [DeFiat]);
 
-  const getPoolValueStaked = async () => {
-    return "0";
-  };
-
-
   const getData = useCallback(async () => {
     const values = await Promise.all([
       getBalance(Pools[chainId][pid].address, AnyStakeAddress, ethereum),
       getTokenPrice(Oracle, Pools[chainId][pid].address),
       getTokenPrice(Oracle, TetherAddress),
       getPoolApr(Oracle, DeFiat, Vault, AnyStake, Pools[chainId], pid),
+      vipAmountAnyStake(AnyStake, pid),
     ]);
 
     const tokenPrice = values[2].times(1e18).div(values[1]);
@@ -59,8 +57,19 @@ export const usePoolCard = (pid: number) => {
       totalStaked: getDisplayBalance(values[0], Pools[chainId][pid].decimals),
       totalValueStaked: getDisplayBalance(totalValueStaked), //new BigNumber(values[0]),
       apr: values[3].dividedBy(1e18).decimalPlaces(2).toString(),
+      vipAmount: values[4],
     });
-  }, [chainId, ethereum, pid, AnyStakeAddress, TetherAddress, Oracle]);
+  }, [
+    chainId,
+    ethereum,
+    pid,
+    AnyStake,
+    DeFiat,
+    Vault,
+    AnyStakeAddress,
+    TetherAddress,
+    Oracle,
+  ]);
 
   useEffect(() => {
     if (!!ethereum) {

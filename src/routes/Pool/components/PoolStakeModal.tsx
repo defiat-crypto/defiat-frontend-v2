@@ -250,9 +250,11 @@ export const PoolStakeModal: React.FC<PoolStakeModalProps> = ({
         </Flex>
       </Flex>
       <Flex mt={2} column>
-        {data && data.chargeFee && (
+        {data && data.stakingFee && (
           <Typography variant="h6" gutterBottom align="center">
-            <b>Unstaking {symbol} incurs a 5% fee to buyback DFT</b>
+            <b>
+              Unstaking {symbol} incurs a {data.stakingFee}% fee to buyback DFT
+            </b>
           </Typography>
         )}
         <Typography align="center">

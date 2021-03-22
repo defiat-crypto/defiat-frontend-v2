@@ -6,6 +6,8 @@ import linkLogo from "assets/img/link256.png";
 import uniLogo from "assets/img/uni256.png";
 import usdtLogo from "assets/img/usdt256.png";
 import usdcLogo from "assets/img/usdc256.png";
+import tokenLpLogo from "assets/img/defiatLp512.png";
+import pointsLpLogo from "assets/img/pointsLp512.png";
 
 export interface StakingPool {
   pid: number;
@@ -21,21 +23,29 @@ export const Pools = {
     {
       pid: 0,
       logo: tokenLogo,
+      name: "DeFiat",
+      symbol: "DFT",
+      address: "0xB6eE603933E024d8d53dDE3faa0bf98fE2a3d6f1",
+      decimals: 18,
+    },
+    {
+      pid: 1,
+      logo: tokenLpLogo,
       name: "DeFiat Liquidity",
       symbol: "DFT/ETH LP",
       address: "0xe2a1d215d03d7e9fa0ed66355c86678561e4940a",
       decimals: 18,
     },
     {
-      pid: 1,
-      logo: pointsLogo,
+      pid: 2,
+      logo: pointsLpLogo,
       name: "DeFiat Points v2 Liquidity",
       symbol: "DFTPv2/ETH LP",
       address: "0xde3e18ecb613498b9a1483af51394ec2259bcd0a",
       decimals: 18,
     },
     {
-      pid: 2,
+      pid: 3,
       logo: usdcLogo,
       name: "USD Coin",
       symbol: "USDC",
@@ -43,7 +53,7 @@ export const Pools = {
       decimals: 6,
     },
     {
-      pid: 3,
+      pid: 4,
       logo: usdtLogo,
       name: "Tether",
       symbol: "USDT",
@@ -51,7 +61,7 @@ export const Pools = {
       decimals: 6,
     },
     {
-      pid: 4,
+      pid: 5,
       logo: uniLogo,
       name: "Uniswap",
       symbol: "UNI",
@@ -59,7 +69,7 @@ export const Pools = {
       decimals: 8,
     },
     {
-      pid: 5,
+      pid: 6,
       logo: linkLogo,
       name: "Chainlink",
       symbol: "LINK",
@@ -71,21 +81,29 @@ export const Pools = {
     {
       pid: 0,
       logo: tokenLogo,
+      name: "DeFiat",
+      symbol: "DFT",
+      address: "0xB571d40e4A7087C1B73ce6a3f29EaDfCA022C5B2",
+      decimals: 18,
+    },
+    {
+      pid: 1,
+      logo: tokenLpLogo,
       name: "DeFiat Liquidity",
       symbol: "DFT/ETH LP",
       address: "0xF7426EAcb2b00398D4cefb3E24115c91821d6fB0",
       decimals: 18,
     },
     {
-      pid: 1,
-      logo: pointsLogo,
+      pid: 2,
+      logo: pointsLpLogo,
       name: "DeFiat Points v2 Liquidity",
       symbol: "DFTPv2/ETH LP",
       address: "0x23A4c03d18666970200A202116Aa8752fbB5a2FB",
       decimals: 18,
     },
     {
-      pid: 2,
+      pid: 3,
       logo: eightLogo,
       name: "8 Ball Token",
       symbol: "8BALL",
@@ -93,7 +111,7 @@ export const Pools = {
       decimals: 8,
     },
     {
-      pid: 3,
+      pid: 4,
       logo: feeLogo,
       name: "1% Fee Token",
       symbol: "1FEE",
