@@ -1,6 +1,5 @@
 import { Value } from "components/Value";
 import { StakingPool } from "constants/pools";
-import { ImportsNotUsedAsValues } from "typescript";
 import { TransactionReceipt } from "web3-core";
 import { Contract } from "web3-eth-contract";
 import { BigNumber, getTetherAddress } from ".";

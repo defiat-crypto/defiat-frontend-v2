@@ -1,4 +1,9 @@
-import { Button, TextField, Typography } from "@material-ui/core";
+import {
+  Button,
+  CircularProgress,
+  TextField,
+  Typography,
+} from "@material-ui/core";
 import { Flex } from "components/Flex";
 import { MaxInputAdornment } from "components/MaxInputAdornment";
 import { Modal, ModalProps } from "components/Modal";
@@ -34,49 +39,82 @@ export const PoolStakeModal: React.FC<PoolStakeModalProps> = ({
 
   const [depositInput, setDepositInput] = useState<string>();
   const [withdrawInput, setWithdrawInput] = useState<string>();
-
+  const [isDepositing, setIsDepositing] = useState<boolean>(false);
+  const [isWithdrawing, setIsWithdrawing] = useState<boolean>(false);
   const handleDeposit = useCallback(async () => {
     if (allowance.eq(0)) {
-      const approveTxHash = await approve();
-      if (!!approveTxHash) {
-        notify(`Approve ${symbol} AnyStake staking.`, "success", approveTxHash);
-      } else {
+      setIsDepositing(true);
+      try {
+        const approveTxHash = await approve();
+        if (!!approveTxHash) {
+          notify(
+            `Approve ${symbol} AnyStake staking.`,
+            "success",
+            approveTxHash,
+            chainId
+          );
+        }
+      } catch {
         notify(`Encountered an error while approving ${symbol}.`, "error");
       }
+      setIsDepositing(false);
     }
 
-    const txHash = await deposit(
-      new BigNumber(depositInput)
-        .times(new BigNumber(10).pow(decimals))
-        .toString()
-    );
-    if (!!txHash) {
-      notify(`Deposited ${symbol} into AnyStake.`, "success", txHash);
-      setDepositInput("");
-    } else {
+    setIsDepositing(true);
+    try {
+      const txHash = await deposit(
+        new BigNumber(depositInput)
+          .times(new BigNumber(10).pow(decimals))
+          .toString()
+      );
+      if (!!txHash) {
+        notify(
+          `Deposited ${symbol} into AnyStake.`,
+          "success",
+          txHash,
+          chainId
+        );
+        setDepositInput("");
+      }
+    } catch {
       notify(
         `Encountered an error while depositing ${symbol} into AnyStake`,
         "error"
       );
     }
-  }, [allowance, decimals, depositInput, symbol, approve, notify, deposit]);
+    setIsDepositing(false);
+  }, [
+    allowance,
+    chainId,
+    decimals,
+    depositInput,
+    symbol,
+    approve,
+    notify,
+    deposit,
+  ]);
 
   const handleWithdraw = useCallback(async () => {
-    const txHash = await withdraw(
-      new BigNumber(withdrawInput)
-        .times(new BigNumber(10).pow(decimals))
-        .toString()
-    );
-    if (!!txHash) {
-      notify(`Withdrew ${symbol} from AnyStake.`, "success", txHash);
-      setWithdrawInput("");
-    } else {
+    setIsWithdrawing(true);
+    try {
+      const txHash = await withdraw(
+        new BigNumber(withdrawInput)
+          .times(new BigNumber(10).pow(decimals))
+          .toString()
+      );
+      if (!!txHash) {
+        notify(`Withdrew ${symbol} from AnyStake.`, "success", txHash, chainId);
+        setWithdrawInput("");
+      }
+    } catch {
       notify(
         `Encountered an error while withdrawing ${symbol} from AnyStake.`,
         "error"
       );
     }
-  }, [symbol, decimals, withdrawInput, notify, withdraw]);
+
+    setIsWithdrawing(false);
+  }, [symbol, chainId, decimals, withdrawInput, notify, withdraw]);
 
   return (
     <Modal
@@ -125,15 +163,24 @@ export const PoolStakeModal: React.FC<PoolStakeModalProps> = ({
             onClick={handleDeposit}
             disabled={
               !data ||
+              isDepositing ||
+              isWithdrawing ||
               data.tokenBalance.eq(0) ||
               !depositInput ||
-              new BigNumber(depositInput).eq(0) ||
+              new BigNumber(depositInput).lte(0) ||
               new BigNumber(depositInput)
                 .times(new BigNumber(10).pow(decimals))
                 .gt(data.tokenBalance)
             }
           >
             Stake {symbol}
+            {isDepositing && (
+              <CircularProgress
+                size={16}
+                style={{ marginLeft: "4px" }}
+                color="inherit"
+              />
+            )}
           </Button>
         </Flex>
       </Flex>
@@ -181,15 +228,24 @@ export const PoolStakeModal: React.FC<PoolStakeModalProps> = ({
             onClick={handleWithdraw}
             disabled={
               !data ||
+              isDepositing ||
+              isWithdrawing ||
               data.stakedBalance.eq(0) ||
               !withdrawInput ||
-              new BigNumber(withdrawInput).eq(0) ||
+              new BigNumber(withdrawInput).lte(0) ||
               new BigNumber(withdrawInput)
                 .times(new BigNumber(10).pow(decimals))
                 .gt(data.stakedBalance)
             }
           >
             Unstake {symbol}
+            {isWithdrawing && (
+              <CircularProgress
+                size={16}
+                style={{ marginLeft: "4px" }}
+                color="inherit"
+              />
+            )}
           </Button>
         </Flex>
       </Flex>
