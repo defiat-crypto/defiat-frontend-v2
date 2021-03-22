@@ -1,7 +1,4 @@
-import { faSpinner } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Button, Typography } from "@material-ui/core";
-import BigNumber from "bignumber.js";
+import { Button, CircularProgress, Typography } from "@material-ui/core";
 import { Flex } from "components/Flex";
 import { Modal, ModalProps } from "components/Modal";
 import { useNotifications } from "hooks/useNotifications";
@@ -23,17 +20,21 @@ export const RegulatorClaimModal: React.FC<ModalProps> = ({
     try {
       const txHash = await claim();
       if (!!txHash) {
-        notify("Claimed DFT rewards from Regulator.", "success", txHash, chainId);
+        notify(
+          "Claimed DFT rewards from Regulator.",
+          "success",
+          txHash,
+          chainId
+        );
       }
-    }
-    catch {
+    } catch {
       notify(
         "Encountered an error while claiming DFT rewards from Regulator.",
         "error"
       );
     }
     setIsTransacting(false);
-  }, [claim, notify]);
+  }, [chainId, claim, notify]);
 
   return (
     <Modal
@@ -65,7 +66,11 @@ export const RegulatorClaimModal: React.FC<ModalProps> = ({
           >
             Claim Rewards
             {isTransacting && (
-              <FontAwesomeIcon icon={faSpinner} className="fa-spin" style={{ marginLeft: "5px" }} />
+              <CircularProgress
+                size={16}
+                style={{ marginLeft: "4px" }}
+                color="inherit"
+              />
             )}
           </Button>
         </Flex>

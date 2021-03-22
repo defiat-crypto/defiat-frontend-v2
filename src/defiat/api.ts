@@ -1,4 +1,3 @@
-import { ImportsNotUsedAsValues } from "typescript";
 import { TransactionReceipt } from "web3-core";
 import { Contract } from "web3-eth-contract";
 import { BigNumber } from ".";

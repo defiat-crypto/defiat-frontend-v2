@@ -1,10 +1,14 @@
 import { Button } from "@material-ui/core";
 import { useSnackbar, VariantType } from "notistack";
-import React, { Fragment } from "react";
+import { Fragment } from "react";
+import { useWallet } from "use-wallet";
+import { getEtherscanTransaction } from "utils/address";
 import { TransactionReceipt } from "web3-core";
 
 export const useNotifications = () => {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { chainId } = useWallet();
+
   const notify = (
     message: string,
     variant: VariantType,
@@ -22,7 +26,7 @@ export const useNotifications = () => {
         <Fragment>
           {txHash && (
             <Button
-              href={`https://${chainId === 4 ? 'rinkeby.' : ''}etherscan.io/tx/${txHash.transactionHash}`}
+              href={getEtherscanTransaction(chainId, txHash.transactionHash)}
               target="_blank"
               rel="noopener,noreferrer"
             >

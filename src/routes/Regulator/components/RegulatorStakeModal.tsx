@@ -1,6 +1,9 @@
-import { faSpinner } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Button, TextField, Typography } from "@material-ui/core";
+import {
+  Button,
+  CircularProgress,
+  TextField,
+  Typography,
+} from "@material-ui/core";
 import { Flex } from "components/Flex";
 import { MaxInputAdornment } from "components/MaxInputAdornment";
 import { Modal, ModalProps } from "components/Modal";
@@ -37,10 +40,14 @@ export const RegulatorStakeModal: React.FC<ModalProps> = ({
         const approveTxHash = await approve();
 
         if (!!approveTxHash) {
-          notify("Approved DFTPv2 Regulator staking.", "success", approveTxHash, chainId);
+          notify(
+            "Approved DFTPv2 Regulator staking.",
+            "success",
+            approveTxHash,
+            chainId
+          );
         }
-      }
-      catch {
+      } catch {
         notify("Encountered an error while approving DFTPv2.", "error");
       }
       setIsDepositing(false);
@@ -52,18 +59,22 @@ export const RegulatorStakeModal: React.FC<ModalProps> = ({
       );
 
       if (!!txHash) {
-        notify("Deposited DFTPv2 into the Regulator.", "success", txHash, chainId);
+        notify(
+          "Deposited DFTPv2 into the Regulator.",
+          "success",
+          txHash,
+          chainId
+        );
         setDepositInput("");
       }
-    }
-    catch {
+    } catch {
       notify(
         "Encountered an error while depositing DFTPv2 into the Regulator",
         "error"
       );
     }
     setIsDepositing(false);
-  }, [allowance, approve, depositInput, notify, deposit]);
+  }, [allowance, chainId, approve, depositInput, notify, deposit]);
 
   const handleWithdraw = useCallback(async () => {
     setIsWithdrawing(true);
@@ -72,18 +83,22 @@ export const RegulatorStakeModal: React.FC<ModalProps> = ({
         new BigNumber(withdrawInput).times(1e18).toString()
       );
       if (!!txHash) {
-        notify("Withdrew DFTPv2 from the Regulator.", "success", txHash, chainId);
+        notify(
+          "Withdrew DFTPv2 from the Regulator.",
+          "success",
+          txHash,
+          chainId
+        );
         setWithdrawInput("");
       }
-    }
-    catch {
+    } catch {
       notify(
         "Encountered an error while withdrawing DFTPv2 from the Regulator.",
         "error"
       );
     }
     setIsWithdrawing(false);
-  }, [withdrawInput, notify, withdraw]);
+  }, [chainId, withdrawInput, notify, withdraw]);
 
   return (
     <Modal
@@ -127,16 +142,22 @@ export const RegulatorStakeModal: React.FC<ModalProps> = ({
             fullWidth
             onClick={handleDeposit}
             disabled={
-              !data || isDepositing || isWithdrawing ||
+              !data ||
+              isDepositing ||
+              isWithdrawing ||
               data.tokenBalance.eq(0) ||
               !depositInput ||
-              new BigNumber(depositInput).eq(0) ||
+              new BigNumber(depositInput).lte(0) ||
               new BigNumber(depositInput).times(1e18).gt(data.tokenBalance)
             }
           >
             Stake DFTPv2
             {isDepositing && (
-              <FontAwesomeIcon icon={faSpinner} className="fa-spin" style={{ marginLeft: "5px" }} />
+              <CircularProgress
+                size={16}
+                style={{ marginLeft: "4px" }}
+                color="inherit"
+              />
             )}
           </Button>
         </Flex>
@@ -178,16 +199,22 @@ export const RegulatorStakeModal: React.FC<ModalProps> = ({
             fullWidth
             onClick={handleWithdraw}
             disabled={
-              !data || isWithdrawing || isDepositing ||
+              !data ||
+              isWithdrawing ||
+              isDepositing ||
               data.stakedBalance.eq(0) ||
               !withdrawInput ||
-              new BigNumber(withdrawInput).eq(0) ||
+              new BigNumber(withdrawInput).lte(0) ||
               new BigNumber(withdrawInput).times(1e18).gt(data.stakedBalance)
             }
           >
             Unstake DFTPv2
             {isWithdrawing && (
-              <FontAwesomeIcon icon={faSpinner} className="fa-spin" style={{ marginLeft: "5px" }} />
+              <CircularProgress
+                size={16}
+                style={{ marginLeft: "4px" }}
+                color="inherit"
+              />
             )}
           </Button>
         </Flex>
