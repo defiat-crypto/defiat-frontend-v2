@@ -33,15 +33,15 @@ const Addresses: { [key: string]: { [networkId: number]: string } } = {
   },
   AnyStake: {
     1: "",
-    4: "0x5599463C36243488D8A7db40f424360674DaBe35",
+    4: "0x9b90eF849E9B07b3f7cab85A4b44925511cB27cF",
   },
   Regulator: {
     1: "",
-    4: "0x02eC52b2C32326938E39cF7e341b93F6Ac7f1B19",
+    4: "0x43E042290c18d8Ae0B0F05355fC82e477f1579a9",
   },
   Vault: {
     1: "",
-    4: "0x9E5d7D815Ab944783d55535CC5aDcbb49fBfB094",
+    4: "0x7b213Ee4ec0f3441926155716d683dc8b3a87aE3",
   },
   Oracle: {
     1: "0x3fc37DC74BA34b261f95EC44ED6756D6D4D98591",
