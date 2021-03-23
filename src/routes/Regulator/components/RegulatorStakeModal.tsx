@@ -151,7 +151,7 @@ export const RegulatorStakeModal: React.FC<ModalProps> = ({
               new BigNumber(depositInput).times(1e18).gt(data.tokenBalance)
             }
           >
-            Stake DFTPv2
+            {allowance?.eq(0) ? 'Approve' : 'Stake'} DFTPv2
             {isDepositing && (
               <CircularProgress
                 size={16}
