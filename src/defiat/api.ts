@@ -74,15 +74,15 @@ export const getSupplyBurndown = async (
 export const viewDiscountOf = async (
   Points: Contract,
   address: string
-): Promise<string> => {
+): Promise<number> => {
   try {
     const discount: number = await Points.methods
       .viewDiscountOf(address)
       .call();
-    return discount.toString();
+    return discount;
   } catch (e) {
     debug(e);
-    return "0";
+    return 0;
   }
 };
 
