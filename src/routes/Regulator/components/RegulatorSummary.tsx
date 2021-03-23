@@ -71,6 +71,13 @@ export const RegulatorSummary = () => {
             icon={points256}
           />
         </Grid>
+        <Grid item xs={12} md={6}>
+          <ValueCard
+            value={data ? `${data.apr}%` : "0%"}
+            name="APR"
+            icon={points256}
+          />
+        </Grid>
       </Grid>
     </Flex>
   );

@@ -5,7 +5,7 @@ import { Contract } from "web3-eth-contract";
 import { BigNumber, getTetherAddress } from ".";
 import { debug } from "../utils";
 import { DeFiat } from "./DeFiat";
-import { getDeFiatAddress } from "./utils";
+import { getDeFiatAddress, getPointsAddress } from "./utils";
 
 // Token
 
@@ -489,6 +489,58 @@ export const getPoolApr = async (
 };
 
 // Regulator
+
+export const getRegulatorApr = async (
+  Oracle: Contract,
+  Defiat: DeFiat,
+  Vault: Contract,
+  Regulator: Contract
+) => {
+  try {
+    const latestDistributionBlock = new BigNumber(
+      await Vault.methods.lastDistributionBlock().call()
+    )
+    const rewardsDistributed = await Vault.getPastEvents("RewardsDistributed", {
+      fromBlock: latestDistributionBlock.minus(50000),
+      toBlock: latestDistributionBlock,
+    });
+    const earliestBlock = rewardsDistributed[0].blockNumber;
+
+    //skip rewards from earliestblock, they fall outside the delta.
+    rewardsDistributed.shift();
+    const delta = latestDistributionBlock.minus(earliestBlock);
+    let rewardsSum = new BigNumber("0");
+    //count all rewards between latestDistributionBlock and earliestBlock
+    rewardsDistributed.forEach((rewards) => {
+      rewardsSum = rewardsSum.plus(new BigNumber(rewards.returnValues['regulatorAmount']));
+    });
+    const blockrewards = rewardsSum.dividedBy(delta);
+
+    const totalStaked = await totalStakedRegulator(
+      Regulator
+    );
+    const pointsprice = await getTokenPrice(Oracle, getPointsAddress(Defiat));
+    const dftprice = await getTokenPrice(Oracle, getDeFiatAddress(Defiat));
+    const tetherprice = await getTokenPrice(Oracle, getTetherAddress(Defiat));
+
+    const valueRegulator = tetherprice
+      .dividedBy(pointsprice)
+      .multipliedBy(totalStaked)
+      .dividedBy(1e18);
+
+    const rewardsperyear = tetherprice
+      .dividedBy(dftprice)
+      .multipliedBy(blockrewards)
+      .multipliedBy(0.7) //70% to rewards
+      .multipliedBy(new BigNumber(2073600))
+      .multipliedBy(1e2);
+    const apy = rewardsperyear.dividedBy(valueRegulator);
+    return apy;
+  } catch (e) {
+    console.log(e);
+    return new BigNumber("0");
+  }
+};
 
 export const claimRegulator = async (Regulator: Contract, account: string) => {
   return await Regulator.methods

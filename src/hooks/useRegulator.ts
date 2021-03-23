@@ -13,6 +13,8 @@ import {
   stakedRegulator,
   pendingRegulator,
   getTetherAddress,
+  getRegulatorApr,
+  getVaultContract,
 } from "defiat";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useWallet } from "use-wallet";
@@ -30,6 +32,7 @@ interface RegulatorData {
   pendingRewards: BigNumber;
   tokenBalance: BigNumber;
   stakedBalance: BigNumber;
+  apr: string;
 }
 
 export const useRegulator = () => {
@@ -44,6 +47,7 @@ export const useRegulator = () => {
 
   const Regulator = useMemo(() => getRegulatorContract(DeFiat), [DeFiat]);
   const Oracle = useMemo(() => getOracle(DeFiat), [DeFiat]);
+  const Vault = useMemo(() => getVaultContract(DeFiat), [DeFiat]);
 
   const handleClaim = useCallback(async () => {
     const txHash = await claimRegulator(Regulator, account);
@@ -76,11 +80,13 @@ export const useRegulator = () => {
       getTokenPrice(Oracle, getPointsAddress(DeFiat)),
       getTokenPrice(Oracle, getDeFiatAddress(DeFiat)),
       getTokenPrice(Oracle, getTetherAddress(DeFiat)),
+      getRegulatorApr(Oracle, DeFiat, Vault, Regulator)
     ]);
 
     const tokenPrice = values[7].multipliedBy(1e18).dividedBy(values[6]);
     const pointsPrice = values[7].multipliedBy(1e18).dividedBy(values[5]);
     const totalValueLocked = pointsPrice.times(values[1]).div(1e18);
+    const apr = values[8].dividedBy(1e18).decimalPlaces(2).toString();
 
     setData({
       totalLocked: values[1],
@@ -91,6 +97,7 @@ export const useRegulator = () => {
       peg: +values[2] / 1000,
       pendingRewards: values[4],
       stakedBalance: values[3],
+      apr: apr
     });
   }, [account, ethereum, DeFiat, Oracle, Regulator]);
 
