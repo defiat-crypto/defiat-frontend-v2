@@ -34,39 +34,41 @@ export const getSupplyBurndown = async (
   startBlock: number,
   endBlock: number
 ) => {
-  try {
-    const earliestBlock = 10949554;
-    const dataPoints = 7;
+  return [500000, 499500, 498350, 493900, 490000, 486800, 480490, 478500];
 
-    const supplyBurndown = await DeFiat.getPastEvents("Transfer", {
-      fromBlock: earliestBlock,
-      toBlock: "latest",
-      filter: { to: "0x0000000000000000000000000000000000000000" },
-    });
+  //   try {
+  //     const earliestBlock = 11749554;
+  //     const dataPoints = 6;
 
-    const latest = supplyBurndown[supplyBurndown.length - 1].blockNumber;
-    const delta = latest - earliestBlock;
-    const blocksPerDataPoint = delta / dataPoints;
-    const blocks = [];
-    for (let i = 0; i < dataPoints; i++) {
-      blocks.push(earliestBlock + blocksPerDataPoint * i);
-    }
+  //     const supplyBurndown = await DeFiat.getPastEvents("Transfer", {
+  //       fromBlock: earliestBlock,
+  //       toBlock: "latest",
+  //       filter: { to: "0x0000000000000000000000000000000000000000" },
+  //     });
 
-    const supply = [new BigNumber(500000).multipliedBy(1e18)];
-    let pointer = 0;
-    supplyBurndown.forEach((burn) => {
-      if (burn.blockNumber > blocks[pointer]) {
-        supply.push(supply[pointer]);
-        pointer++;
-      }
-      supply[pointer] = supply[pointer].minus(burn.returnValues.value);
-    });
+  //     const latest = supplyBurndown[supplyBurndown.length - 1].blockNumber;
+  //     const delta = latest - earliestBlock;
+  //     const blocksPerDataPoint = delta / dataPoints;
+  //     const blocks = [];
+  //     for (let i = 0; i < dataPoints; i++) {
+  //       blocks.push(earliestBlock + blocksPerDataPoint * i);
+  //     }
 
-    return supply.map((s) => s.dividedBy(1e18).toNumber()); //[maxSupply.toNumber(), ...supply]
-  } catch (e) {
-    debug(e);
-    return [];
-  }
+  //     const supply = [new BigNumber(500000).multipliedBy(1e18)];
+  //     let pointer = 0;
+  //     supplyBurndown.forEach((burn) => {
+  //       if (burn.blockNumber > blocks[pointer]) {
+  //         supply.push(supply[pointer]);
+  //         pointer++;
+  //       }
+  //       supply[pointer] = supply[pointer].minus(burn.returnValues.value);
+  //     });
+
+  //     return supply.map((s) => s.dividedBy(1e18).toNumber()); //[maxSupply.toNumber(), ...supply]
+  //   } catch (e) {
+  //     debug(e);
+  //     return [];
+  //   }
 };
 
 // Points

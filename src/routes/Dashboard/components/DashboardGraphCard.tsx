@@ -31,7 +31,7 @@ export const DashboardGraphCard = () => {
 
       return {
         labels: [
-          // "Sept 20",
+          "Sept 20",
           "Oct 20",
           "Nov 20",
           "Dec 20",
