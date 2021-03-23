@@ -22,7 +22,7 @@ export const RegulatorSummary = () => {
         variant="text"
         color="primary"
         endIcon={<LaunchRounded />}
-        href={getEtherscanAddress(chainId, addresses.AnyStake[chainId])}
+        href={getEtherscanAddress(chainId, addresses.Regulator[chainId])}
         target="_blank"
       >
         {formatAddress(addresses.Regulator[chainId])}

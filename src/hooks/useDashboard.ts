@@ -64,9 +64,10 @@ export const useDashboard = () => {
       getTokenPrice(OracleContract, Addresses.USDT[chainId]),
     ]);
 
+    const tranche = values[5] / 10;
     const nextLevel = await viewDiscountPointsNeeded(
       PointsContract,
-      +values[5] + 1
+      tranche + 1
     );
 
     setData({
@@ -75,7 +76,7 @@ export const useDashboard = () => {
       burnRate: (+values[2] / 100).toFixed(2),
       feeRate: (+values[3] / 100).toFixed(2),
       pointsBalance: getDisplayBalance(values[4]),
-      discountLevel: values[5],
+      discountLevel: tranche.toString(),
       nextLevel: getDisplayBalance(new BigNumber(nextLevel)),
       tokenPrice: getDisplayBalance(
         values[7].multipliedBy(1e18).dividedBy(values[6])

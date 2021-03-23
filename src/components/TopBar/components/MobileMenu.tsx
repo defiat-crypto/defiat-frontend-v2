@@ -9,7 +9,7 @@ interface MobileMenuProps {
   anchorRef: any;
 }
 
-export const MobileMenu : React.FC<MobileMenuProps> = ({
+export const MobileMenu: React.FC<MobileMenuProps> = ({
   anchorRef
 }) => {
   const history = useHistory()
@@ -22,7 +22,7 @@ export const MobileMenu : React.FC<MobileMenuProps> = ({
     setAnchorEl(anchorRef.current);
   };
 
-  const handleClose = (path?:string) => {
+  const handleClose = (path?: string) => {
     setAnchorEl(null);
     if (!!path) {
       history.push(path)
@@ -35,7 +35,7 @@ export const MobileMenu : React.FC<MobileMenuProps> = ({
       <IconButton edge="end" color="inherit" aria-label="menu">
         <MenuIcon onClick={handleMenu} />
       </IconButton>
-      <Menu 
+      <Menu
         anchorEl={anchorEl}
         getContentAnchorEl={null}
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
@@ -43,8 +43,8 @@ export const MobileMenu : React.FC<MobileMenuProps> = ({
         open={open}
         onClose={handleClose}
         variant='selectedMenu'
-        
-        style={{marginTop: '16px', width: '100vw', display: 'flex'}}
+
+        style={{ marginTop: '16px', width: '100vw', display: 'flex' }}
       >
         <ListSubheader>DeFiat</ListSubheader>
         <MenuItem onClick={() => handleClose('/')}>Home</MenuItem>
@@ -53,6 +53,7 @@ export const MobileMenu : React.FC<MobileMenuProps> = ({
         <MenuItem onClick={() => handleClose('/dashboard')}>Dashboard</MenuItem>
         <ListSubheader>Services</ListSubheader>
         <MenuItem onClick={() => handleClose('/staking')}>AnyStake</MenuItem>
+        <MenuItem onClick={() => handleClose('/regulator')}>Regulator</MenuItem>
         <MenuItem onClick={() => handleClose('/second')}>2ND Chance</MenuItem>
         <Divider />
         <Flex center p={1}>
