@@ -456,6 +456,26 @@ export const getPoolApr = async (
   pid: number
 ) => {
   try {
+    const latestDistributionBlock = new BigNumber(
+      await Vault.methods.lastDistributionBlock().call()
+    )
+    const rewardsDistributed = await Vault.getPastEvents("RewardsDistributed", {
+      fromBlock: latestDistributionBlock.minus(50000),
+      toBlock: latestDistributionBlock,
+    });
+
+    const earliestBlock = rewardsDistributed[0].blockNumber;
+
+    //skip rewards from earliestblock, they fall outside the delta.
+    rewardsDistributed.shift();
+    const delta = latestDistributionBlock.minus(earliestBlock);
+    let rewardsSum = new BigNumber("0");
+    //count all rewards between latestDistributionBlock and earliestBlock
+    rewardsDistributed.forEach((rewards) => {
+      rewardsSum = rewardsSum.plus(new BigNumber(rewards.returnValues['anystakeAmount']));
+    });
+    const blockrewards = rewardsSum.dividedBy(delta);
+
     const valuePool = await totalValueStakedPoolAnyStake(
       Oracle,
       Defiat,
@@ -468,17 +488,13 @@ export const getPoolApr = async (
     const poolAlloc = new BigNumber(
       (await AnyStake.methods.poolInfo(pid).call()).allocPoint
     );
-    const bondedRewards = new BigNumber(
-      await Vault.methods.bondedRewardsPerBlock().call()
-    );
     const dftprice = await getTokenPrice(Oracle, getDeFiatAddress(Defiat));
     const tetherprice = await getTokenPrice(Oracle, getTetherAddress(Defiat));
 
     const rewardsperyear = tetherprice
       .dividedBy(dftprice)
       .multipliedBy(poolAlloc.dividedBy(totalAlloc))
-      .multipliedBy(bondedRewards)
-      .multipliedBy(new BigNumber(0.7))
+      .multipliedBy(blockrewards)
       .multipliedBy(new BigNumber(2073600))
       .multipliedBy(1e2);
     const apy = rewardsperyear.dividedBy(valuePool);
