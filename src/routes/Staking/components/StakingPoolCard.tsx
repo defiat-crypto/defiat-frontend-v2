@@ -1,5 +1,6 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
+import vault256 from "assets/img/vault256.png";
 import { Box, Button, Typography } from "@material-ui/core";
 import { Flex } from "components/Flex";
 import { Card } from "components/Card";
@@ -17,6 +18,9 @@ export const StakingPoolCard: React.FC<StakingPoolCardProps> = ({ pool }) => {
 
   return (
     <Card>
+      <Box visibility={data?.vipAmount.isGreaterThan(0) ? "visible" : "hidden"}  >
+        <img src={vault256} alt="VIP" height="50px" width="auto" />
+      </Box>
       <Flex align="center" justify="center">
         <img src={logo} alt={symbol} height="100px" width="auto" />
       </Flex>

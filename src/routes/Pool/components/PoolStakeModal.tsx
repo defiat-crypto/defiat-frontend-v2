@@ -14,6 +14,7 @@ import { useDeFiat } from "hooks/useDeFiat";
 import { useNotifications } from "hooks/useNotifications";
 import { usePool } from "hooks/usePool";
 import React, { useCallback, useState } from "react";
+import { useHistory } from "react-router-dom";
 import { useWallet } from "use-wallet";
 import { getDisplayBalance, getFullDisplayBalance } from "utils";
 
@@ -28,7 +29,7 @@ export const PoolStakeModal: React.FC<PoolStakeModalProps> = ({
 }) => {
   const { chainId } = useWallet();
   const { symbol, address, decimals } = Pools[chainId][pid];
-
+  const symbolVIP = Pools[chainId][0]["symbol"];
   const notify = useNotifications();
   const DeFiat = useDeFiat();
   const { data, deposit, withdraw } = usePool(pid);
@@ -122,7 +123,27 @@ export const PoolStakeModal: React.FC<PoolStakeModalProps> = ({
       onDismiss={onDismiss}
       title={`Stake / Unstake ${symbol}`}
     >
-      <Flex mb={2} column>
+
+      <Flex mb={2} column visibility={data?.vipAmountUser.isLessThan(data.vipAmount) ? "visible" : "collapse"}>
+        <Flex align="flex-end" justify="space-between" mb={1}>
+          <Typography variant="h5">VIP Balance</Typography>
+          <Flex align="flex-end">
+            <Typography variant="h5" align="right">
+              <b>
+                {data ? getDisplayBalance(data.vipAmountUser, 18) : "0.00"}
+              </b>
+            </Typography>
+            <Typography variant="body1" align="right">
+              &nbsp;{symbolVIP}
+            </Typography>
+          </Flex>
+        </Flex>
+        <Flex mt={1}>
+          VIP Pool: {data ? getDisplayBalance(data.vipAmount) : "0.00"} DFT Stake Required to
+          Enter
+        </Flex>
+      </Flex>
+      <Flex mb={2} column display="false">
         <Flex align="flex-end" justify="space-between" mb={1}>
           <Typography variant="h5">Wallet Balance</Typography>
           <Flex align="flex-end">
@@ -166,6 +187,7 @@ export const PoolStakeModal: React.FC<PoolStakeModalProps> = ({
               isDepositing ||
               isWithdrawing ||
               data.tokenBalance.eq(0) ||
+              (data.vipAmount.isGreaterThan(0) && data.vipAmountUser.isLessThan(data.vipAmount)) ||
               !depositInput ||
               new BigNumber(depositInput).lte(0) ||
               new BigNumber(depositInput)
@@ -231,6 +253,7 @@ export const PoolStakeModal: React.FC<PoolStakeModalProps> = ({
               isDepositing ||
               isWithdrawing ||
               data.stakedBalance.eq(0) ||
+              (data.vipAmount.isGreaterThan(0) && data.vipAmountUser.isLessThan(data.vipAmount)) ||
               !withdrawInput ||
               new BigNumber(withdrawInput).lte(0) ||
               new BigNumber(withdrawInput)
