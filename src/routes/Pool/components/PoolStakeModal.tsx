@@ -173,7 +173,7 @@ export const PoolStakeModal: React.FC<PoolStakeModalProps> = ({
                 .gt(data.tokenBalance)
             }
           >
-            Stake {symbol}
+            {allowance?.eq(0) ? 'Approve' : 'Stake'} {symbol}
             {isDepositing && (
               <CircularProgress
                 size={16}
