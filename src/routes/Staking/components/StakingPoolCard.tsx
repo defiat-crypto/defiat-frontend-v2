@@ -18,9 +18,11 @@ export const StakingPoolCard: React.FC<StakingPoolCardProps> = ({ pool }) => {
 
   return (
     <Card>
-      <Box visibility={data?.vipAmount.isGreaterThan(0) ? "visible" : "hidden"}  >
-        <img src={vault256} alt="VIP" height="50px" width="auto" />
-      </Box>
+      {data?.vipAmount.isGreaterThan(0) ?
+        <Box>
+          <img src={vault256} alt="VIP" height="50px" width="auto" />
+        </Box>
+        : ""}
       <Flex align="center" justify="center">
         <img src={logo} alt={symbol} height="100px" width="auto" />
       </Flex>
