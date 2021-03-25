@@ -223,6 +223,11 @@ export const RegulatorStakeModal: React.FC<ModalProps> = ({
         <Typography variant="h6" gutterBottom align="center">
           <b>Unstaking DFTPv2 incurs a 10% fee to Regulate DFTPv2:DFT Peg</b>
         </Typography>
+        {data && !data.isAbovePeg && (
+          <Typography variant="h6" gutterBottom align="center">
+            The buyback balance of {getDisplayBalance(data.buybackBalance)}DFT will be used to buy DFTPv2
+          </Typography>
+        )}
         <Typography align="center">
           Staking / Unstaking automatically claim pending rewards
         </Typography>
