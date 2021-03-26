@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button, ButtonProps, makeStyles } from '@material-ui/core'
 import { useModal } from '../../hooks/useModal'
-import { Connectors, useWallet } from 'use-wallet'
+import { useWallet } from 'use-wallet'
 import { formatAddress } from '../../utils'
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import { Web3ConnectModal } from '../Web3ConnectModal'
