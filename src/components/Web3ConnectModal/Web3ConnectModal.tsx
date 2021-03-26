@@ -6,9 +6,9 @@ import { Web3ProviderButton } from './components/Web3ProviderButton'
 import { useWallet } from 'use-wallet'
 import { Modal, ModalProps } from '../Modal'
 
-export const Web3ConnectModal: React.FC<ModalProps> = ({ 
+export const Web3ConnectModal: React.FC<ModalProps> = ({
   isOpen,
-  onDismiss 
+  onDismiss
 }) => {
   const { account, connect } = useWallet()
 
@@ -25,14 +25,20 @@ export const Web3ConnectModal: React.FC<ModalProps> = ({
           <Web3ProviderButton
             image={MetamaskLogo}
             providerName="Metamask"
-            onClick={() => connect('injected')}
+            onClick={() => {
+              connect('injected');
+              localStorage.setItem('web3', 'injected');
+            }}
           />
         </Grid>
         <Grid item xs={12} md={6}>
           <Web3ProviderButton
             image={WalletConnectLogo}
             providerName="WalletConnect"
-            onClick={() => connect('walletconnect')}
+            onClick={() => {
+              connect('walletconnect');
+              localStorage.setItem('web3', 'walletconnect');
+            }}
           />
         </Grid>
       </Grid>
