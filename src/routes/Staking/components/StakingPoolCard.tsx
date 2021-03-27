@@ -28,9 +28,7 @@ export const StakingPoolCard: React.FC<StakingPoolCardProps> = ({ pool }) => {
   return (
     <Card>
       {data?.vipAmount.isGreaterThan(0) ?
-        <Box>
-          <img src={vault256} alt="VIP" className={classes.image} />
-        </Box>
+        <img src={vault256} alt="VIP" className={classes.image} />
         : ""}
       <Flex align="center" justify="center">
         <img src={logo} alt={symbol} height="100px" width="auto" />
