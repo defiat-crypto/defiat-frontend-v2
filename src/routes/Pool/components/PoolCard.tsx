@@ -58,7 +58,7 @@ export const PoolCard = () => {
             <b>{data ? getDisplayBalance(data.pendingRewards) : "0.00"}</b>
           </Typography>
           <Typography variant="subtitle2" align="center" gutterBottom>
-            Pending DFT Rewardss
+            Pending DFT Rewards
           </Typography>
           <Button
             variant="contained"
