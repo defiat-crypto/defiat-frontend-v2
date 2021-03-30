@@ -38,7 +38,7 @@ export const RegulatorSummary = () => {
 
 
       <Grid container spacing={1}>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={4}>
           <ValueCard
             value={data ? `${data.peg}:1` : "10:1"}
             name="DFTPv2:DFT Price Peg"
@@ -46,7 +46,14 @@ export const RegulatorSummary = () => {
             icon={regulator128}
           />
         </Grid>
-        <Grid item xs={12} md={6}>
+        <Grid item xs={12} md={4}>
+          <ValueCard
+            value={data ? `${getDisplayBalance(data.ratio, 0)}:1` : "10:1"}
+            name="Current DFTPv2:DFT Price Ratio"
+            icon={regulator128}
+          />
+        </Grid>
+        <Grid item xs={12} md={4}>
           <ValueCard
             value={data ? getDisplayBalance(data.totalLocked) : "0.00"}
             name="Total DFTP Staked"
@@ -76,6 +83,14 @@ export const RegulatorSummary = () => {
             value={data ? `${data.apr}%` : "0%"}
             name="APR"
             icon={points256}
+          />
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <ValueCard
+            value={data ? getDisplayBalance(data.buybackBalance) : "0.00"}
+            name="Buyback balance"
+            endSymbol="DFT"
+            icon={logo192}
           />
         </Grid>
       </Grid>
