@@ -16,20 +16,18 @@ import { Dashboard } from "./Dashboard";
 import { Scroll } from "../components/Scroll";
 import { useModal } from "../hooks/useModal";
 import { DisclaimerModal } from "../components/DisclaimerModal";
-import Cookies from "universal-cookie";
 import { Regulator } from "./Regulator";
 import { Pool } from "./Pool";
 
 export const Routes = () => {
-  const cookies = useMemo(() => new Cookies(), []);
-  const setCookie = () => cookies.set("defiat", "dft", { path: "/" });
+  const setCookie = () => localStorage.setItem("defiat", "dft");
   const [onPresent] = useModal(<DisclaimerModal onAccept={setCookie} />);
 
   useEffect(() => {
-    if (!cookies.get("defiat")) {
+    if (!localStorage.getItem("defiat")) {
       onPresent();
     }
-  }, [cookies, onPresent]);
+  }, [onPresent]);
 
   return (
     <Router basename="/">
