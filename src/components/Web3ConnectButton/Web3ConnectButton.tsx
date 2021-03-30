@@ -22,15 +22,25 @@ export const Web3ConnectButton: React.FC<Web3ConnectButtonProps> = ({
 }) => {
   const classes = useStyles()
   const [showConnectModal] = useModal(<Web3ConnectModal />)
-  const { account, reset } = useWallet()
+  const { account, reset, connect, status } = useWallet()
 
+  if (!account && status === 'disconnected') {
+    const web3 = localStorage.getItem('web3');
+    if (web3 === 'injected')
+      connect('injected');
+    else if (web3 === 'walletconnect')
+      connect('walletconnect');
+  }
   return (
     <Button
       color="inherit"
       variant="outlined"
-      classes={{label: classes.label}}
-      onClick={!!account 
-        ? reset
+      classes={{ label: classes.label }}
+      onClick={!!account
+        ? () => {
+          localStorage.removeItem('web3');
+          reset();
+        }
         : showConnectModal
       }
       startIcon={useWalletIcon
@@ -39,8 +49,8 @@ export const Web3ConnectButton: React.FC<Web3ConnectButtonProps> = ({
       }
       {...props}
     >
-      {!!account 
-        ? formatAddress(account) 
+      {!!account
+        ? formatAddress(account)
         : "CONNECT"
       }
     </Button>
