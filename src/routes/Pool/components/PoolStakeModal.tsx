@@ -28,7 +28,6 @@ export const PoolStakeModal: React.FC<PoolStakeModalProps> = ({
 }) => {
   const { chainId } = useWallet();
   const { symbol, address, decimals } = Pools[chainId][pid];
-
   const notify = useNotifications();
   const DeFiat = useDeFiat();
   const { data, deposit, withdraw } = usePool(pid);
@@ -148,7 +147,7 @@ export const PoolStakeModal: React.FC<PoolStakeModalProps> = ({
               <MaxInputAdornment
                 onClick={() =>
                   setDepositInput(
-                    getFullDisplayBalance(data.tokenBalance, decimals)
+                    data ? getFullDisplayBalance(data.tokenBalance, decimals) : "0"
                   )
                 }
               />
@@ -213,7 +212,7 @@ export const PoolStakeModal: React.FC<PoolStakeModalProps> = ({
               <MaxInputAdornment
                 onClick={() =>
                   setWithdrawInput(
-                    getFullDisplayBalance(data.stakedBalance, decimals)
+                    data ? getFullDisplayBalance(data.stakedBalance, decimals) : "0"
                   )
                 }
               />

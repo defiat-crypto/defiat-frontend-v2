@@ -31,6 +31,7 @@ interface StakingPoolData {
   tokenBalance: BigNumber;
   stakingFee: number;
   vipAmount: BigNumber;
+  vipAmountUser: BigNumber;
 }
 
 export const usePool = (pid: number) => {
@@ -81,6 +82,7 @@ export const usePool = (pid: number) => {
       getTokenPrice(Oracle, Pools[chainId][pid].address),
       getTokenPrice(Oracle, getTetherAddress(DeFiat)),
       vipAmountAnyStake(AnyStake, pid),
+      stakedAnyStake(AnyStake, 0, account)
       // getTokenPrice(Oracle, getDeFiatAddress(DeFiat)),
     ]);
 
@@ -98,6 +100,7 @@ export const usePool = (pid: number) => {
       stakedBalance: values[3],
       pendingRewards: values[4],
       vipAmount: values[7],
+      vipAmountUser: values[8]
     });
   }, [account, chainId, pid, ethereum, Oracle, AnyStake, DeFiat]);
 
