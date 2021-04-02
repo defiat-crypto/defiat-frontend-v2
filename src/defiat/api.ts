@@ -1,6 +1,6 @@
 import { Value } from "components/Value";
 import Addresses from "constants/addresses";
-import { StakingPool } from "constants/pools";
+import { Pools, StakingPool } from "constants/pools";
 import { TransactionReceipt } from "web3-core";
 import { Contract } from "web3-eth-contract";
 import { BigNumber, getTetherAddress } from ".";
@@ -711,8 +711,10 @@ export const getIncomingRewardsVault = async (DeFiat: DeFiat,
         id++,
         timeConverter(block.timestamp),
         rewards.returnValues["buybackAmount"],
+        rewards.returnValues["tokenAmount"],
+        getSymbol(rewards.returnValues["token"], chainid),
         rewards.transactionHash,
-        rewards.event,
+        "DeFiat Buyback",
         "In"
       ));
     });
@@ -728,8 +730,10 @@ export const getIncomingRewardsVault = async (DeFiat: DeFiat,
           id++,
           timeConverter(block.timestamp),
           rewards.returnValues["tokenAmount"],
+          rewards.returnValues["buybackAmount"],
+          getSymbol(rewards.returnValues["token"], chainid),
           rewards.transactionHash,
-          rewards.event,
+          "Points Buyback",
           "Out"
         ));
       }
@@ -746,8 +750,10 @@ export const getIncomingRewardsVault = async (DeFiat: DeFiat,
         id++,
         timeConverter(block.timestamp),
         rewards.returnValues["amount"],
+        undefined,
+        undefined,
         rewards.transactionHash,
-        rewards.event,
+        "Claimed Rewards",
         "Out"
       ));
     });
@@ -762,8 +768,10 @@ export const getIncomingRewardsVault = async (DeFiat: DeFiat,
         id++,
         timeConverter(block.timestamp),
         rewards.returnValues["amount"],
+        undefined,
+        undefined,
         rewards.transactionHash,
-        rewards.event,
+        "Claimed Rewards",
         "Out"
       ));
     });
@@ -780,13 +788,16 @@ export const getIncomingRewardsVault = async (DeFiat: DeFiat,
           id++,
           timeConverter(block.timestamp),
           rewards.returnValues.value,
+          undefined,
+          undefined,
           rewards.transactionHash,
-          rewards.event,
+          "Transfer Fee",
           "In"
         ));
       }
     });
     rewardsData.sort((one, two) => (one.timestamp > two.timestamp ? -1 : 1));
+    console.log(rewardsData);
     return rewardsData;
 
   } catch (e) {
@@ -795,6 +806,12 @@ export const getIncomingRewardsVault = async (DeFiat: DeFiat,
   }
 };
 
+function getSymbol(address: string, chainId: number) {
+  if (Addresses.DeFiat[chainId] === address)
+    return "DFTPv2";
+  const pools: StakingPool[] = Pools[chainId];
+  return pools.find((x) => x.address === address).symbol;
+}
 
 function timeConverter(UNIX_timestamp) {
   var a = new Date(UNIX_timestamp * 1000);
@@ -811,15 +828,19 @@ function timeConverter(UNIX_timestamp) {
 export class ProcessedRewards {
   public id: number;
   public timestamp: string
-  public amount: number;
+  public amountDFT: number;
+  public amountToken: number;
+  public symbolToken: string;
   public transactionHash: string;
   public eventType: string
   public direction: string
 
-  constructor(id: number, timestamp: string, amount: number, transactionHash: string, eventType: string, direction: string) {
+  constructor(id: number, timestamp: string, amount: number, amountToken: number, symbolToken: string, transactionHash: string, eventType: string, direction: string) {
     this.id = id;
     this.timestamp = timestamp;
-    this.amount = amount;
+    this.amountDFT = amount;
+    this.amountToken = amountToken;
+    this.symbolToken = symbolToken
     this.transactionHash = transactionHash;
     this.eventType = eventType;
     this.direction = direction;

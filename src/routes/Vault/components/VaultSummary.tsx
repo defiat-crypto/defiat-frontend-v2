@@ -7,7 +7,7 @@ import { useVault } from "hooks/useVault";
 import logo192 from "assets/img/logo192.png";
 import { useWallet } from "use-wallet";
 import { formatAddress, getDisplayBalance, getEtherscanAddress } from "utils";
-import { DataGrid, GridCellParams, GridValueFormatterParams } from "@material-ui/data-grid";
+import { DataGrid, GridCellParams, GridValueFormatterParams, GridValueGetterParams } from "@material-ui/data-grid";
 import { BigNumber } from "defiat";
 import { getEtherscanTransaction } from "utils/address";
 
@@ -21,6 +21,11 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+function getBuyBackToken(params: GridValueGetterParams) {
+    return `${params.getValue('amountToken') ? getDisplayBalance(new BigNumber(params.getValue('amountToken').toString())) : ''} ${params.getValue('symbolToken') ?? ''
+        }`;
+}
+
 
 export const VaultSummary = () => {
     const { data } = useVault();
@@ -28,15 +33,20 @@ export const VaultSummary = () => {
 
     const columns = [
         { field: 'timestamp', headerName: 'Date', flex: 1, sortable: false, filterable: false, },
+        { field: 'direction', headerName: 'Direction DFT', width: 160, sortable: false },
         {
-            field: 'amount', headerName: 'Amount DFT', flex: 1, sortable: false, type: 'number',
+            field: 'amountDFT', headerName: 'Amount DFT', flex: 1, sortable: false,
             valueFormatter: (params: GridValueFormatterParams) =>
                 getDisplayBalance(new BigNumber(params.value.toString()))
         },
-        { field: 'direction', headerName: 'Direction', flex: 1, sortable: false },
+
+        { field: 'buybackToken', headerName: 'Buyback Token', flex: 1, sortable: false, valueGetter: getBuyBackToken },
+
+
+
         { field: 'eventType', headerName: 'Action', flex: 1, sortable: false, },
         {
-            field: 'transactionHash', headerName: 'Transaction', flex: 1, sortable: false, filterable: false,
+            field: 'transactionHash', headerName: 'Transaction', width: 140, sortable: false, filterable: false,
             renderCell: (params: GridCellParams) => (
                 <Button
                     href={getEtherscanTransaction(chainId, params.value.toString())}
@@ -100,7 +110,7 @@ export const VaultSummary = () => {
                     <ValueCard
                         value={data ? getDisplayBalance(data.pendingRewards) : "0.00"}
                         endSymbol="DFT"
-                        name="Total Pending Rewards"
+                        name="Total Claimable Rewards"
                         icon={logo192}
                     />
                 </Grid>

@@ -52,10 +52,10 @@ export const useVault = () => {
 
         incomingRewardsVault.forEach((reward) => {
             if (reward.direction == "In") {
-                change = change.plus(reward.amount);
+                change = change.plus(reward.amountDFT);
             }
             else {
-                change = change.minus(reward.amount);
+                change = change.minus(reward.amountDFT);
             }
         }
         );
