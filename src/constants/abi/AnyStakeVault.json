@@ -845,7 +845,7 @@
   },
   {
     "inputs": [],
-    "name": "totalBuybackAmount",
+    "name": "totalPointsBuybackAmount",
     "outputs": [
       {
         "internalType": "uint256",
@@ -859,6 +859,19 @@
   {
     "inputs": [],
     "name": "totalRewardsDistributed",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "totalTokenBuybackAmount",
     "outputs": [
       {
         "internalType": "uint256",

@@ -1,6 +1,7 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
-import { Box, Button, Typography } from "@material-ui/core";
+import vault256 from "assets/img/vault256.png";
+import { Box, Button, makeStyles, Typography } from "@material-ui/core";
 import { Flex } from "components/Flex";
 import { Card } from "components/Card";
 import { StakingPool } from "constants/pools";
@@ -10,13 +11,25 @@ interface StakingPoolCardProps {
   pool: StakingPool;
 }
 
+const useStyles = makeStyles((theme) => ({
+  image: {
+    height: "50px",
+    width: "auto",
+    position: "absolute"
+  },
+}));
+
 export const StakingPoolCard: React.FC<StakingPoolCardProps> = ({ pool }) => {
   const history = useHistory();
   const { pid, logo, name, symbol, address, decimals } = pool;
   const { data } = usePoolCard(pid);
 
+  const classes = useStyles();
   return (
     <Card>
+      {data?.vipAmount.isGreaterThan(0) ?
+        <img src={vault256} alt="VIP" className={classes.image} />
+        : ""}
       <Flex align="center" justify="center">
         <img src={logo} alt={symbol} height="100px" width="auto" />
       </Flex>

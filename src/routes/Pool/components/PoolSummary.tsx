@@ -17,12 +17,6 @@ export const PoolSummary = () => {
 
   return (
     <Box>
-      {data && data.vipAmount.gt(0) && (
-        <Flex center pb={2}>
-          VIP Pool: {getDisplayBalance(data.vipAmount)} DFT Stake Required to
-          Enter
-        </Flex>
-      )}
       <Box pb={2}>
         <Typography variant="h4" align="center">
           $<b>{data ? getDisplayBalance(data.totalValueLocked) : "0.00"}</b>
@@ -31,7 +25,6 @@ export const PoolSummary = () => {
           Total Value Locked
         </Typography>
       </Box>
-
       <Grid container spacing={2}>
         <Grid item md={6} xs={12}>
           <ValueCard

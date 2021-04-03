@@ -643,16 +643,19 @@ export const pendingRegulator = async (
   account: string
 ) => {
   try {
-    // const result = await Regulator.methods.pending(account).call();
-    const values = await Promise.all([
-      Regulator.methods.userInfo(account).call(),
-      Regulator.methods.rewardsPerShare().call(),
-    ]);
+    const result = await Regulator.methods.pending(account).call();
+    return new BigNumber(result);
+  } catch (e) {
+    return new BigNumber("0");
+  }
+};
 
-    return new BigNumber(values[0].amount)
-      .times(values[1])
-      .div(1e18)
-      .minus(values[0].rewardDebt);
+export const buybackRegulator = async (
+  Regulator: Contract
+) => {
+  try {
+    const value = await Regulator.methods.buybackBalance().call();
+    return new BigNumber(value);
   } catch (e) {
     return new BigNumber("0");
   }
@@ -855,6 +858,17 @@ export async function asyncForEach<T>(array: Array<T>, callback: (item: T, index
   }
 }
 
+
+export const isAbovePeg = async (
+  Regulator: Contract
+) => {
+  try {
+    const value = await Regulator.methods.isAbovePeg().call();
+    return value;
+  } catch (e) {
+    return true;
+  }
+};
 
 
 

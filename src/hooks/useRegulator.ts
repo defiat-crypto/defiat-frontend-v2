@@ -15,6 +15,8 @@ import {
   getTetherAddress,
   getRegulatorApr,
   getVaultContract,
+  buybackRegulator,
+  isAbovePeg,
 } from "defiat";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useWallet } from "use-wallet";
@@ -29,10 +31,13 @@ interface RegulatorData {
   pointsPrice: BigNumber;
   tokenPrice: BigNumber;
   peg: number;
+  ratio: BigNumber;
   pendingRewards: BigNumber;
   tokenBalance: BigNumber;
   stakedBalance: BigNumber;
   apr: string;
+  buybackBalance: BigNumber;
+  isAbovePeg: boolean;
 }
 
 export const useRegulator = () => {
@@ -80,7 +85,9 @@ export const useRegulator = () => {
       getTokenPrice(Oracle, getPointsAddress(DeFiat)),
       getTokenPrice(Oracle, getDeFiatAddress(DeFiat)),
       getTokenPrice(Oracle, getTetherAddress(DeFiat)),
-      getRegulatorApr(Oracle, DeFiat, Vault, Regulator)
+      getRegulatorApr(Oracle, DeFiat, Vault, Regulator),
+      buybackRegulator(Regulator),
+      isAbovePeg(Regulator),
     ]);
 
     const tokenPrice = values[7].multipliedBy(1e18).dividedBy(values[6]);
@@ -94,10 +101,13 @@ export const useRegulator = () => {
       pointsPrice,
       tokenPrice,
       tokenBalance: values[0],
-      peg: +values[2] / 1000,
+      peg: +values[2] / 10,
+      ratio: tokenPrice.div(pointsPrice),
       pendingRewards: values[4],
       stakedBalance: values[3],
-      apr: apr
+      apr: apr,
+      buybackBalance: values[9],
+      isAbovePeg: values[10],
     });
   }, [account, ethereum, DeFiat, Oracle, Regulator]);
 
