@@ -10,8 +10,8 @@ import { useBlock } from "./useBlock";
 import { useDeFiat } from "./useDeFiat";
 
 interface VaultData {
-    tokenPrice: string,
-    totalValueLocked: string,
+    tokenPrice: BigNumber,
+    totalValueLocked: BigNumber,
     bondedRewards: BigNumber,
     getIncomingRewardsVault: ProcessedRewards[],
     balanceChange: BigNumber,
@@ -60,8 +60,8 @@ export const useVault = () => {
         }
         );
         setData({
-            tokenPrice: getDisplayBalance(tokenPrice.multipliedBy(1e18)),
-            totalValueLocked: getDisplayBalance(totalValueLocked),
+            tokenPrice: tokenPrice.multipliedBy(1e18),
+            totalValueLocked: totalValueLocked,
             bondedRewards: values[3],
             getIncomingRewardsVault: incomingRewardsVault,
             balanceChange: change,

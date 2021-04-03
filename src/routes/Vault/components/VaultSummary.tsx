@@ -75,7 +75,7 @@ export const VaultSummary = () => {
             </Button>
             <Box pb={2}>
                 <Typography variant="h4" align="center">
-                    $<b>{data ? data.totalValueLocked : "0.00"}</b>
+                    $<b>{data ? getDisplayBalance(data.totalValueLocked) : "0.00"}</b>
                 </Typography>
                 <Typography variant="subtitle2" align="center">
                     Total Value in the Vault
@@ -84,7 +84,7 @@ export const VaultSummary = () => {
             <Grid container spacing={2}>
                 <Grid item md={6} xs={12}>
                     <ValueCard
-                        value={data ? data.tokenPrice : "0.00"}
+                        value={data ? getDisplayBalance(data.tokenPrice) : "0.00"}
                         startSymbol="$"
                         name="DFT Price"
                         icon={logo192}
