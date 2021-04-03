@@ -32,21 +32,17 @@ export const VaultSummary = () => {
     const { chainId } = useWallet();
 
     const columns = [
-        { field: 'timestamp', headerName: 'Date', flex: 1, sortable: false, filterable: false, },
-        { field: 'direction', headerName: 'Direction DFT', width: 160, sortable: false },
+        { field: 'timestamp', headerName: 'Date', flex: 1, filterable: false, },
+        { field: 'direction', headerName: 'Direction DFT', width: 160, },
         {
-            field: 'amountDFT', headerName: 'Amount DFT', flex: 1, sortable: false,
+            field: 'amountDFT', headerName: 'Amount DFT', flex: 1,
             valueFormatter: (params: GridValueFormatterParams) =>
                 getDisplayBalance(new BigNumber(params.value.toString()))
         },
-
-        { field: 'buybackToken', headerName: 'Buyback Token', flex: 1, sortable: false, valueGetter: getBuyBackToken },
-
-
-
-        { field: 'eventType', headerName: 'Action', flex: 1, sortable: false, },
+        { field: 'buybackToken', headerName: 'Buyback Token', flex: 1, valueGetter: getBuyBackToken },
+        { field: 'eventType', headerName: 'Action', flex: 1, },
         {
-            field: 'transactionHash', headerName: 'Transaction', width: 140, sortable: false, filterable: false,
+            field: 'transactionHash', headerName: 'Transaction', width: 140, filterable: false,
             renderCell: (params: GridCellParams) => (
                 <Button
                     href={getEtherscanTransaction(chainId, params.value.toString())}
@@ -115,7 +111,10 @@ export const VaultSummary = () => {
                     />
                 </Grid>
                 <Grid item xs={12}>
-                    <DataGrid rows={data?.getIncomingRewardsVault ?? []} columns={columns} className={classes.grid} pageSize={50} />
+                    <DataGrid rows={data?.getIncomingRewardsVault ?? []} columns={columns.map((column) => ({
+                        ...column, sortable: false,
+                        disableClickEventBubbling: true,
+                    }))} className={classes.grid} pageSize={50} />
                 </Grid>
             </Grid>
 
