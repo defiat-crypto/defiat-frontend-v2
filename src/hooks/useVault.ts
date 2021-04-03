@@ -1,10 +1,9 @@
 
 import addresses from "constants/addresses";
-import Addresses from "constants/addresses";
-import DeFiat, { BigNumber, buybackBalanceRegulator, getAnyStakeContract, getBondedRewards, getDeFiatAddress, getDeFiatContract, getIncomingRewardsVault, getOracle, getPendingRewardsVault, getRegulatorContract, getTetherAddress, getTokenPrice, getVaultContract, ProcessedRewards, totalPendingRewardsAnyStake } from "defiat";
+import { BigNumber, getAnyStakeContract, getBondedRewards, getDeFiatAddress, getDeFiatContract, getIncomingRewardsVault, getOracle, getPendingRewardsVault, getRegulatorContract, getTetherAddress, getTokenPrice, getVaultContract, ProcessedRewards } from "defiat";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useWallet } from "use-wallet";
-import { getBalance, getDisplayBalance } from "utils";
+import { getBalance } from "utils";
 import { provider } from "web3-core";
 import { useBlock } from "./useBlock";
 import { useDeFiat } from "./useDeFiat";
@@ -51,7 +50,7 @@ export const useVault = () => {
         let change: BigNumber = new BigNumber("0");
 
         incomingRewardsVault.forEach((reward) => {
-            if (reward.direction == "In") {
+            if (reward.direction === "In") {
                 change = change.plus(reward.amountDFT);
             }
             else {
@@ -68,7 +67,7 @@ export const useVault = () => {
             pendingRewards: values[5]
 
         });
-    }, [account, ethereum, DeFiat, Oracle, Vault, AnyStake, Regulator, block]);
+    }, [ethereum, DeFiat, Oracle, Vault, AnyStake, Regulator, block, Token, chainId]);
 
 
     useEffect(() => {

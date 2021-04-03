@@ -1,10 +1,9 @@
 import { Display } from "components/Display";
 import vault256 from "assets/img/vault256.png";
-import { Box, Grid, makeStyles, Typography } from "@material-ui/core";
+import { Box, makeStyles, Typography } from "@material-ui/core";
 import { SocialMediaButtons } from "components/SocialMediaButtons";
 import { isTestnet } from "utils";
 import { Flex } from "components/Flex";
-import React from "react";
 import { VaultSummary } from "./components/VaultSummary";
 
 const useStyles = makeStyles((theme) => ({

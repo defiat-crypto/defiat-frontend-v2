@@ -661,14 +661,14 @@ export const buybackRegulator = async (
   }
 };
 
-export const buybackBalanceRegulator = async (
+export const isAbovePeg = async (
   Regulator: Contract
 ) => {
   try {
-    const result = await Regulator.methods.buybackBalance().call();
-    return new BigNumber(result);
+    const value = await Regulator.methods.isAbovePeg().call();
+    return value;
   } catch (e) {
-    return new BigNumber("0");
+    return true;
   }
 };
 
@@ -800,11 +800,9 @@ export const getIncomingRewardsVault = async (DeFiat: DeFiat,
       }
     });
     rewardsData.sort((one, two) => (one.timestamp > two.timestamp ? -1 : 1));
-    console.log(rewardsData);
     return rewardsData;
 
   } catch (e) {
-    console.log(e);
     return [];
   }
 };
@@ -859,16 +857,6 @@ export async function asyncForEach<T>(array: Array<T>, callback: (item: T, index
 }
 
 
-export const isAbovePeg = async (
-  Regulator: Contract
-) => {
-  try {
-    const value = await Regulator.methods.isAbovePeg().call();
-    return value;
-  } catch (e) {
-    return true;
-  }
-};
 
 
 
