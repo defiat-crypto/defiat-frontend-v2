@@ -1,4 +1,4 @@
-import { Box, makeStyles, Typography } from "@material-ui/core";
+import { Box, makeStyles, Tooltip, Typography } from "@material-ui/core";
 import React from "react";
 import { Card } from "../Card";
 import { Flex } from "..//Flex";
@@ -10,6 +10,7 @@ interface ValueCardProps {
   startSymbol?: string;
   endSymbol?: string;
   icon: string;
+  tooltip?: string;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -30,32 +31,36 @@ export const ValueCard: React.FC<ValueCardProps> = ({
   startSymbol,
   endSymbol,
   icon,
+  tooltip
 }) => {
   const classes = useStyles();
 
   return (
     <Card className={classes.card}>
-      <Flex column justify="space-between">
-        <Flex align="center">
-          <Box mr={2}>
-            <img src={icon} height="36px" width="auto" alt={name} />
-          </Box>
-          <Flex align="flex-end">
-            {!!startSymbol && (
-              <Typography variant="body1">{startSymbol}</Typography>
-            )}
-            <Typography variant="h5">{value}</Typography>
-            {!!endSymbol && (
-              <Typography variant="body1">{endSymbol}</Typography>
-            )}
+      <Tooltip title={tooltip ?? ""} placement="top-end">
+        <Box>
+          <Flex column justify="space-between">
+            <Flex align="center">
+              <Box mr={2}>
+                <img src={icon} height="36px" width="auto" alt={name} />
+              </Box>
+              <Flex align="flex-end">
+                {!!startSymbol && (
+                  <Typography variant="body1">{startSymbol}</Typography>
+                )}
+                <Typography variant="h5">{value}</Typography>
+                {!!endSymbol && (
+                  <Typography variant="body1">{endSymbol}</Typography>
+                )}
+              </Flex>
+            </Flex>
+            <TextDecoration width="100%" />
+            <Typography variant="body2" color="textSecondary" align="left">
+              {name}
+            </Typography>
           </Flex>
-        </Flex>
-
-        <TextDecoration width="100%" />
-        <Typography variant="body2" color="textSecondary" align="left">
-          {name}
-        </Typography>
-      </Flex>
-    </Card>
+        </Box>
+      </Tooltip>
+    </Card >
   );
 };

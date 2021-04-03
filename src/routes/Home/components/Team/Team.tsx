@@ -30,9 +30,9 @@ export const Team = () => {
       <Grid container spacing={3}>
         <Grid item xs={12} lg={4}>
           <TeamCard
-            name="Stupid"
+            name="Steven"
             title="Blockchain Developer"
-            email="stupid@defiat.net"
+            email="steven@defiat.net"
           />
         </Grid>
         <Grid item xs={12} lg={4}>
