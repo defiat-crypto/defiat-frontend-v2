@@ -447,6 +447,62 @@ export const totalPendingAnyStake = async (
   }
 };
 
+export const totalPendingVirtualAnyStake = async (
+  AnyStake: Contract,
+  pools: StakingPool[],
+  account: string,
+  block: number
+) => {
+  try {
+    var totalPending: BigNumber = new BigNumber(0);
+    for (const pool of pools) {
+      const result = await pendingVirtualAnyStake(AnyStake, pool.pid, account, block);
+      totalPending = totalPending.plus(result);
+    }
+    return new BigNumber(totalPending);
+  } catch (e) {
+    return new BigNumber("0");
+  }
+};
+
+export const pendingVirtualAnyStake = async (
+  AnyStake: Contract,
+  pid: number,
+  account: string,
+  block: number
+) => {
+  try {
+    if (block === 0)
+      return new BigNumber("0");
+    const poolinfo = await AnyStake.methods.poolInfo(pid).call();
+    let totalBlockDelta = new BigNumber(
+      await AnyStake.methods.totalBlockDelta().call()
+    );
+    const pendingRewards = new BigNumber(
+      await AnyStake.methods.pendingRewards().call()
+    );
+    const totalEligiblePools = new BigNumber(
+      await AnyStake.methods.totalEligiblePools().call()
+    );
+    const lastRewardBlock = await AnyStake.methods.lastRewardBlock().call();
+    totalBlockDelta = totalBlockDelta.plus(totalEligiblePools.multipliedBy(block - lastRewardBlock));
+    const poolBlockDelta = new BigNumber(block - poolinfo.lastRewardBlock);
+    const totalAlloc = new BigNumber(
+      await AnyStake.methods.totalAllocPoint().call()
+    );
+    const poolRewards = pendingRewards.multipliedBy(poolBlockDelta.dividedBy(totalBlockDelta)).multipliedBy(new BigNumber(poolinfo.allocPoint).dividedBy(totalAlloc));
+    const userinfo = await AnyStake.methods.userInfo(pid, account).call();
+    const virtualpending = new BigNumber(poolRewards).dividedBy(poolinfo.totalStaked).multipliedBy(userinfo.amount);
+    const pending = await AnyStake.methods.pending(pid, account).call();
+    const result = new BigNumber(pending).plus(virtualpending);
+    return result;
+  } catch (e) {
+    return new BigNumber("0");
+  }
+};
+
+
+
 export const getPoolApr = async (
   Oracle: Contract,
   Defiat: DeFiat,
@@ -632,6 +688,17 @@ export const pendingRegulator = async (
 ) => {
   try {
     const result = await Regulator.methods.pending(account).call();
+    return new BigNumber(result);
+  } catch (e) {
+    return new BigNumber("0");
+  }
+};
+
+export const pendingTotalRegulator = async (
+  Regulator: Contract,
+) => {
+  try {
+    const result = await Regulator.methods.pendingRewards().call();
     return new BigNumber(result);
   } catch (e) {
     return new BigNumber("0");
