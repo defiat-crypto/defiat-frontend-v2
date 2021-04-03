@@ -1,6 +1,7 @@
 
 import addresses from "constants/addresses";
-import { BigNumber, getAnyStakeContract, getBondedRewards, getDeFiatAddress, getDeFiatContract, getIncomingRewardsVault, getOracle, getPendingRewardsVault, getRegulatorContract, getTetherAddress, getTokenPrice, getVaultContract, ProcessedRewards } from "defiat";
+import { BigNumber, getAnyStakeContract, getBondedRewards, getDeFiatAddress, getDeFiatContract, getIncomingRewardsVault, getOracle, getPendingRewardsVault, getRegulatorContract, getTetherAddress, getTokenPrice, getVaultContract } from "defiat";
+import { ProcessedRewards } from "defiat/lib/processedRewards";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useWallet } from "use-wallet";
 import { getBalance } from "utils";

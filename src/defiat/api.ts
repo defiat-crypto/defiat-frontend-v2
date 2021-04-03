@@ -6,6 +6,7 @@ import { Contract } from "web3-eth-contract";
 import { BigNumber, getTetherAddress } from ".";
 import { debug, getBalance, getDisplayBalance } from "../utils";
 import { DeFiat } from "./DeFiat";
+import { ProcessedRewards } from "./lib/processedRewards";
 import { getDeFiatAddress, getPointsAddress } from "./utils";
 
 // Token
@@ -825,30 +826,6 @@ function timeConverter(UNIX_timestamp) {
   var time = year + '-' + month + '-' + date + ' ' + hour + ':' + min + ':' + sec;
   return time;
 }
-
-export class ProcessedRewards {
-  public id: number;
-  public timestamp: string
-  public amountDFT: number;
-  public amountToken: number;
-  public symbolToken: string;
-  public transactionHash: string;
-  public eventType: string
-  public direction: string
-
-  constructor(id: number, timestamp: string, amount: number, amountToken: number, symbolToken: string, transactionHash: string, eventType: string, direction: string) {
-    this.id = id;
-    this.timestamp = timestamp;
-    this.amountDFT = amount;
-    this.amountToken = amountToken;
-    this.symbolToken = symbolToken
-    this.transactionHash = transactionHash;
-    this.eventType = eventType;
-    this.direction = direction;
-  }
-}
-
-
 
 export async function asyncForEach<T>(array: Array<T>, callback: (item: T, index: number) => void) {
   for (let index = 0; index < array.length; index++) {
