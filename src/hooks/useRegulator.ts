@@ -101,7 +101,7 @@ export const useRegulator = () => {
       pointsPrice,
       tokenPrice,
       tokenBalance: values[0],
-      peg: +values[2] / 10,
+      peg: +values[2] / 1000,
       ratio: tokenPrice.div(pointsPrice),
       pendingRewards: values[4],
       stakedBalance: values[3],
