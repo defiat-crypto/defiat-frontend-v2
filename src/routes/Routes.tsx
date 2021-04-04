@@ -18,6 +18,7 @@ import { useModal } from "../hooks/useModal";
 import { DisclaimerModal } from "../components/DisclaimerModal";
 import { Regulator } from "./Regulator";
 import { Pool } from "./Pool";
+import { Vault } from "./Vault";
 
 export const Routes = () => {
   const setCookie = () => localStorage.setItem("defiat", "dft");
@@ -45,6 +46,7 @@ export const Routes = () => {
           <Route path="/second" component={SecondRecycler} />
           <Route path="/staking/:pid" component={Pool} />
           <Route path="/staking" component={Staking} />
+          <Route path="/vault" component={Vault} />
           <Route component={NoMatch} />
         </Switch>
       </Container>
