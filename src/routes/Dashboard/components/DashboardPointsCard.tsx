@@ -5,6 +5,7 @@ import { Flex } from "../../../components/Flex";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import { useDashboard } from "../../../hooks/useDashboard";
 import { ArrowUpwardRounded } from "@material-ui/icons";
+import { getDisplayBalance } from "utils";
 
 export const DashboardPointsCard = () => {
   const { data, upgrade } = useDashboard();
@@ -18,10 +19,10 @@ export const DashboardPointsCard = () => {
 
         <Flex align="flex-end">
           <Typography variant="h5">
-            {data ? data.pointsBalance : "0"}
+            {data ? getDisplayBalance(data.pointsBalance) : "0"}
           </Typography>
           <Typography variant="h5" color="textSecondary">
-            /{data ? data.nextLevel : "0"}
+            /{data ? getDisplayBalance(data.nextLevel) : "0"}
           </Typography>
           <Typography variant="body1">DFTP</Typography>
         </Flex>
@@ -44,9 +45,9 @@ export const DashboardPointsCard = () => {
             variant="determinate"
             value={
               data
-                ? +data.pointsBalance > +data.nextLevel
+                ? data.pointsBalance.isGreaterThan(data.nextLevel)
                   ? 100
-                  : (+data.pointsBalance / +data.nextLevel) * 100
+                  : (data.pointsBalance.dividedBy(data.nextLevel)).multipliedBy(100).toNumber()
                 : 0
             }
             color="primary"
@@ -76,7 +77,7 @@ export const DashboardPointsCard = () => {
             color="primary"
             startIcon={<ArrowUpwardRounded />}
             onClick={upgrade}
-            disabled={!data || +data.pointsBalance < +data.nextLevel}
+            disabled={!data || data.pointsBalance.isLessThan(data.nextLevel)}
           >
             Upgrade Discount
           </Button>
