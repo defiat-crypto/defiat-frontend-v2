@@ -14,6 +14,7 @@ import {
   withdrawAnyStake,
   getTetherAddress,
   vipAmountAnyStake,
+  pendingVirtualAnyStake,
 } from "defiat";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useWallet } from "use-wallet";
@@ -82,7 +83,8 @@ export const usePool = (pid: number) => {
       getTokenPrice(Oracle, Pools[chainId][pid].address),
       getTokenPrice(Oracle, getTetherAddress(DeFiat)),
       vipAmountAnyStake(AnyStake, pid),
-      stakedAnyStake(AnyStake, 0, account)
+      stakedAnyStake(AnyStake, 0, account),
+      pendingVirtualAnyStake(AnyStake, pid, account, block)
       // getTokenPrice(Oracle, getDeFiatAddress(DeFiat)),
     ]);
 
@@ -98,11 +100,11 @@ export const usePool = (pid: number) => {
       tokenPrice,
       totalValueLocked,
       stakedBalance: values[3],
-      pendingRewards: values[4],
+      pendingRewards: values[9],
       vipAmount: values[7],
       vipAmountUser: values[8]
     });
-  }, [account, chainId, pid, ethereum, Oracle, AnyStake, DeFiat]);
+  }, [account, chainId, pid, ethereum, Oracle, AnyStake, DeFiat, block]);
 
   useEffect(() => {
     if (!!account && !!DeFiat) {
