@@ -125,7 +125,25 @@ export const getTokenPrice = async (
   token: string
 ): Promise<BigNumber> => {
   try {
-    const tokenPrice = await Oracle.methods.getUniPrice(token).call();
+    if (token === "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2") {
+      return new BigNumber(10).pow(18);
+    } else {
+      const tokenPrice = await Oracle.methods.getUniPrice(token).call();
+      return new BigNumber(tokenPrice);
+    }
+  } catch (e) {
+    debug(e);
+    return new BigNumber(0);
+  }
+};
+
+export const getVaultPrice = async (
+  Vault: Contract,
+  token: string,
+  lpToken: string
+): Promise<BigNumber> => {
+  try {
+    const tokenPrice = await Vault.methods.getTokenPrice(token, lpToken).call();
     return new BigNumber(tokenPrice);
   } catch (e) {
     debug(e);
@@ -304,14 +322,17 @@ export const totalValueStakedAllPoolsAnyStake = async (
   try {
     //const tetherprice = await getTokenPrice(Oracle, getTetherAddress(Defiat));
     var totalAllPools: BigNumber = new BigNumber(0);
-    for (const pool of pools) {
-      totalAllPools = totalAllPools.plus(
-        await totalValueStakedPoolAnyStake(Oracle, Defiat, AnyStake, pool)
-      );
-    }
+
+    const totalStaked = await Promise.all(
+      pools.map((pool) =>
+        totalValueStakedPoolAnyStake(Oracle, Defiat, AnyStake, pool)
+      )
+    );
+
+    totalStaked.forEach((stake) => totalAllPools.plus(stake));
     return totalAllPools;
   } catch (e) {
-    debug(e);
+    debug(`ALL POOL STAKE ${e}`);
     return new BigNumber(0);
   }
 };
@@ -325,13 +346,19 @@ export const totalValueStakedPoolAnyStake = async (
   try {
     const tetherprice = await getTokenPrice(Oracle, getTetherAddress(Defiat));
     const result = await AnyStake.methods.poolInfo(pool.pid).call();
-    const tokenprice = await getTokenPrice(Oracle, pool.address);
+
+    let tokenPrice;
+    if (pool.pid === 5) {
+      tokenPrice = new BigNumber(10).pow(18);
+    } else {
+      tokenPrice = await getTokenPrice(Oracle, pool.address);
+    }
     return tetherprice
-      .dividedBy(tokenprice)
+      .dividedBy(tokenPrice)
       .multipliedBy(result.totalStaked)
       .dividedBy(new BigNumber(10).pow(pool.decimals));
   } catch (e) {
-    debug(e);
+    debug(`Staked Value ${e}`);
     return new BigNumber(0);
   }
 };
@@ -380,18 +407,23 @@ export const totalValueStakedAnyStake = async (
   try {
     const tetherprice = await getTokenPrice(Oracle, getTetherAddress(Defiat));
     var totalAllPools: BigNumber = new BigNumber(0);
-    for (const pool of pools) {
-      const userinfo = await AnyStake.methods
-        .userInfo(pool.pid, account)
-        .call();
-      const tokenprice = await getTokenPrice(Oracle, pool.address);
-      totalAllPools = totalAllPools.plus(
+
+    const totalStaked = await Promise.all(
+      pools.map((pool) => AnyStake.methods.userInfo(pool.pid, account).call())
+    );
+    const tokenPrice = await Promise.all(
+      pools.map((pool) => getTokenPrice(Oracle, pool.address))
+    );
+    // let totalAllPools = new BigNumber(0);
+    pools.forEach((pool, i) => {
+      totalAllPools.plus(
         tetherprice
-          .dividedBy(tokenprice)
-          .multipliedBy(userinfo.amount)
-          .dividedBy(new BigNumber(10).pow(pool.decimals))
+          .div(tokenPrice[i])
+          .times(totalStaked[i])
+          .div(new BigNumber(10).pow(pool.decimals))
       );
-    }
+    });
+
     return new BigNumber(totalAllPools);
   } catch (e) {
     debug(e);
@@ -420,12 +452,12 @@ export const totalPoolsStakedAnyStake = async (
 };
 
 export const pendingAnyStake = async (
-  RugSanctuary: Contract,
+  AnyStake: Contract,
   pid: number,
   account: string
 ) => {
   try {
-    const result = await RugSanctuary.methods.pending(pid, account).call();
+    const result = await AnyStake.methods.pending(pid, account).call();
     return new BigNumber(result);
   } catch (e) {
     return new BigNumber("0");
@@ -458,15 +490,21 @@ export const totalPendingVirtualAnyStake = async (
   try {
     var totalPending: BigNumber = new BigNumber(0);
     for (const pool of pools) {
-      const result = await pendingVirtualAnyStake(AnyStake, pool.pid, account, block);
+      const result = await pendingVirtualAnyStake(
+        AnyStake,
+        pool.pid,
+        account,
+        block
+      );
       totalPending = totalPending.plus(result);
     }
     return new BigNumber(totalPending);
-}
-  
-export const totalPendingRewardsAnyStake = async (
-  AnyStake: Contract
-) => {
+  } catch (e) {
+    return new BigNumber("0");
+  }
+};
+
+export const totalPendingRewardsAnyStake = async (AnyStake: Contract) => {
   try {
     const result = await AnyStake.methods.pendingRewards().call();
     return new BigNumber(result);
@@ -482,28 +520,39 @@ export const pendingVirtualAnyStake = async (
   block: number
 ) => {
   try {
-    if (block === 0)
+    if (block === 0) {
       return new BigNumber("0");
-    const poolinfo = await AnyStake.methods.poolInfo(pid).call();
-    let totalBlockDelta = new BigNumber(
-      await AnyStake.methods.totalBlockDelta().call()
+    }
+
+    const values = await Promise.all([
+      AnyStake.methods.poolInfo(pid).call(),
+      AnyStake.methods.totalBlockDelta().call(),
+      AnyStake.methods.pendingRewards().call(),
+      AnyStake.methods.totalEligiblePools().call(),
+      AnyStake.methods.lastRewardBlock().call(),
+      AnyStake.methods.totalAllocPoint().call(),
+      AnyStake.methods.userInfo(pid, account).call(),
+      AnyStake.methods.pending(pid, account).call(),
+    ]);
+
+    const poolinfo = values[0];
+    let totalBlockDelta = values[1];
+    const pendingRewards = values[2];
+    const totalEligiblePools = values[3];
+    const lastRewardBlock = values[4];
+    totalBlockDelta = totalBlockDelta.plus(
+      totalEligiblePools.multipliedBy(block - lastRewardBlock)
     );
-    const pendingRewards = new BigNumber(
-      await AnyStake.methods.pendingRewards().call()
-    );
-    const totalEligiblePools = new BigNumber(
-      await AnyStake.methods.totalEligiblePools().call()
-    );
-    const lastRewardBlock = await AnyStake.methods.lastRewardBlock().call();
-    totalBlockDelta = totalBlockDelta.plus(totalEligiblePools.multipliedBy(block - lastRewardBlock));
     const poolBlockDelta = new BigNumber(block - poolinfo.lastRewardBlock);
-    const totalAlloc = new BigNumber(
-      await AnyStake.methods.totalAllocPoint().call()
-    );
-    const poolRewards = pendingRewards.multipliedBy(poolBlockDelta.dividedBy(totalBlockDelta)).multipliedBy(new BigNumber(poolinfo.allocPoint).dividedBy(totalAlloc));
-    const userinfo = await AnyStake.methods.userInfo(pid, account).call();
-    const virtualpending = new BigNumber(poolRewards).dividedBy(poolinfo.totalStaked).multipliedBy(userinfo.amount);
-    const pending = await AnyStake.methods.pending(pid, account).call();
+    const totalAlloc = values[5];
+    const poolRewards = pendingRewards
+      .multipliedBy(poolBlockDelta.dividedBy(totalBlockDelta))
+      .multipliedBy(new BigNumber(poolinfo.allocPoint).dividedBy(totalAlloc));
+    const userinfo = values[6];
+    const virtualpending = new BigNumber(poolRewards)
+      .dividedBy(poolinfo.totalStaked)
+      .multipliedBy(userinfo.amount);
+    const pending = values[7];
     const result = new BigNumber(pending).plus(virtualpending);
     return result;
   } catch (e) {
@@ -520,11 +569,27 @@ export const getPoolApr = async (
   pid: number
 ) => {
   try {
-    const latestDistributionBlock = new BigNumber(
-      await Vault.methods.lastDistributionBlock().call()
-    )
+    const values = await Promise.all([
+      Vault.methods.lastDistributionBlock().call(),
+      AnyStake.methods.totalAllocPoint().call(),
+      AnyStake.methods.poolInfo(pid).call(),
+      getTokenPrice(Oracle, getDeFiatAddress(Defiat)),
+      getTokenPrice(Oracle, getTetherAddress(Defiat)),
+      totalValueStakedPoolAnyStake(Oracle, Defiat, AnyStake, pools[pid]),
+    ]);
+
+    const latestDistributionBlock = new BigNumber(values[0]);
+    const totalAlloc = new BigNumber(values[1]);
+    const poolAlloc = new BigNumber(values[2].allocPoint);
+    const dftPrice = values[3];
+    const tetherPrice = values[4];
+
+    const fromBlock = latestDistributionBlock.minus(50000).lt(12175584)
+      ? 12175584
+      : latestDistributionBlock.minus(50000);
+
     const rewardsDistributed = await Vault.getPastEvents("RewardsDistributed", {
-      fromBlock: latestDistributionBlock.minus(50000),
+      fromBlock: fromBlock,
       toBlock: latestDistributionBlock,
     });
 
@@ -536,34 +601,26 @@ export const getPoolApr = async (
     let rewardsSum = new BigNumber("0");
     //count all rewards between latestDistributionBlock and earliestBlock
     rewardsDistributed.forEach((rewards) => {
-      rewardsSum = rewardsSum.plus(new BigNumber(rewards.returnValues['anystakeAmount']));
+      rewardsSum = rewardsSum.plus(
+        new BigNumber(rewards.returnValues["anystakeAmount"])
+      );
     });
-    const blockrewards = rewardsSum.dividedBy(delta);
+    const blockrewards = rewardsSum.div(delta);
+    // console.log(blockrewards.toString());
 
-    const valuePool = await totalValueStakedPoolAnyStake(
-      Oracle,
-      Defiat,
-      AnyStake,
-      pools[pid]
-    );
-    const totalAlloc = new BigNumber(
-      await AnyStake.methods.totalAllocPoint().call()
-    );
-    const poolAlloc = new BigNumber(
-      (await AnyStake.methods.poolInfo(pid).call()).allocPoint
-    );
-    const dftprice = await getTokenPrice(Oracle, getDeFiatAddress(Defiat));
-    const tetherprice = await getTokenPrice(Oracle, getTetherAddress(Defiat));
+    const valuePool = values[5];
 
-    const rewardsperyear = tetherprice
-      .dividedBy(dftprice)
+    const rewardsperyear = tetherPrice
+      .dividedBy(dftPrice)
       .multipliedBy(poolAlloc.dividedBy(totalAlloc))
       .multipliedBy(blockrewards)
       .multipliedBy(new BigNumber(2073600))
       .multipliedBy(1e2);
     const apy = rewardsperyear.dividedBy(valuePool);
+    // console.log(apy.toString());
     return apy;
   } catch (e) {
+    console.log("APR", e);
     return new BigNumber("0");
   }
 };
@@ -579,7 +636,7 @@ export const getRegulatorApr = async (
   try {
     const latestDistributionBlock = new BigNumber(
       await Vault.methods.lastDistributionBlock().call()
-    )
+    );
     const rewardsDistributed = await Vault.getPastEvents("RewardsDistributed", {
       fromBlock: latestDistributionBlock.minus(50000),
       toBlock: latestDistributionBlock,
@@ -592,13 +649,13 @@ export const getRegulatorApr = async (
     let rewardsSum = new BigNumber("0");
     //count all rewards between latestDistributionBlock and earliestBlock
     rewardsDistributed.forEach((rewards) => {
-      rewardsSum = rewardsSum.plus(new BigNumber(rewards.returnValues['regulatorAmount']));
+      rewardsSum = rewardsSum.plus(
+        new BigNumber(rewards.returnValues["regulatorAmount"])
+      );
     });
     const blockrewards = rewardsSum.dividedBy(delta);
 
-    const totalStaked = await totalStakedRegulator(
-      Regulator
-    );
+    const totalStaked = await totalStakedRegulator(Regulator);
     const pointsprice = await getTokenPrice(Oracle, getPointsAddress(Defiat));
     const dftprice = await getTokenPrice(Oracle, getDeFiatAddress(Defiat));
     const tetherprice = await getTokenPrice(Oracle, getTetherAddress(Defiat));
@@ -702,9 +759,7 @@ export const pendingRegulator = async (
   }
 };
 
-export const pendingTotalRegulator = async (
-  Regulator: Contract,
-) => {
+export const pendingTotalRegulator = async (Regulator: Contract) => {
   try {
     const result = await Regulator.methods.pendingRewards().call();
     return new BigNumber(result);
@@ -713,9 +768,7 @@ export const pendingTotalRegulator = async (
   }
 };
 
-export const buybackRegulator = async (
-  Regulator: Contract
-) => {
+export const buybackRegulator = async (Regulator: Contract) => {
   try {
     const value = await Regulator.methods.buybackBalance().call();
     return new BigNumber(value);
@@ -724,9 +777,7 @@ export const buybackRegulator = async (
   }
 };
 
-export const isAbovePeg = async (
-  Regulator: Contract
-) => {
+export const isAbovePeg = async (Regulator: Contract) => {
   try {
     const value = await Regulator.methods.isAbovePeg().call();
     return value;
@@ -736,9 +787,7 @@ export const isAbovePeg = async (
 };
 
 // Vault
-export const getBondedRewards = async (
-  Vault: Contract,
-) => {
+export const getBondedRewards = async (Vault: Contract) => {
   try {
     const result = await Vault.methods.bondedRewards().call();
     return new BigNumber(result);
@@ -747,9 +796,7 @@ export const getBondedRewards = async (
   }
 };
 
-export const getPendingRewardsVault = async (
-  Vault: Contract,
-) => {
+export const getPendingRewardsVault = async (Vault: Contract) => {
   try {
     const result = await Vault.methods.pendingRewards().call();
     return new BigNumber(result);
@@ -758,12 +805,17 @@ export const getPendingRewardsVault = async (
   }
 };
 
-export const getIncomingRewardsVault = async (DeFiat: DeFiat,
-  DeFiatToken: Contract, Vault: Contract, AnyStake: Contract, Regulator: Contract, chainid: number, blockNumber: number
+export const getIncomingRewardsVault = async (
+  DeFiat: DeFiat,
+  DeFiatToken: Contract,
+  Vault: Contract,
+  AnyStake: Contract,
+  Regulator: Contract,
+  chainid: number,
+  blockNumber: number
 ) => {
   try {
-    if (blockNumber === 0)
-      return [];
+    if (blockNumber === 0) return [];
     var rewardsData: ProcessedRewards[] = [];
 
     const incomingBuyBacks = await Vault.getPastEvents("DeFiatBuyback", {
@@ -773,16 +825,18 @@ export const getIncomingRewardsVault = async (DeFiat: DeFiat,
     let id: number = 0;
     await asyncForEach(incomingBuyBacks, async (rewards) => {
       const block = await DeFiat.web3.eth.getBlock(rewards.blockNumber);
-      rewardsData.push(new ProcessedRewards(
-        id++,
-        timeConverter(block.timestamp),
-        rewards.returnValues["buybackAmount"],
-        rewards.returnValues["tokenAmount"],
-        getSymbol(rewards.returnValues["token"], chainid),
-        rewards.transactionHash,
-        "DeFiat Buyback",
-        "In"
-      ));
+      rewardsData.push(
+        new ProcessedRewards(
+          id++,
+          timeConverter(block.timestamp),
+          rewards.returnValues["buybackAmount"],
+          rewards.returnValues["tokenAmount"],
+          getSymbol(rewards.returnValues["token"], chainid),
+          rewards.transactionHash,
+          "DeFiat Buyback",
+          "In"
+        )
+      );
     });
 
     const pointsBuyBacks = await Vault.getPastEvents("PointsBuyback", {
@@ -792,16 +846,18 @@ export const getIncomingRewardsVault = async (DeFiat: DeFiat,
     await asyncForEach(pointsBuyBacks, async (rewards) => {
       if (rewards.returnValues["token"] === Addresses.DeFiat[chainid]) {
         const block = await DeFiat.web3.eth.getBlock(rewards.blockNumber);
-        rewardsData.push(new ProcessedRewards(
-          id++,
-          timeConverter(block.timestamp),
-          rewards.returnValues["tokenAmount"],
-          rewards.returnValues["buybackAmount"],
-          getSymbol(rewards.returnValues["token"], chainid),
-          rewards.transactionHash,
-          "Points Buyback",
-          "Out"
-        ));
+        rewardsData.push(
+          new ProcessedRewards(
+            id++,
+            timeConverter(block.timestamp),
+            rewards.returnValues["tokenAmount"],
+            rewards.returnValues["buybackAmount"],
+            getSymbol(rewards.returnValues["token"], chainid),
+            rewards.transactionHash,
+            "Points Buyback",
+            "Out"
+          )
+        );
       }
     });
 
@@ -812,16 +868,18 @@ export const getIncomingRewardsVault = async (DeFiat: DeFiat,
 
     await asyncForEach(outgoingClaims, async (rewards) => {
       const block = await DeFiat.web3.eth.getBlock(rewards.blockNumber);
-      rewardsData.push(new ProcessedRewards(
-        id++,
-        timeConverter(block.timestamp),
-        rewards.returnValues["amount"],
-        undefined,
-        undefined,
-        rewards.transactionHash,
-        "Claimed Rewards",
-        "Out"
-      ));
+      rewardsData.push(
+        new ProcessedRewards(
+          id++,
+          timeConverter(block.timestamp),
+          rewards.returnValues["amount"],
+          undefined,
+          undefined,
+          rewards.transactionHash,
+          "Claimed Rewards",
+          "Out"
+        )
+      );
     });
 
     const outgoingClaimsRegulator = await Regulator.getPastEvents("Claim", {
@@ -830,16 +888,18 @@ export const getIncomingRewardsVault = async (DeFiat: DeFiat,
     });
     await asyncForEach(outgoingClaimsRegulator, async (rewards) => {
       const block = await DeFiat.web3.eth.getBlock(rewards.blockNumber);
-      rewardsData.push(new ProcessedRewards(
-        id++,
-        timeConverter(block.timestamp),
-        rewards.returnValues["amount"],
-        undefined,
-        undefined,
-        rewards.transactionHash,
-        "Claimed Rewards",
-        "Out"
-      ));
+      rewardsData.push(
+        new ProcessedRewards(
+          id++,
+          timeConverter(block.timestamp),
+          rewards.returnValues["amount"],
+          undefined,
+          undefined,
+          rewards.transactionHash,
+          "Claimed Rewards",
+          "Out"
+        )
+      );
     });
 
     const incomingTransfers = await DeFiatToken.getPastEvents("Transfer", {
@@ -849,30 +909,34 @@ export const getIncomingRewardsVault = async (DeFiat: DeFiat,
     });
     await asyncForEach(incomingTransfers, async (rewards) => {
       const block = await DeFiat.web3.eth.getBlock(rewards.blockNumber);
-      if (rewardsData.find((x) => x.transactionHash === rewards.transactionHash) === undefined) {
-        rewardsData.push(new ProcessedRewards(
-          id++,
-          timeConverter(block.timestamp),
-          rewards.returnValues.value,
-          undefined,
-          undefined,
-          rewards.transactionHash,
-          "Transfer Fee",
-          "In"
-        ));
+      if (
+        rewardsData.find(
+          (x) => x.transactionHash === rewards.transactionHash
+        ) === undefined
+      ) {
+        rewardsData.push(
+          new ProcessedRewards(
+            id++,
+            timeConverter(block.timestamp),
+            rewards.returnValues.value,
+            undefined,
+            undefined,
+            rewards.transactionHash,
+            "Transfer Fee",
+            "In"
+          )
+        );
       }
     });
     rewardsData.sort((one, two) => (one.timestamp > two.timestamp ? -1 : 1));
     return rewardsData;
-
   } catch (e) {
     return [];
   }
 };
 
 function getSymbol(address: string, chainId: number) {
-  if (Addresses.DeFiat[chainId] === address)
-    return "DFTPv2";
+  if (Addresses.DeFiat[chainId] === address) return "DFTPv2";
   const pools: StakingPool[] = Pools[chainId];
   return pools.find((x) => x.address === address).symbol;
 }
@@ -882,21 +946,19 @@ function timeConverter(UNIX_timestamp) {
   var year = a.getFullYear();
   var month = a.getMonth() + 1;
   var date = a.getDate();
-  var hour = a.getHours().toString().padStart(2, '0');
-  var min = a.getMinutes().toString().padStart(2, '0');;
-  var sec = a.getSeconds().toString().padStart(2, '0');;
-  var time = year + '-' + month + '-' + date + ' ' + hour + ':' + min + ':' + sec;
+  var hour = a.getHours().toString().padStart(2, "0");
+  var min = a.getMinutes().toString().padStart(2, "0");
+  var sec = a.getSeconds().toString().padStart(2, "0");
+  var time =
+    year + "-" + month + "-" + date + " " + hour + ":" + min + ":" + sec;
   return time;
 }
 
-export async function asyncForEach<T>(array: Array<T>, callback: (item: T, index: number) => void) {
+export async function asyncForEach<T>(
+  array: Array<T>,
+  callback: (item: T, index: number) => void
+) {
   for (let index = 0; index < array.length; index++) {
     await callback(array[index], index);
   }
 }
-
-
-
-
-
-

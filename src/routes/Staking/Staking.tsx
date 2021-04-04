@@ -33,7 +33,7 @@ export const Staking = () => {
               alt="anystake-brand"
             />
           </Flex>
-          <StakingSummary />
+          {/* <StakingSummary /> */}
           <StakingPoolList />
         </Box>
       ) : (

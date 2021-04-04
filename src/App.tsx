@@ -9,7 +9,7 @@ import { SnackbarProvider } from "notistack";
 import { isTestnet } from "utils";
 
 const App = () => {
-  const chainId = isTestnet() ? 4 : 1;
+  const chainId = !isTestnet() ? 4 : 1;
 
   return (
     <UseWalletProvider
