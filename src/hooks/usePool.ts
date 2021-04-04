@@ -84,7 +84,8 @@ export const usePool = (pid: number) => {
       getTokenPrice(Oracle, getTetherAddress(DeFiat)),
       vipAmountAnyStake(AnyStake, pid),
       stakedAnyStake(AnyStake, 0, account),
-      pendingVirtualAnyStake(AnyStake, pid, account, block)
+      pendingAnyStake(AnyStake, pid, account),
+      // pendingVirtualAnyStake(AnyStake, pid, account, block)
       // getTokenPrice(Oracle, getDeFiatAddress(DeFiat)),
     ]);
 
@@ -102,7 +103,7 @@ export const usePool = (pid: number) => {
       stakedBalance: values[3],
       pendingRewards: values[9],
       vipAmount: values[7],
-      vipAmountUser: values[8]
+      vipAmountUser: values[8],
     });
   }, [account, chainId, pid, ethereum, Oracle, AnyStake, DeFiat, block]);
 

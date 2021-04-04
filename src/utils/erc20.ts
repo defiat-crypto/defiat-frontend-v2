@@ -1,7 +1,7 @@
 import Web3 from "web3";
 import { provider, TransactionReceipt } from "web3-core";
 import { AbiItem } from "web3-utils";
-import ERC20 from "../constants/abi/_ERC20.json";
+import ERC20 from "../constants/abi/IERC20.json";
 import BigNumber from "bignumber.js";
 import { debug } from "./config";
 import { ethers } from "ethers";

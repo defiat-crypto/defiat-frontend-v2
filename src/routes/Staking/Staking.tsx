@@ -23,21 +23,19 @@ export const Staking = () => {
   const classes = useStyles();
 
   return (
-    <Display column center={!isTestnet()} offset={isTestnet()}>
-      {isTestnet() ? (
-        <Box>
-          <Flex center>
-            <img
-              src={anystakeBrand}
-              className={classes.image}
-              alt="anystake-brand"
-            />
-          </Flex>
-          <StakingSummary />
-          <StakingPoolList />
-        </Box>
-      ) : (
-        <Box>
+    <Display column center>
+      <Box>
+        <Flex center>
+          <img
+            src={anystakeBrand}
+            className={classes.image}
+            alt="anystake-brand"
+          />
+        </Flex>
+        {/* <StakingSummary /> */}
+        <StakingPoolList />
+      </Box>
+      {/* <Box>
           <Flex center>
             <img
               src={anystakeBrand}
@@ -53,8 +51,7 @@ export const Staking = () => {
             communities for more news and developments.
           </Typography>
           <SocialMediaButtons center />
-        </Box>
-      )}
+        </Box> */}
     </Display>
   );
 };

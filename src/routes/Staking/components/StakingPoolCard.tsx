@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
   image: {
     height: "50px",
     width: "auto",
-    position: "absolute"
+    position: "absolute",
   },
 }));
 
@@ -27,9 +27,11 @@ export const StakingPoolCard: React.FC<StakingPoolCardProps> = ({ pool }) => {
   const classes = useStyles();
   return (
     <Card>
-      {data?.vipAmount.isGreaterThan(0) ?
+      {data?.vipAmount.isGreaterThan(0) ? (
         <img src={vault256} alt="VIP" className={classes.image} />
-        : ""}
+      ) : (
+        ""
+      )}
       <Flex align="center" justify="center">
         <img src={logo} alt={symbol} height="100px" width="auto" />
       </Flex>
@@ -43,7 +45,7 @@ export const StakingPoolCard: React.FC<StakingPoolCardProps> = ({ pool }) => {
         </Typography>
       </Box>
 
-      <Flex justify="space-around" my={2}>
+      {/* <Flex justify="space-around" my={2}>
         <Box>
           <Typography variant="h5" align="center">
             <b>{data ? data.totalStaked : "0.00"}</b>
@@ -60,7 +62,7 @@ export const StakingPoolCard: React.FC<StakingPoolCardProps> = ({ pool }) => {
             APR
           </Typography>
         </Box>
-      </Flex>
+      </Flex> */}
       <Button
         onClick={() => history.push(`/staking/${pid}`)}
         color="primary"
