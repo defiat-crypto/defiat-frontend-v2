@@ -1,7 +1,7 @@
 import BigNumber from "bignumber.js";
 import { Pools } from "constants/pools";
 import DeFiat from "contexts/DeFiat";
-import { getTokenPrice, getOracle, getDeFiatAddress, getAnyStakeContract, pendingAnyStake, getTetherAddress, totalStakedAnyStake, totalValueStakedAllPoolsAnyStake, totalPendingAnyStake, totalValueStakedAnyStake, totalPoolsStakedAnyStake } from "defiat";
+import { getTokenPrice, getOracle, getDeFiatAddress, getAnyStakeContract, pendingAnyStake, getTetherAddress, totalStakedAnyStake, totalValueStakedAllPoolsAnyStake, totalPendingAnyStake, totalValueStakedAnyStake, totalPoolsStakedAnyStake, totalPendingVirtualAnyStake } from "defiat";
 import { useEffect, useMemo } from "react";
 import { useCallback, useState } from "react";
 import { useWallet } from "use-wallet";
@@ -35,7 +35,7 @@ export const useAnyStake = () => {
     const values = await Promise.all([
       getTokenPrice(Oracle, getDeFiatAddress(DeFiat)),
       getTokenPrice(Oracle, getTetherAddress(DeFiat)),
-      totalPendingAnyStake(AnyStake, Pools[chainId], account),
+      totalPendingVirtualAnyStake(AnyStake, Pools[chainId], account, block),
       totalValueStakedAllPoolsAnyStake(Oracle, DeFiat, AnyStake, Pools[chainId]),
       totalValueStakedAnyStake(Oracle, DeFiat, AnyStake, Pools[chainId], account),
       totalPoolsStakedAnyStake(AnyStake, Pools[chainId], account)
@@ -52,7 +52,7 @@ export const useAnyStake = () => {
       totalValueStaked: getDisplayBalance(totalValueStaked),
       totalStakes: values[5]
     });
-  }, [account, ethereum, DeFiat, Oracle, AnyStake]);
+  }, [account, ethereum, DeFiat, Oracle, AnyStake, block]);
 
   useEffect(() => {
     if (!!account && !!DeFiat) {

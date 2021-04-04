@@ -24,9 +24,9 @@ interface DashboardData {
   tokenSupply: string;
   burnRate: string;
   feeRate: string;
-  pointsBalance: string;
+  pointsBalance: BigNumber;
   discountLevel: string;
-  nextLevel: string;
+  nextLevel: BigNumber;
   tokenPrice: string;
   ethPrice: string;
 }
@@ -70,14 +70,15 @@ export const useDashboard = () => {
       tranche + 1
     );
 
+
     setData({
       tokenBalance: getDisplayBalance(values[0]),
       tokenSupply: getDisplayBalance(values[1]),
       burnRate: (+values[2] / 100).toFixed(2),
       feeRate: (+values[3] / 100).toFixed(2),
-      pointsBalance: getDisplayBalance(values[4]),
+      pointsBalance: values[4],
       discountLevel: tranche.toString(),
-      nextLevel: getDisplayBalance(new BigNumber(nextLevel)),
+      nextLevel: new BigNumber(nextLevel),
       tokenPrice: getDisplayBalance(
         values[7].multipliedBy(1e18).dividedBy(values[6])
       ),

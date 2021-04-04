@@ -55,6 +55,7 @@ export const MenuLink = () => {
             Regulator
           </MenuItem>
         )}
+        <MenuItem onClick={() => handleClose("/vault")}>Vault</MenuItem>
         <MenuItem onClick={() => handleClose("/second")}>2nd Chance</MenuItem>
       </Menu>
       {/* <Popover

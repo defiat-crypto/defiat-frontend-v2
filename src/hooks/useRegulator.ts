@@ -17,6 +17,7 @@ import {
   getVaultContract,
   buybackRegulator,
   isAbovePeg,
+  pendingTotalRegulator,
 } from "defiat";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useWallet } from "use-wallet";
@@ -88,12 +89,14 @@ export const useRegulator = () => {
       getRegulatorApr(Oracle, DeFiat, Vault, Regulator),
       buybackRegulator(Regulator),
       isAbovePeg(Regulator),
+      pendingTotalRegulator(Regulator),
     ]);
 
     const tokenPrice = values[7].multipliedBy(1e18).dividedBy(values[6]);
     const pointsPrice = values[7].multipliedBy(1e18).dividedBy(values[5]);
     const totalValueLocked = pointsPrice.times(values[1]).div(1e18);
     const apr = values[8].dividedBy(1e18).decimalPlaces(2).toString();
+    const pendingRewards = values[1].isZero() ? values[4] : values[4].plus(values[3].dividedBy(values[1]).multipliedBy(values[11]));
 
     setData({
       totalLocked: values[1],
@@ -101,9 +104,9 @@ export const useRegulator = () => {
       pointsPrice,
       tokenPrice,
       tokenBalance: values[0],
-      peg: +values[2] / 10,
+      peg: +values[2] / 1000,
       ratio: tokenPrice.div(pointsPrice),
-      pendingRewards: values[4],
+      pendingRewards: pendingRewards,
       stakedBalance: values[3],
       apr: apr,
       buybackBalance: values[9],
