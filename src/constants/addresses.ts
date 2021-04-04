@@ -28,7 +28,7 @@ const Addresses: { [key: string]: { [networkId: number]: string } } = {
     4: "0xF7426EAcb2b00398D4cefb3E24115c91821d6fB0",
   },
   PointsLp: {
-    1: "0xde3e18ecb613498b9a1483af51394ec2259bcd0a",
+    1: "0xb4c36b752b706836ab90ed4e78b058150ae9ed59",
     4: "0x23A4c03d18666970200A202116Aa8752fbB5a2FB",
   },
   AnyStake: {
