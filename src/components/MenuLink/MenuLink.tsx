@@ -50,11 +50,7 @@ export const MenuLink = () => {
         onClose={() => handleClose()}
       >
         <MenuItem onClick={() => handleClose("/staking")}>AnyStake</MenuItem>
-        {isTestnet() && (
-          <MenuItem onClick={() => handleClose("/regulator")}>
-            Regulator
-          </MenuItem>
-        )}
+        <MenuItem onClick={() => handleClose("/regulator")}>Regulator</MenuItem>
         <MenuItem onClick={() => handleClose("/vault")}>Vault</MenuItem>
         <MenuItem onClick={() => handleClose("/second")}>2nd Chance</MenuItem>
       </Menu>
