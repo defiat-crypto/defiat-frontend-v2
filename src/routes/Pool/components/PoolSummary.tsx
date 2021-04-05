@@ -1,5 +1,6 @@
 import { Box, Grid, Typography } from "@material-ui/core";
 import anystake128 from "assets/img/anystake128.png";
+import logo192 from "assets/img/logo192.png";
 import { useWallet } from "use-wallet";
 import { useParams } from "react-router";
 import { Pools } from "constants/pools";
@@ -42,6 +43,22 @@ export const PoolSummary = () => {
             startSymbol="$"
             name={`${symbol} Price`}
             icon={logo}
+          />
+        </Grid>
+        <Grid item md={6} xs={12}>
+          <ValueCard
+            value={data ? `${data.apr}` : "0.00"}
+            endSymbol="%"
+            name="APR in USDC"
+            icon={logo192}
+          />
+        </Grid>
+        <Grid item md={6} xs={12}>
+          <ValueCard
+            value={data ? data.priceMultiplier : ""}
+            endSymbol="x"
+            name="Pool Reward Multiplier"
+            icon={logo192}
           />
         </Grid>
       </Grid>

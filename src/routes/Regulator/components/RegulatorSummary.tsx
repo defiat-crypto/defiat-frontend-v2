@@ -36,8 +36,7 @@ export const RegulatorSummary = () => {
         </Typography>
       </Box>
 
-
-      <Grid container spacing={1}>
+      <Grid container spacing={2}>
         <Grid item xs={12} md={4}>
           <ValueCard
             value={data ? `${data.peg}:1` : "10:1"}
@@ -81,8 +80,8 @@ export const RegulatorSummary = () => {
         <Grid item xs={12} md={6}>
           <ValueCard
             value={data ? `${data.apr}%` : "0%"}
-            name="APR"
-            icon={points256}
+            name="APR in USDC"
+            icon={logo192}
           />
         </Grid>
         <Grid item xs={12} md={6}>

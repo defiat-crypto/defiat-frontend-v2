@@ -59,7 +59,7 @@ export const StakingPoolCard: React.FC<StakingPoolCardProps> = ({ pool }) => {
             <b>{data ? `${data.apr}%` : "0%"}</b>
           </Typography>
           <Typography variant="subtitle2" align="center">
-            APR
+            APR ($)
           </Typography>
         </Box>
       </Flex>

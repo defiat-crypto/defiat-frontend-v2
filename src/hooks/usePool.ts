@@ -19,6 +19,7 @@ import {
   getVaultPrice,
   getCircleAddress,
   getCircleLpAddress,
+  getPoolApr,
 } from "defiat";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useWallet } from "use-wallet";
@@ -37,6 +38,8 @@ interface StakingPoolData {
   stakingFee: number;
   vipAmount: BigNumber;
   vipAmountUser: BigNumber;
+  apr: string;
+  priceMultiplier: string;
 }
 
 export const usePool = (pid: number) => {
@@ -52,7 +55,6 @@ export const usePool = (pid: number) => {
 
   const AnyStake = useMemo(() => getAnyStakeContract(DeFiat), [DeFiat]);
   const Vault = useMemo(() => getVaultContract(DeFiat), [DeFiat]);
-  const Oracle = useMemo(() => getOracle(DeFiat), [DeFiat]);
 
   const handleClaim = useCallback(
     async (pid: number) => {
@@ -88,6 +90,7 @@ export const usePool = (pid: number) => {
       vipAmountAnyStake(AnyStake, pid),
       stakedAnyStake(AnyStake, 0, account),
       AnyStake.methods.poolInfo(pid).call(),
+      getPoolApr(DeFiat, Vault, AnyStake, Pools[chainId][pid], pid),
     ]);
 
     const tokenBalance = values[0];
@@ -98,6 +101,8 @@ export const usePool = (pid: number) => {
     const vipAmount = values[5];
     const vipAmountUser = values[6];
     const poolInfo = values[7];
+    const priceMultiplier = (values[7].allocPoint / 100).toString();
+    const apr = values[8].div(1e18).decimalPlaces(2).toString();
 
     const prices = await Promise.all([
       getVaultPrice(
@@ -123,6 +128,8 @@ export const usePool = (pid: number) => {
       pendingRewards,
       vipAmount,
       vipAmountUser,
+      apr,
+      priceMultiplier,
     });
   }, [account, chainId, pid, ethereum, Vault, AnyStake, DeFiat, block]);
 
