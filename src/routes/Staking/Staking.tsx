@@ -23,7 +23,7 @@ export const Staking = () => {
   const classes = useStyles();
 
   return (
-    <Display column center>
+    <Display column offset>
       <Box>
         <Flex center>
           <img
