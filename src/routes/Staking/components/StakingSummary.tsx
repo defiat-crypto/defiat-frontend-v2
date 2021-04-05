@@ -40,6 +40,7 @@ export const StakingSummary = () => {
             value={data ? data.tokenPrice : "0.00"}
             startSymbol="$"
             name="DFT Price"
+            tooltip="The price of DFT on Uniswap in USDC"
             icon={logo192}
           />
         </Grid>
@@ -48,6 +49,7 @@ export const StakingSummary = () => {
             value={data ? data.pendingRewards : "0.00"}
             name="My Claimable Rewards"
             endSymbol="DFT"
+            tooltip="My total pending rewards across all of AnyStake. Note: total pending rewards is virtually calculated to give a real-time estimate of your pending DFT rewards. This figure will always be most accurate after a recent interaction with the given pool"
             icon={logo192}
           />
         </Grid>
@@ -56,6 +58,7 @@ export const StakingSummary = () => {
             value={data ? data.totalValueStaked : "0.00"}
             startSymbol="$"
             name="My Total Staked Value"
+            tooltip="The total value of my tokens staked in AnyStake"
             icon={anystake128}
           />
         </Grid>
@@ -63,6 +66,7 @@ export const StakingSummary = () => {
           <ValueCard
             value={data ? data.totalStakes : "0"}
             name="My Active AnyStakes"
+            tooltip="How many pools I have staked into in AnyStake"
             icon={spinner256}
           />
         </Grid>
