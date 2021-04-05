@@ -4,15 +4,10 @@ import {
   claimAnyStake,
   depositAnyStake,
   getAnyStakeContract,
-  getDeFiatAddress,
-  getOracle,
-  getTokenPrice,
-  pendingAnyStake,
   stakedAnyStake,
   totalStakedAnyStake,
   stakingFeeAnyStake,
   withdrawAnyStake,
-  getTetherAddress,
   vipAmountAnyStake,
   pendingVirtualAnyStake,
   getVaultContract,
@@ -23,7 +18,7 @@ import {
 } from "defiat";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useWallet } from "use-wallet";
-import { getBalance, getDisplayBalance } from "utils";
+import { getBalance } from "utils";
 import { provider } from "web3-core";
 import { useBlock } from "./useBlock";
 import { useDeFiat } from "./useDeFiat";

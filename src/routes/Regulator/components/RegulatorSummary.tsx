@@ -1,7 +1,5 @@
 import { Box, Button, Grid, Typography } from "@material-ui/core";
 import { Flex } from "components/Flex";
-import React from "react";
-import { Value } from "components/Value";
 import { formatAddress, getDisplayBalance, getEtherscanAddress } from "utils";
 import { useRegulator } from "hooks/useRegulator";
 import { ValueCard } from "components/ValueCard";

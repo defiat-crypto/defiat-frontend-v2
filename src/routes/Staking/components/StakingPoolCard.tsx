@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const StakingPoolCard: React.FC<StakingPoolCardProps> = ({ pool }) => {
   const history = useHistory();
-  const { pid, logo, name, symbol, address, decimals } = pool;
+  const { pid, logo, name, symbol } = pool;
   const { data } = usePoolCard(pid);
 
   const classes = useStyles();

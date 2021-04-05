@@ -7,12 +7,11 @@ import { Pools } from "constants/pools";
 import { usePool } from "hooks/usePool";
 import { ValueCard } from "components/ValueCard";
 import { getDisplayBalance } from "utils";
-import { Flex } from "components/Flex";
 
 export const PoolSummary = () => {
   const { chainId } = useWallet();
   const { pid } = useParams<{ pid: string }>();
-  const { logo, name, symbol, address, decimals } = Pools[chainId][pid];
+  const { logo, symbol, decimals } = Pools[chainId][pid];
 
   const { data } = usePool(+pid);
 

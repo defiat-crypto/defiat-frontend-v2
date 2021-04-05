@@ -554,26 +554,31 @@ export const pendingVirtualAnyStake = async (
     ]);
 
     const poolInfo = values[0];
-    let totalBlockDelta = new BigNumber(values[1]);
+    const totalBlockDelta = new BigNumber(values[1]);
     const pendingRewards = new BigNumber(values[2]);
     const totalEligiblePools = new BigNumber(values[3]);
-    const lastRewardBlock = values[4];
-    totalBlockDelta = totalBlockDelta.plus(
+    const lastRewardBlock = +values[4];
+    const totalAlloc = +values[5];
+    const userInfo = values[6];
+    const pending = new BigNumber(values[7]);
+
+    const poolBlockDelta = new BigNumber(block - +poolInfo.lastRewardBlock);
+    const currentTotalBlockDelta = totalBlockDelta.plus(
       totalEligiblePools.times(block - lastRewardBlock)
     );
-    const poolBlockDelta = new BigNumber(block - poolInfo.lastRewardBlock);
-    const totalAlloc = values[5];
+
     const poolRewards = pendingRewards
-      .times(poolBlockDelta.div(totalBlockDelta))
-      .times(new BigNumber(poolInfo.allocPoint).div(totalAlloc));
-    const userinfo = values[6];
-    const virtualpending = new BigNumber(poolRewards)
-      .div(poolInfo.totalStaked)
-      .times(userinfo.amount);
-    const pending = values[7];
-    const result = new BigNumber(pending).plus(virtualpending);
+      .times(poolBlockDelta)
+      .div(currentTotalBlockDelta)
+      .times(poolInfo.allocPoint)
+      .div(totalAlloc);
+    const virtualPending = poolRewards
+      .times(userInfo.amount)
+      .div(poolInfo.totalStaked);
+    const result = pending.plus(virtualPending);
     return result;
   } catch (e) {
+    debug(e);
     return new BigNumber("0");
   }
 };

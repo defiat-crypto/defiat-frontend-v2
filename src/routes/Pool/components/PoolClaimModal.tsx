@@ -18,8 +18,7 @@ export const PoolClaimModal: React.FC<PoolClaimModalProps> = ({
   onDismiss,
 }) => {
   const { chainId } = useWallet();
-  // const { pid } = useParams<{ pid: string }>();
-  const { symbol, address, decimals } = Pools[chainId][pid];
+  const { symbol } = Pools[chainId][pid];
 
   const notify = useNotifications();
   const { data, claim } = usePool(+pid);

@@ -4,7 +4,6 @@ import { Card } from "components/Card";
 import Addresses from "constants/addresses";
 import { useModal } from "hooks/useModal";
 import { useRegulator } from "hooks/useRegulator";
-import { useCallback } from "react";
 import { useWallet } from "use-wallet";
 import { getDisplayBalance } from "utils";
 import { RegulatorClaimModal } from "./RegulatorClaimModal";

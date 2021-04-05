@@ -15,8 +15,7 @@ import {
 import { useEffect, useMemo } from "react";
 import { useCallback, useState } from "react";
 import { useWallet } from "use-wallet";
-import { getBalance, getDisplayBalance } from "utils";
-import { provider } from "web3-core";
+import { getDisplayBalance } from "utils";
 import { useBlock } from "./useBlock";
 import { useDeFiat } from "./useDeFiat";
 
@@ -33,8 +32,7 @@ export const useAnyStake = () => {
   const {
     account,
     chainId,
-    ethereum,
-  }: { account: string; chainId: number; ethereum: provider } = useWallet();
+  }: { account: string; chainId: number } = useWallet();
   const block = useBlock();
   const DeFiat = useDeFiat();
 

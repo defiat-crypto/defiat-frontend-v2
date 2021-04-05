@@ -2,17 +2,14 @@ import BigNumber from "bignumber.js";
 import {
   claimRegulator,
   depositRegulator,
-  getOracle,
   getPointsAddress,
   getRegulatorContract,
-  getTokenPrice,
   withdrawRegulator,
   totalStakedRegulator,
   getDeFiatAddress,
   multiplierRegulator,
   stakedRegulator,
   pendingRegulator,
-  getTetherAddress,
   getRegulatorApr,
   getVaultContract,
   buybackRegulator,
@@ -26,7 +23,7 @@ import {
 } from "defiat";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useWallet } from "use-wallet";
-import { getBalance, getDisplayBalance } from "utils";
+import { getBalance } from "utils";
 import { provider } from "web3-core";
 import { useBlock } from "./useBlock";
 import { useDeFiat } from "./useDeFiat";
@@ -57,7 +54,6 @@ export const useRegulator = () => {
   const DeFiat = useDeFiat();
 
   const Regulator = useMemo(() => getRegulatorContract(DeFiat), [DeFiat]);
-  const Oracle = useMemo(() => getOracle(DeFiat), [DeFiat]);
   const Vault = useMemo(() => getVaultContract(DeFiat), [DeFiat]);
 
   const handleClaim = useCallback(async () => {
