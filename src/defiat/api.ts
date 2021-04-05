@@ -13,6 +13,7 @@ import {
   getDeFiatAddress,
   getDeFiatLpAddress,
   getPointsAddress,
+  getPointsLpAddress,
 } from "./utils";
 
 // Token
@@ -651,15 +652,37 @@ export const getPoolApr = async (
 // Regulator
 
 export const getRegulatorApr = async (
-  Oracle: Contract,
-  Defiat: DeFiat,
+  DeFiat: DeFiat,
   Vault: Contract,
   Regulator: Contract
 ) => {
   try {
-    const latestDistributionBlock = new BigNumber(
-      await Vault.methods.lastDistributionBlock().call()
-    );
+    const values = await Promise.all([
+      Vault.methods.lastDistributionBlock().call(),
+      totalStakedRegulator(Regulator),
+      getVaultPrice(
+        Vault,
+        getCircleAddress(DeFiat),
+        getCircleLpAddress(DeFiat)
+      ),
+      getVaultPrice(
+        Vault,
+        getPointsAddress(DeFiat),
+        getPointsLpAddress(DeFiat)
+      ),
+      getVaultPrice(
+        Vault,
+        getDeFiatAddress(DeFiat),
+        getDeFiatLpAddress(DeFiat)
+      ),
+    ]);
+
+    const latestDistributionBlock = new BigNumber(values[0]);
+    const totalStaked = values[1];
+    const circlePrice = values[2];
+    const pointsPrice = values[3];
+    const tokenPrice = values[4];
+
     const rewardsDistributed = await Vault.getPastEvents("RewardsDistributed", {
       fromBlock: latestDistributionBlock.minus(50000),
       toBlock: latestDistributionBlock,
@@ -676,25 +699,23 @@ export const getRegulatorApr = async (
         new BigNumber(rewards.returnValues["regulatorAmount"])
       );
     });
-    const blockrewards = rewardsSum.dividedBy(delta);
+    const rewardsPerBlock = rewardsSum.dividedBy(delta);
 
-    const totalStaked = await totalStakedRegulator(Regulator);
-    const pointsprice = await getTokenPrice(Oracle, getPointsAddress(Defiat));
-    const dftprice = await getTokenPrice(Oracle, getDeFiatAddress(Defiat));
-    const tetherprice = await getTokenPrice(Oracle, getTetherAddress(Defiat));
+    const valueRegulator = pointsPrice
+      .times(1e18)
+      .div(circlePrice)
+      .times(totalStaked)
+      .div(1e18);
 
-    const valueRegulator = tetherprice
-      .dividedBy(pointsprice)
-      .multipliedBy(totalStaked)
-      .dividedBy(1e18);
+    const rewardsperyear = tokenPrice
+      .times(1e18)
+      .div(circlePrice)
+      .times(rewardsPerBlock)
+      .times(0.7) // 70% to rewards
+      .times(new BigNumber(2073600))
+      .times(1e2);
 
-    const rewardsperyear = tetherprice
-      .dividedBy(dftprice)
-      .multipliedBy(blockrewards)
-      .multipliedBy(0.7) //70% to rewards
-      .multipliedBy(new BigNumber(2073600))
-      .multipliedBy(1e2);
-    const apy = rewardsperyear.dividedBy(valueRegulator);
+    const apy = rewardsperyear.div(valueRegulator);
     return apy;
   } catch (e) {
     console.log(e);

@@ -12,6 +12,10 @@ export const getPointsAddress = (DeFiat?: DeFiat) => {
   return DeFiat && DeFiat.PointsAddress;
 };
 
+export const getPointsLpAddress = (DeFiat?: DeFiat) => {
+  return DeFiat && DeFiat.PointsLpAddress;
+};
+
 export const getSecondAddress = (DeFiat?: DeFiat) => {
   return DeFiat && DeFiat.SecondAddress;
 };

@@ -11,6 +11,7 @@ export class DeFiat {
   DefiatAddress: string;
   DefiatLpAddress: string;
   PointsAddress: string;
+  PointsLpAddress: string;
   GovernanceAddress: string;
   SecondAddress: string;
   SecondLpAddress: string;
@@ -52,6 +53,7 @@ export class DeFiat {
     this.DefiatAddress = Addresses.DeFiat[networkId];
     this.DefiatLpAddress = Addresses.DeFiatLp[networkId];
     this.PointsAddress = Addresses.Points[networkId];
+    this.PointsLpAddress = Addresses.PointsLp[networkId];
     this.GovernanceAddress = Addresses.Governance[networkId];
     this.SecondAddress = Addresses.Second[networkId];
     this.SecondLpAddress = Addresses.SecondLp[networkId];
