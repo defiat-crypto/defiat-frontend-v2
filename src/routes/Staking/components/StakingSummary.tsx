@@ -25,14 +25,14 @@ export const StakingSummary = () => {
       >
         {formatAddress(addresses.AnyStake[chainId])}
       </Button>
-      <Box pb={2}>
+      {/* <Box pb={2}>
         <Typography variant="h4" align="center">
           $<b>{data ? data.totalValueLocked : "0.00"}</b>
         </Typography>
         <Typography variant="subtitle2" align="center">
           Total Value Locked
         </Typography>
-      </Box>
+      </Box> */}
 
       <Grid container spacing={2}>
         <Grid item md={6} xs={12}>
@@ -43,22 +43,22 @@ export const StakingSummary = () => {
             icon={logo192}
           />
         </Grid>
-        <Grid item md={6} xs={12}>
+        {/* <Grid item md={6} xs={12}>
           <ValueCard
             value={data ? data.pendingRewards : "0.00"}
             name="My Claimable Rewards"
             endSymbol="DFT"
             icon={logo192}
           />
-        </Grid>
-        <Grid item md={6} xs={12}>
+        </Grid> */}
+        {/* <Grid item md={6} xs={12}>
           <ValueCard
             value={data ? data.totalValueStaked : "0.00"}
             startSymbol="$"
             name="My Total Staked Value"
             icon={anystake128}
           />
-        </Grid>
+        </Grid> */}
         <Grid item md={6} xs={12}>
           <ValueCard
             value={data ? data.totalStakes : "0"}

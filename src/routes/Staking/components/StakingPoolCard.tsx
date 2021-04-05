@@ -45,7 +45,7 @@ export const StakingPoolCard: React.FC<StakingPoolCardProps> = ({ pool }) => {
         </Typography>
       </Box>
 
-      {/* <Flex justify="space-around" my={2}>
+      <Flex justify="space-around" my={2}>
         <Box>
           <Typography variant="h5" align="center">
             <b>{data ? data.totalStaked : "0.00"}</b>
@@ -62,7 +62,7 @@ export const StakingPoolCard: React.FC<StakingPoolCardProps> = ({ pool }) => {
             APR
           </Typography>
         </Box>
-      </Flex> */}
+      </Flex>
       <Button
         onClick={() => history.push(`/staking/${pid}`)}
         color="primary"
