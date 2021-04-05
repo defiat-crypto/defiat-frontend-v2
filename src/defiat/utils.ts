@@ -4,8 +4,16 @@ export const getDeFiatAddress = (DeFiat?: DeFiat) => {
   return DeFiat && DeFiat.DefiatAddress;
 };
 
+export const getDeFiatLpAddress = (DeFiat?: DeFiat) => {
+  return DeFiat && DeFiat.DefiatLpAddress;
+};
+
 export const getPointsAddress = (DeFiat?: DeFiat) => {
   return DeFiat && DeFiat.PointsAddress;
+};
+
+export const getPointsLpAddress = (DeFiat?: DeFiat) => {
+  return DeFiat && DeFiat.PointsLpAddress;
 };
 
 export const getSecondAddress = (DeFiat?: DeFiat) => {
@@ -18,6 +26,14 @@ export const getSecondLpAddress = (DeFiat?: DeFiat) => {
 
 export const getTetherAddress = (DeFiat?: DeFiat) => {
   return DeFiat && DeFiat.TetherAddress;
+};
+
+export const getCircleAddress = (DeFiat?: DeFiat) => {
+  return DeFiat && DeFiat.CircleAddress;
+};
+
+export const getCircleLpAddress = (DeFiat?: DeFiat) => {
+  return DeFiat && DeFiat.CircleLpAddress;
 };
 
 export const getRugSanctuaryAddress = (DeFiat?: DeFiat) => {

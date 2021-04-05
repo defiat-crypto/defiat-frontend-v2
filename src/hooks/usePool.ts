@@ -4,21 +4,21 @@ import {
   claimAnyStake,
   depositAnyStake,
   getAnyStakeContract,
-  getDeFiatAddress,
-  getOracle,
-  getTokenPrice,
-  pendingAnyStake,
   stakedAnyStake,
   totalStakedAnyStake,
   stakingFeeAnyStake,
   withdrawAnyStake,
-  getTetherAddress,
   vipAmountAnyStake,
   pendingVirtualAnyStake,
+  getVaultContract,
+  getVaultPrice,
+  getCircleAddress,
+  getCircleLpAddress,
+  getPoolApr,
 } from "defiat";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useWallet } from "use-wallet";
-import { getBalance, getDisplayBalance } from "utils";
+import { getBalance } from "utils";
 import { provider } from "web3-core";
 import { useBlock } from "./useBlock";
 import { useDeFiat } from "./useDeFiat";
@@ -33,6 +33,8 @@ interface StakingPoolData {
   stakingFee: number;
   vipAmount: BigNumber;
   vipAmountUser: BigNumber;
+  apr: string;
+  priceMultiplier: string;
 }
 
 export const usePool = (pid: number) => {
@@ -47,7 +49,7 @@ export const usePool = (pid: number) => {
   const DeFiat = useDeFiat();
 
   const AnyStake = useMemo(() => getAnyStakeContract(DeFiat), [DeFiat]);
-  const Oracle = useMemo(() => getOracle(DeFiat), [DeFiat]);
+  const Vault = useMemo(() => getVaultContract(DeFiat), [DeFiat]);
 
   const handleClaim = useCallback(
     async (pid: number) => {
@@ -79,33 +81,52 @@ export const usePool = (pid: number) => {
       totalStakedAnyStake(AnyStake, pid),
       stakingFeeAnyStake(AnyStake, pid),
       stakedAnyStake(AnyStake, pid, account),
-      pendingAnyStake(AnyStake, pid, account),
-      getTokenPrice(Oracle, Pools[chainId][pid].address),
-      getTokenPrice(Oracle, getTetherAddress(DeFiat)),
+      pendingVirtualAnyStake(AnyStake, pid, account, block),
       vipAmountAnyStake(AnyStake, pid),
       stakedAnyStake(AnyStake, 0, account),
-      pendingAnyStake(AnyStake, pid, account),
-      // pendingVirtualAnyStake(AnyStake, pid, account, block)
-      // getTokenPrice(Oracle, getDeFiatAddress(DeFiat)),
+      AnyStake.methods.poolInfo(pid).call(),
+      getPoolApr(DeFiat, Vault, AnyStake, Pools[chainId][pid], pid),
     ]);
 
-    const tokenPrice = values[6].multipliedBy(1e18).dividedBy(values[5]);
+    const tokenBalance = values[0];
+    const totalLocked = values[1];
+    const stakingFee = values[2].div(10).toNumber();
+    const stakedBalance = values[3];
+    const pendingRewards = values[4];
+    const vipAmount = values[5];
+    const vipAmountUser = values[6];
+    const poolInfo = values[7];
+    const priceMultiplier = (values[7].allocPoint / 100).toString();
+    const apr = values[8].div(1e18).decimalPlaces(2).toString();
+
+    const prices = await Promise.all([
+      getVaultPrice(
+        Vault,
+        getCircleAddress(DeFiat),
+        getCircleLpAddress(DeFiat)
+      ),
+      getVaultPrice(Vault, poolInfo.stakedToken, poolInfo.lpToken),
+    ]);
+
+    const tokenPrice = prices[1].times(1e18).div(prices[0]);
     const totalValueLocked = tokenPrice
-      .times(values[1])
+      .times(totalLocked)
       .div(new BigNumber(10).pow(Pools[chainId][pid].decimals));
 
     setData({
-      tokenBalance: values[0],
-      totalLocked: values[1],
-      stakingFee: values[2].div(10).toNumber(),
+      tokenBalance,
+      totalLocked,
+      stakingFee,
       tokenPrice,
       totalValueLocked,
-      stakedBalance: values[3],
-      pendingRewards: values[9],
-      vipAmount: values[7],
-      vipAmountUser: values[8],
+      stakedBalance,
+      pendingRewards,
+      vipAmount,
+      vipAmountUser,
+      apr,
+      priceMultiplier,
     });
-  }, [account, chainId, pid, ethereum, Oracle, AnyStake, DeFiat, block]);
+  }, [account, chainId, pid, ethereum, Vault, AnyStake, DeFiat, block]);
 
   useEffect(() => {
     if (!!account && !!DeFiat) {

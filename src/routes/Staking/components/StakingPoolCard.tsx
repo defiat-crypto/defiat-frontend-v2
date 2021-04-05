@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const StakingPoolCard: React.FC<StakingPoolCardProps> = ({ pool }) => {
   const history = useHistory();
-  const { pid, logo, name, symbol, address, decimals } = pool;
+  const { pid, logo, name, symbol } = pool;
   const { data } = usePoolCard(pid);
 
   const classes = useStyles();
@@ -45,7 +45,7 @@ export const StakingPoolCard: React.FC<StakingPoolCardProps> = ({ pool }) => {
         </Typography>
       </Box>
 
-      {/* <Flex justify="space-around" my={2}>
+      <Flex justify="space-around" my={2}>
         <Box>
           <Typography variant="h5" align="center">
             <b>{data ? data.totalStaked : "0.00"}</b>
@@ -59,10 +59,10 @@ export const StakingPoolCard: React.FC<StakingPoolCardProps> = ({ pool }) => {
             <b>{data ? `${data.apr}%` : "0%"}</b>
           </Typography>
           <Typography variant="subtitle2" align="center">
-            APR
+            APR ($)
           </Typography>
         </Box>
-      </Flex> */}
+      </Flex>
       <Button
         onClick={() => history.push(`/staking/${pid}`)}
         color="primary"

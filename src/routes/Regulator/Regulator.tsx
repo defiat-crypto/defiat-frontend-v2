@@ -18,7 +18,7 @@ export const Regulator = () => {
         <Box>
           <RegulatorSummary />
         </Box>
-        <Box mt={1}>
+        <Box mt={2}>
           <RegulatorCard />
         </Box>
       </Web3ConnectView>

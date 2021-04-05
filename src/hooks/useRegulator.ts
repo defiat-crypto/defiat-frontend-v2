@@ -2,26 +2,28 @@ import BigNumber from "bignumber.js";
 import {
   claimRegulator,
   depositRegulator,
-  getOracle,
   getPointsAddress,
   getRegulatorContract,
-  getTokenPrice,
   withdrawRegulator,
   totalStakedRegulator,
   getDeFiatAddress,
   multiplierRegulator,
   stakedRegulator,
   pendingRegulator,
-  getTetherAddress,
   getRegulatorApr,
   getVaultContract,
   buybackRegulator,
   isAbovePeg,
   pendingTotalRegulator,
+  getVaultPrice,
+  getCircleAddress,
+  getCircleLpAddress,
+  getPointsLpAddress,
+  getDeFiatLpAddress,
 } from "defiat";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useWallet } from "use-wallet";
-import { getBalance, getDisplayBalance } from "utils";
+import { getBalance } from "utils";
 import { provider } from "web3-core";
 import { useBlock } from "./useBlock";
 import { useDeFiat } from "./useDeFiat";
@@ -52,7 +54,6 @@ export const useRegulator = () => {
   const DeFiat = useDeFiat();
 
   const Regulator = useMemo(() => getRegulatorContract(DeFiat), [DeFiat]);
-  const Oracle = useMemo(() => getOracle(DeFiat), [DeFiat]);
   const Vault = useMemo(() => getVaultContract(DeFiat), [DeFiat]);
 
   const handleClaim = useCallback(async () => {
@@ -82,37 +83,61 @@ export const useRegulator = () => {
       totalStakedRegulator(Regulator),
       multiplierRegulator(Regulator),
       stakedRegulator(Regulator, account),
-      pendingRegulator(Regulator, account),
-      getTokenPrice(Oracle, getPointsAddress(DeFiat)),
-      getTokenPrice(Oracle, getDeFiatAddress(DeFiat)),
-      getTokenPrice(Oracle, getTetherAddress(DeFiat)),
-      getRegulatorApr(Oracle, DeFiat, Vault, Regulator),
+      getRegulatorApr(DeFiat, Vault, Regulator),
       buybackRegulator(Regulator),
       isAbovePeg(Regulator),
+      pendingRegulator(Regulator, account),
       pendingTotalRegulator(Regulator),
+      getVaultPrice(
+        Vault,
+        getPointsAddress(DeFiat),
+        getPointsLpAddress(DeFiat)
+      ),
+      getVaultPrice(
+        Vault,
+        getDeFiatAddress(DeFiat),
+        getDeFiatLpAddress(DeFiat)
+      ),
+      getVaultPrice(
+        Vault,
+        getCircleAddress(DeFiat),
+        getCircleLpAddress(DeFiat)
+      ),
     ]);
 
-    const tokenPrice = values[7].multipliedBy(1e18).dividedBy(values[6]);
-    const pointsPrice = values[7].multipliedBy(1e18).dividedBy(values[5]);
-    const totalValueLocked = pointsPrice.times(values[1]).div(1e18);
-    const apr = values[8].dividedBy(1e18).decimalPlaces(2).toString();
-    const pendingRewards = values[1].isZero() ? values[4] : values[4].plus(values[3].dividedBy(values[1]).multipliedBy(values[11]));
+    const tokenBalance = values[0];
+    const totalLocked = values[1];
+    const peg = +values[2] / 1000;
+    const stakedBalance = values[3];
+    const apr = values[4].div(1e18).decimalPlaces(2).toString();
+    const buybackBalance = values[5];
+    const abovePeg = values[6];
+    const pending = new BigNumber(values[7]);
+    const pendingTotal = values[8];
+    const pointsPrice = values[9].times(1e18).div(values[11]);
+    const tokenPrice = values[10].times(1e18).div(values[11]);
+
+    const pendingRewards = pending.plus(
+      stakedBalance.div(totalLocked).times(pendingTotal)
+    );
+    const totalValueLocked = pointsPrice.times(totalLocked).div(1e18);
+    const ratio = tokenPrice.div(pointsPrice);
 
     setData({
-      totalLocked: values[1],
+      totalLocked,
       totalValueLocked,
       pointsPrice,
       tokenPrice,
-      tokenBalance: values[0],
-      peg: +values[2] / 1000,
-      ratio: tokenPrice.div(pointsPrice),
+      tokenBalance,
+      peg,
+      ratio,
       pendingRewards: pendingRewards,
-      stakedBalance: values[3],
+      stakedBalance,
       apr: apr,
-      buybackBalance: values[9],
-      isAbovePeg: values[10],
+      buybackBalance,
+      isAbovePeg: abovePeg,
     });
-  }, [account, ethereum, DeFiat, Oracle, Regulator]);
+  }, [account, ethereum, DeFiat, Vault, Regulator]);
 
   useEffect(() => {
     if (!!account && !!DeFiat) {
