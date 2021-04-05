@@ -1,20 +1,16 @@
-import BigNumber from "bignumber.js";
 import { Pools } from "constants/pools";
-import DeFiat from "contexts/DeFiat";
 import {
-  getTokenPrice,
-  getOracle,
   getDeFiatAddress,
   getAnyStakeContract,
-  pendingAnyStake,
-  getTetherAddress,
-  totalStakedAnyStake,
   totalValueStakedAllPoolsAnyStake,
-  totalPendingAnyStake,
   totalValueStakedAnyStake,
   totalPoolsStakedAnyStake,
   totalPendingVirtualAnyStake,
   getVaultContract,
+  getVaultPrice,
+  getDeFiatLpAddress,
+  getCircleLpAddress,
+  getCircleAddress,
 } from "defiat";
 import { useEffect, useMemo } from "react";
 import { useCallback, useState } from "react";
@@ -41,50 +37,48 @@ export const useAnyStake = () => {
   }: { account: string; chainId: number; ethereum: provider } = useWallet();
   const block = useBlock();
   const DeFiat = useDeFiat();
-  const Oracle = useMemo(() => getOracle(DeFiat), [DeFiat]);
 
   const AnyStake = useMemo(() => getAnyStakeContract(DeFiat), [DeFiat]);
   const Vault = useMemo(() => getVaultContract(DeFiat), [DeFiat]);
 
   const getData = useCallback(async () => {
     const values = await Promise.all([
-      getTokenPrice(Oracle, getDeFiatAddress(DeFiat)),
-      getTokenPrice(Oracle, getTetherAddress(DeFiat)),
+      getVaultPrice(
+        Vault,
+        getDeFiatAddress(DeFiat),
+        getDeFiatLpAddress(DeFiat)
+      ),
+      getVaultPrice(
+        Vault,
+        getCircleAddress(DeFiat),
+        getCircleLpAddress(DeFiat)
+      ),
       totalValueStakedAnyStake(
-        Oracle,
+        Vault,
         DeFiat,
         AnyStake,
         Pools[chainId],
         account
       ),
       totalPoolsStakedAnyStake(AnyStake, Pools[chainId], account),
+      totalPendingVirtualAnyStake(AnyStake, Pools[chainId], account, block),
+      totalValueStakedAllPoolsAnyStake(Vault, DeFiat, AnyStake, Pools[chainId]),
     ]);
-    const totalPending = await totalPendingVirtualAnyStake(
-      AnyStake,
-      Pools[chainId],
-      account,
-      block
-    );
-    const totalValue = await totalValueStakedAllPoolsAnyStake(
-      Oracle,
-      DeFiat,
-      AnyStake,
-      Pools[chainId]
-    );
-    console.log(totalPending.toString(), totalValue.toString());
 
-    const tokenPrice = values[1].dividedBy(values[0]).multipliedBy(1e18);
-    const totalValueLocked = totalValue.multipliedBy(1e18);
-    const totalValueStaked = values[2].multipliedBy(1e18);
+    const tokenPrice = values[1].times(1e18).div(values[0]);
+    const totalValueStaked = values[2];
+    const totalStakes = values[3];
+    const totalPending = values[4];
+    const totalValueLocked = values[5];
 
     setData({
       totalValueLocked: getDisplayBalance(totalValueLocked),
       tokenPrice: getDisplayBalance(tokenPrice),
       pendingRewards: getDisplayBalance(totalPending),
       totalValueStaked: getDisplayBalance(totalValueStaked),
-      totalStakes: values[3],
+      totalStakes,
     });
-  }, [account, chainId, DeFiat, Oracle, AnyStake, block]);
+  }, [account, chainId, DeFiat, AnyStake, Vault, block]);
 
   useEffect(() => {
     if (!!account && !!DeFiat) {

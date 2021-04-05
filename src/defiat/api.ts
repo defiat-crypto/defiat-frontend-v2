@@ -7,7 +7,13 @@ import { BigNumber, getTetherAddress } from ".";
 import { debug, getBalance, getDisplayBalance } from "../utils";
 import { DeFiat } from "./DeFiat";
 import { ProcessedRewards } from "./lib/processedRewards";
-import { getDeFiatAddress, getPointsAddress } from "./utils";
+import {
+  getCircleAddress,
+  getCircleLpAddress,
+  getDeFiatAddress,
+  getDeFiatLpAddress,
+  getPointsAddress,
+} from "./utils";
 
 // Token
 
@@ -314,22 +320,22 @@ export const totalStakedAnyStake = async (AnyStake: Contract, pid: number) => {
 };
 
 export const totalValueStakedAllPoolsAnyStake = async (
-  Oracle: Contract,
+  Vault: Contract,
   Defiat: DeFiat,
   AnyStake: Contract,
   pools: StakingPool[]
 ) => {
   try {
-    //const tetherprice = await getTokenPrice(Oracle, getTetherAddress(Defiat));
-    var totalAllPools: BigNumber = new BigNumber(0);
-
-    const totalStaked = await Promise.all(
-      pools.map((pool) =>
-        totalValueStakedPoolAnyStake(Oracle, Defiat, AnyStake, pool)
-      )
-    );
-
-    totalStaked.forEach((stake) => totalAllPools.plus(stake));
+    let totalAllPools = new BigNumber("0");
+    for (let pool of pools) {
+      const totalPoolValue = await totalValueStakedPoolAnyStake(
+        Vault,
+        Defiat,
+        AnyStake,
+        pool
+      );
+      totalAllPools = totalAllPools.plus(totalPoolValue);
+    }
     return totalAllPools;
   } catch (e) {
     debug(`ALL POOL STAKE ${e}`);
@@ -338,25 +344,29 @@ export const totalValueStakedAllPoolsAnyStake = async (
 };
 
 export const totalValueStakedPoolAnyStake = async (
-  Oracle: Contract,
-  Defiat: DeFiat,
+  Vault: Contract,
+  DeFiat: DeFiat,
   AnyStake: Contract,
   pool: StakingPool
 ) => {
   try {
-    const tetherprice = await getTokenPrice(Oracle, getTetherAddress(Defiat));
-    const result = await AnyStake.methods.poolInfo(pool.pid).call();
+    const poolInfo = await AnyStake.methods.poolInfo(pool.pid).call();
+    const tokenPrice = await getVaultPrice(
+      Vault,
+      poolInfo.stakedToken.toString(),
+      poolInfo.lpToken.toString()
+    );
+    const circlePrice = await getVaultPrice(
+      Vault,
+      getCircleAddress(DeFiat),
+      getCircleLpAddress(DeFiat)
+    );
 
-    let tokenPrice;
-    if (pool.pid === 5) {
-      tokenPrice = new BigNumber(10).pow(18);
-    } else {
-      tokenPrice = await getTokenPrice(Oracle, pool.address);
-    }
-    return tetherprice
-      .dividedBy(tokenPrice)
-      .multipliedBy(result.totalStaked)
-      .dividedBy(new BigNumber(10).pow(pool.decimals));
+    return tokenPrice
+      .times(1e18)
+      .div(circlePrice)
+      .times(poolInfo.totalStaked)
+      .div(new BigNumber(10).pow(pool.decimals));
   } catch (e) {
     debug(`Staked Value ${e}`);
     return new BigNumber(0);
@@ -398,33 +408,40 @@ export const stakedAnyStake = async (
 };
 
 export const totalValueStakedAnyStake = async (
-  Oracle: Contract,
-  Defiat: DeFiat,
+  Vault: Contract,
+  DeFiat: DeFiat,
   AnyStake: Contract,
   pools: StakingPool[],
   account: string
 ) => {
   try {
-    const tetherprice = await getTokenPrice(Oracle, getTetherAddress(Defiat));
-    var totalAllPools: BigNumber = new BigNumber(0);
+    const circlePrice = await getVaultPrice(
+      Vault,
+      getCircleAddress(DeFiat),
+      getCircleLpAddress(DeFiat)
+    );
 
-    const totalStaked = await Promise.all(
-      pools.map((pool) => AnyStake.methods.userInfo(pool.pid, account).call())
-    );
-    const tokenPrice = await Promise.all(
-      pools.map((pool) => getTokenPrice(Oracle, pool.address))
-    );
-    // let totalAllPools = new BigNumber(0);
-    pools.forEach((pool, i) => {
-      totalAllPools.plus(
-        tetherprice
-          .div(tokenPrice[i])
-          .times(totalStaked[i])
+    let totalAllPools = new BigNumber(0);
+    for (const pool of pools) {
+      const userInfo = await AnyStake.methods
+        .userInfo(pool.pid, account)
+        .call();
+      const poolInfo = await AnyStake.methods.poolInfo(pool.pid).call();
+      const tokenPrice = await getVaultPrice(
+        Vault,
+        poolInfo.stakedToken.toString(),
+        poolInfo.lpToken.toString()
+      );
+
+      totalAllPools = totalAllPools.plus(
+        tokenPrice
+          .times(1e18)
+          .div(circlePrice)
+          .times(userInfo.amount)
           .div(new BigNumber(10).pow(pool.decimals))
       );
-    });
-
-    return new BigNumber(totalAllPools);
+    }
+    return totalAllPools;
   } catch (e) {
     debug(e);
     return new BigNumber("0");
@@ -535,23 +552,23 @@ export const pendingVirtualAnyStake = async (
       AnyStake.methods.pending(pid, account).call(),
     ]);
 
-    const poolinfo = values[0];
-    let totalBlockDelta = values[1];
-    const pendingRewards = values[2];
-    const totalEligiblePools = values[3];
+    const poolInfo = values[0];
+    let totalBlockDelta = new BigNumber(values[1]);
+    const pendingRewards = new BigNumber(values[2]);
+    const totalEligiblePools = new BigNumber(values[3]);
     const lastRewardBlock = values[4];
     totalBlockDelta = totalBlockDelta.plus(
-      totalEligiblePools.multipliedBy(block - lastRewardBlock)
+      totalEligiblePools.times(block - lastRewardBlock)
     );
-    const poolBlockDelta = new BigNumber(block - poolinfo.lastRewardBlock);
+    const poolBlockDelta = new BigNumber(block - poolInfo.lastRewardBlock);
     const totalAlloc = values[5];
     const poolRewards = pendingRewards
-      .multipliedBy(poolBlockDelta.dividedBy(totalBlockDelta))
-      .multipliedBy(new BigNumber(poolinfo.allocPoint).dividedBy(totalAlloc));
+      .times(poolBlockDelta.div(totalBlockDelta))
+      .times(new BigNumber(poolInfo.allocPoint).div(totalAlloc));
     const userinfo = values[6];
     const virtualpending = new BigNumber(poolRewards)
-      .dividedBy(poolinfo.totalStaked)
-      .multipliedBy(userinfo.amount);
+      .div(poolInfo.totalStaked)
+      .times(userinfo.amount);
     const pending = values[7];
     const result = new BigNumber(pending).plus(virtualpending);
     return result;
@@ -561,11 +578,10 @@ export const pendingVirtualAnyStake = async (
 };
 
 export const getPoolApr = async (
-  Oracle: Contract,
-  Defiat: DeFiat,
+  DeFiat: DeFiat,
   Vault: Contract,
   AnyStake: Contract,
-  pools: StakingPool[],
+  pool: StakingPool,
   pid: number
 ) => {
   try {
@@ -573,23 +589,32 @@ export const getPoolApr = async (
       Vault.methods.lastDistributionBlock().call(),
       AnyStake.methods.totalAllocPoint().call(),
       AnyStake.methods.poolInfo(pid).call(),
-      getTokenPrice(Oracle, getDeFiatAddress(Defiat)),
-      getTokenPrice(Oracle, getTetherAddress(Defiat)),
-      totalValueStakedPoolAnyStake(Oracle, Defiat, AnyStake, pools[pid]),
+      getVaultPrice(
+        Vault,
+        getDeFiatAddress(DeFiat),
+        getDeFiatLpAddress(DeFiat)
+      ),
+      getVaultPrice(
+        Vault,
+        getCircleAddress(DeFiat),
+        getCircleLpAddress(DeFiat)
+      ),
+      totalValueStakedPoolAnyStake(Vault, DeFiat, AnyStake, pool),
     ]);
 
     const latestDistributionBlock = new BigNumber(values[0]);
     const totalAlloc = new BigNumber(values[1]);
     const poolAlloc = new BigNumber(values[2].allocPoint);
     const dftPrice = values[3];
-    const tetherPrice = values[4];
+    const circlePrice = values[4];
+    const poolValue = values[5];
 
-    const fromBlock = latestDistributionBlock.minus(50000).lt(12175584)
-      ? 12175584
-      : latestDistributionBlock.minus(50000);
+    // const fromBlock = latestDistributionBlock.minus(50000).lt(12175584)
+    //   ? 12175584
+    //   : latestDistributionBlock.minus(50000);
 
     const rewardsDistributed = await Vault.getPastEvents("RewardsDistributed", {
-      fromBlock: fromBlock,
+      fromBlock: latestDistributionBlock.minus(50000),
       toBlock: latestDistributionBlock,
     });
 
@@ -605,18 +630,16 @@ export const getPoolApr = async (
         new BigNumber(rewards.returnValues["anystakeAmount"])
       );
     });
-    const blockrewards = rewardsSum.div(delta);
-    // console.log(blockrewards.toString());
+    const rewardsPerBlock = rewardsSum.div(delta);
 
-    const valuePool = values[5];
-
-    const rewardsperyear = tetherPrice
-      .dividedBy(dftPrice)
-      .multipliedBy(poolAlloc.dividedBy(totalAlloc))
-      .multipliedBy(blockrewards)
-      .multipliedBy(new BigNumber(2073600))
-      .multipliedBy(1e2);
-    const apy = rewardsperyear.dividedBy(valuePool);
+    const rewardsPerYear = dftPrice
+      .times(1e18)
+      .div(circlePrice)
+      .times(poolAlloc.div(totalAlloc))
+      .times(rewardsPerBlock)
+      .times(new BigNumber(2073600))
+      .times(1e2);
+    const apy = rewardsPerYear.div(poolValue);
     // console.log(apy.toString());
     return apy;
   } catch (e) {

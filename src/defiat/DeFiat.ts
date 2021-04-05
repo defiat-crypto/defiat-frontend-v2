@@ -9,6 +9,7 @@ export class DeFiat {
   contracts: Contracts;
   accounts: Account[] = [];
   DefiatAddress: string;
+  DefiatLpAddress: string;
   PointsAddress: string;
   GovernanceAddress: string;
   SecondAddress: string;
@@ -16,6 +17,8 @@ export class DeFiat {
   RugSanctuaryAddress: string;
   OracleAddress: string;
   TetherAddress: string;
+  CircleAddress: string;
+  CircleLpAddress: string;
   AnyStakeAddress: string;
   RegulatorAddress: string;
   VaultAddress: string;
@@ -47,6 +50,7 @@ export class DeFiat {
     this.contracts = new Contracts(realProvider, networkId, this.web3, options);
 
     this.DefiatAddress = Addresses.DeFiat[networkId];
+    this.DefiatLpAddress = Addresses.DeFiatLp[networkId];
     this.PointsAddress = Addresses.Points[networkId];
     this.GovernanceAddress = Addresses.Governance[networkId];
     this.SecondAddress = Addresses.Second[networkId];
@@ -57,6 +61,8 @@ export class DeFiat {
     this.AnyStakeAddress = Addresses.AnyStake[networkId];
     this.RegulatorAddress = Addresses.Regulator[networkId];
     this.VaultAddress = Addresses.Vault[networkId];
+    this.CircleAddress = Addresses.Circle[networkId];
+    this.CircleLpAddress = Addresses.CircleLp[networkId];
   }
 
   addAccount(address: string) {

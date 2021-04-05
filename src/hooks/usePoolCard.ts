@@ -46,7 +46,7 @@ export const usePoolCard = (pid: number) => {
       getBalance(Pools[chainId][pid].address, AnyStakeAddress, ethereum),
       getTokenPrice(Oracle, Pools[chainId][pid].address),
       getTokenPrice(Oracle, TetherAddress),
-      getPoolApr(Oracle, DeFiat, Vault, AnyStake, Pools[chainId], pid),
+      getPoolApr(DeFiat, Vault, AnyStake, Pools[chainId][pid], pid),
       vipAmountAnyStake(AnyStake, pid),
     ]);
 

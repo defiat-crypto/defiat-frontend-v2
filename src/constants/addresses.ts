@@ -51,6 +51,14 @@ const Addresses: { [key: string]: { [networkId: number]: string } } = {
     1: "0xdac17f958d2ee523a2206206994597c13d831ec7",
     4: "0x3B00Ef435fA4FcFF5C209a37d1f3dcff37c705aD",
   },
+  Circle: {
+    1: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+    // 4: "0x3B00Ef435fA4FcFF5C209a37d1f3dcff37c705aD",
+  },
+  CircleLp: {
+    1: "0xB4e16d0168e52d35CaCD2c6185b44281Ec28C9Dc",
+    // 4: "0x3B00Ef435fA4FcFF5C209a37d1f3dcff37c705aD",
+  },
   EIGHT: {
     4: "0xD5D087d31dDcc58c70d0441554dff9C9874c882F",
   },
