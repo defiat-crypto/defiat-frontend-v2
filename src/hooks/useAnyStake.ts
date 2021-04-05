@@ -65,7 +65,7 @@ export const useAnyStake = () => {
       totalValueStakedAllPoolsAnyStake(Vault, DeFiat, AnyStake, Pools[chainId]),
     ]);
 
-    const tokenPrice = values[1].times(1e18).div(values[0]);
+    const tokenPrice = values[0].times(1e18).div(values[1]);
     const totalValueStaked = values[2];
     const totalStakes = values[3];
     const totalPending = values[4];
