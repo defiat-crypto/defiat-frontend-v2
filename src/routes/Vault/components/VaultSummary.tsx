@@ -26,13 +26,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function getBuyBackToken(params: GridValueGetterParams) {
-  return `${
-    params.getValue("amountToken")
+  return `${params.getValue("amountToken")
       ? getDisplayBalance(
-          new BigNumber(params.getValue("amountToken").toString())
-        )
+        new BigNumber(params.getValue("amountToken").toString())
+      )
       : ""
-  } ${params.getValue("symbolToken") ?? ""}`;
+    } ${params.getValue("symbolToken") ?? ""}`;
 }
 
 export const VaultSummary = () => {
@@ -40,7 +39,7 @@ export const VaultSummary = () => {
   const { chainId } = useWallet();
 
   const columns = [
-    { field: "timestamp", headerName: "Date", flex: 1, filterable: false },
+    { field: "blocknumber", headerName: "Block", flex: 1, filterable: false },
     { field: "direction", headerName: "Direction DFT", width: 160 },
     {
       field: "amountDFT",

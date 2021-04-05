@@ -873,11 +873,10 @@ export const getIncomingRewardsVault = async (
     });
     let id: number = 0;
     await asyncForEach(incomingBuyBacks, async (rewards) => {
-      const block = await DeFiat.web3.eth.getBlock(rewards.blockNumber);
       rewardsData.push(
         new ProcessedRewards(
           id++,
-          timeConverter(block.timestamp),
+          rewards.blockNumber,
           rewards.returnValues["buybackAmount"],
           rewards.returnValues["tokenAmount"],
           getSymbol(rewards.returnValues["token"], chainid),
@@ -894,11 +893,10 @@ export const getIncomingRewardsVault = async (
     });
     await asyncForEach(pointsBuyBacks, async (rewards) => {
       if (rewards.returnValues["token"] === Addresses.DeFiat[chainid]) {
-        const block = await DeFiat.web3.eth.getBlock(rewards.blockNumber);
         rewardsData.push(
           new ProcessedRewards(
             id++,
-            timeConverter(block.timestamp),
+            rewards.blockNumber,
             rewards.returnValues["tokenAmount"],
             rewards.returnValues["buybackAmount"],
             getSymbol(rewards.returnValues["token"], chainid),
@@ -916,11 +914,10 @@ export const getIncomingRewardsVault = async (
     });
 
     await asyncForEach(outgoingClaims, async (rewards) => {
-      const block = await DeFiat.web3.eth.getBlock(rewards.blockNumber);
       rewardsData.push(
         new ProcessedRewards(
           id++,
-          timeConverter(block.timestamp),
+          rewards.blockNumber,
           rewards.returnValues["amount"],
           undefined,
           undefined,
@@ -936,11 +933,10 @@ export const getIncomingRewardsVault = async (
       toBlock: blockNumber,
     });
     await asyncForEach(outgoingClaimsRegulator, async (rewards) => {
-      const block = await DeFiat.web3.eth.getBlock(rewards.blockNumber);
       rewardsData.push(
         new ProcessedRewards(
           id++,
-          timeConverter(block.timestamp),
+          rewards.blockNumber,
           rewards.returnValues["amount"],
           undefined,
           undefined,
@@ -957,7 +953,6 @@ export const getIncomingRewardsVault = async (
       filter: { to: Addresses.Vault[chainid] },
     });
     await asyncForEach(incomingTransfers, async (rewards) => {
-      const block = await DeFiat.web3.eth.getBlock(rewards.blockNumber);
       if (
         rewardsData.find(
           (x) => x.transactionHash === rewards.transactionHash
@@ -966,7 +961,7 @@ export const getIncomingRewardsVault = async (
         rewardsData.push(
           new ProcessedRewards(
             id++,
-            timeConverter(block.timestamp),
+            rewards.blockNumber,
             rewards.returnValues.value,
             undefined,
             undefined,
@@ -977,7 +972,7 @@ export const getIncomingRewardsVault = async (
         );
       }
     });
-    rewardsData.sort((one, two) => (one.timestamp > two.timestamp ? -1 : 1));
+    rewardsData.sort((one, two) => (one.blocknumber > two.blocknumber ? -1 : 1));
     return rewardsData;
   } catch (e) {
     return [];
@@ -987,21 +982,9 @@ export const getIncomingRewardsVault = async (
 function getSymbol(address: string, chainId: number) {
   if (Addresses.DeFiat[chainId] === address) return "DFTPv2";
   const pools: StakingPool[] = Pools[chainId];
-  return pools.find((x) => x.address === address).symbol;
+  return pools.find((x) => x.address.toLowerCase() === address.toLowerCase())?.symbol;
 }
 
-function timeConverter(UNIX_timestamp) {
-  var a = new Date(UNIX_timestamp * 1000);
-  var year = a.getFullYear();
-  var month = a.getMonth() + 1;
-  var date = a.getDate();
-  var hour = a.getHours().toString().padStart(2, "0");
-  var min = a.getMinutes().toString().padStart(2, "0");
-  var sec = a.getSeconds().toString().padStart(2, "0");
-  var time =
-    year + "-" + month + "-" + date + " " + hour + ":" + min + ":" + sec;
-  return time;
-}
 
 export async function asyncForEach<T>(
   array: Array<T>,

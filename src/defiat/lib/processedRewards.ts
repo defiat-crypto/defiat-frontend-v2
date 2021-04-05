@@ -1,6 +1,6 @@
 export class ProcessedRewards {
     public id: number;
-    public timestamp: string
+    public blocknumber: number
     public amountDFT: number;
     public amountToken: number;
     public symbolToken: string;
@@ -8,9 +8,9 @@ export class ProcessedRewards {
     public eventType: string
     public direction: string
 
-    constructor(id: number, timestamp: string, amount: number, amountToken: number, symbolToken: string, transactionHash: string, eventType: string, direction: string) {
+    constructor(id: number, blocknumber: number, amount: number, amountToken: number, symbolToken: string, transactionHash: string, eventType: string, direction: string) {
         this.id = id;
-        this.timestamp = timestamp;
+        this.blocknumber = blocknumber;
         this.amountDFT = amount;
         this.amountToken = amountToken;
         this.symbolToken = symbolToken
