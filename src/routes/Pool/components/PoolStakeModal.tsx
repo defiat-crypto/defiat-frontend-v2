@@ -160,16 +160,16 @@ export const PoolStakeModal: React.FC<PoolStakeModalProps> = ({
             color="primary"
             fullWidth
             onClick={handleDeposit}
-            disabled={
-              !data ||
-              isDepositing ||
-              isWithdrawing ||
-              data.tokenBalance.eq(0) ||
-              !depositInput ||
-              new BigNumber(depositInput).lte(0) ||
-              new BigNumber(depositInput)
-                .times(new BigNumber(10).pow(decimals))
-                .gt(data.tokenBalance)
+            disabled={true
+              // !data ||
+              // isDepositing ||
+              // isWithdrawing ||
+              // data.tokenBalance.eq(0) ||
+              // !depositInput ||
+              // new BigNumber(depositInput).lte(0) ||
+              // new BigNumber(depositInput)
+              //   .times(new BigNumber(10).pow(decimals))
+              //   .gt(data.tokenBalance)
             }
           >
             {allowance?.eq(0) ? 'Approve' : 'Stake'} {symbol}
