@@ -11,6 +11,7 @@ import {
   getDeFiatLpAddress,
   getCircleLpAddress,
   getCircleAddress,
+  totalPendingAnyStake,
 } from "defiat";
 import { useEffect, useMemo } from "react";
 import { useCallback, useState } from "react";
@@ -59,7 +60,8 @@ export const useAnyStake = () => {
         account
       ),
       totalPoolsStakedAnyStake(AnyStake, Pools[chainId], account),
-      totalPendingVirtualAnyStake(AnyStake, Pools[chainId], account, block),
+      totalPendingAnyStake(AnyStake, Pools[chainId], account),
+      // totalPendingVirtualAnyStake(AnyStake, Pools[chainId], account, block),
       totalValueStakedAllPoolsAnyStake(Vault, DeFiat, AnyStake, Pools[chainId]),
     ]);
 
