@@ -34,6 +34,15 @@ export const StakingSummary = () => {
         </Typography>
       </Box>
 
+      <Box pb={2}>
+        <Typography variant="h4" align="center">
+          Migration Event Has Started
+        </Typography>
+        <Typography variant="subtitle2" align="center">
+          Please unstake all funds from AnyStake
+        </Typography>
+      </Box>
+
       <Grid container spacing={2}>
         <Grid item md={6} xs={12}>
           <ValueCard

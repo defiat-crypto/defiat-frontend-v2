@@ -576,7 +576,7 @@ export const pendingVirtualAnyStake = async (
       .times(userInfo.amount)
       .div(poolInfo.totalStaked);
     const result = pending.plus(virtualPending);
-    return result;
+    return result.isNaN() ? new BigNumber("0") : result;
   } catch (e) {
     debug(e);
     return new BigNumber("0");
@@ -646,8 +646,7 @@ export const getPoolApr = async (
       .times(new BigNumber(2073600))
       .times(1e2);
     const apy = rewardsPerYear.div(poolValue);
-    // console.log(apy.toString());
-    return apy;
+    return apy.isNaN() ? new BigNumber("0") : apy;
   } catch (e) {
     console.log("APR", e);
     return new BigNumber("0");
