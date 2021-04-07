@@ -1,7 +1,8 @@
 import { Value } from "components/Value";
+import addresses from "constants/addresses";
 import Addresses from "constants/addresses";
 import { Pools, StakingPool } from "constants/pools";
-import { TransactionReceipt } from "web3-core";
+import { provider, TransactionReceipt } from "web3-core";
 import { Contract } from "web3-eth-contract";
 import { BigNumber, getTetherAddress } from ".";
 import { debug, getBalance, getDisplayBalance } from "../utils";
@@ -834,6 +835,46 @@ export const isAbovePeg = async (Regulator: Contract) => {
     return true;
   }
 };
+
+export const pendingVirtualRegulator = async (Regulator: Contract, Vault: Contract, DeFiat: DeFiat, chainId: number, ethereum: provider, block: number, address: string) => {
+  try {
+    const userPendingRegulator = await pendingRegulator(Regulator, address);
+    if (block === 0) {
+      return userPendingRegulator;
+    }
+
+    const values = await Promise.all([
+      getBalance(getDeFiatAddress(DeFiat), addresses.Vault[chainId], ethereum),
+      Vault.methods.pendingRewards().call(),
+      Vault.methods.bondedRewards().call(),
+      Vault.methods.lastDistributionBlock().call(),
+      Vault.methods.bondedRewardsPerBlock().call(),
+      Vault.methods.distributionRate().call(),
+      Regulator.methods.buybackRate().call(),
+      getBalance(getPointsAddress(DeFiat), addresses.Regulator[chainId], ethereum),
+      stakedRegulator(Regulator, address),
+    ]);
+
+
+    const vaultBalance = values[0];
+    const pendingRewardsVault = values[1];
+    const bondedRewards = values[2];
+    const lastDistributionBlock = values[3];
+    const bondedRewardsPerBlock = values[4];
+    const bondedAmount = bondedRewards === 0 ? 0 : new BigNumber(block - lastDistributionBlock).times(bondedRewardsPerBlock);
+    const feeRewards = vaultBalance.minus(bondedRewards).minus(pendingRewardsVault);
+    const totalRewardsSinceLastUpdate = feeRewards.plus(bondedAmount);
+    const regulatorPendingRewards = totalRewardsSinceLastUpdate.times((1000 - values[5]) / 1000).times((1000 - values[6]) / 1000);
+    const regulatorBalance = values[7];
+    const staked = values[8];
+    const virtualPending = userPendingRegulator.plus(staked.div(regulatorBalance).times(regulatorPendingRewards))
+    return virtualPending;
+  } catch (e) {
+    console.log(e);
+    return true;
+  }
+};
+
 
 // Vault
 export const getBondedRewards = async (Vault: Contract) => {
