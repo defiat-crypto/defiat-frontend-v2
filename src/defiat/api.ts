@@ -870,8 +870,7 @@ export const pendingVirtualRegulator = async (Regulator: Contract, Vault: Contra
     const virtualPending = userPendingRegulator.plus(staked.div(regulatorBalance).times(regulatorPendingRewards))
     return virtualPending;
   } catch (e) {
-    console.log(e);
-    return true;
+    return new BigNumber("0");
   }
 };
 
