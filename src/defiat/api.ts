@@ -1020,7 +1020,8 @@ export const getIncomingRewardsVault = async (
 };
 
 function getSymbol(address: string, chainId: number) {
-  if (Addresses.DeFiat[chainId] === address) return "DFTPv2";
+  if (Addresses.Points[chainId].toLowerCase() === address.toLowerCase()) return "DFTPv2";
+  if (Addresses.DeFiat[chainId].toLowerCase() === address.toLowerCase()) return "DFTPv2";
   const pools: StakingPool[] = Pools[chainId];
   return pools.find((x) => x.address.toLowerCase() === address.toLowerCase())?.symbol;
 }
