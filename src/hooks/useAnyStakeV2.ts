@@ -4,7 +4,6 @@ import {
   totalValueStakedAllPoolsAnyStake,
   totalValueStakedAnyStake,
   totalPoolsStakedAnyStake,
-  // totalPendingVirtualAnyStake,
   getVaultContract,
   getVaultPrice,
   getDeFiatLpAddress,
@@ -12,11 +11,13 @@ import {
   getCircleAddress,
   getAnyStakeV2Contract,
   totalPendingAnyStake,
+  totalPendingVirtualAnyStakeV2,
 } from "defiat";
 import { useEffect, useMemo } from "react";
 import { useCallback, useState } from "react";
 import { useWallet } from "use-wallet";
 import { getDisplayBalance } from "utils";
+import { provider } from "web3-core";
 import { useBlock } from "./useBlock";
 import { useDeFiat } from "./useDeFiat";
 
@@ -33,7 +34,8 @@ export const useAnyStakeV2 = () => {
   const {
     account,
     chainId,
-  }: { account: string; chainId: number } = useWallet();
+    ethereum
+  }: { account: string; chainId: number, ethereum: provider } = useWallet();
   const block = useBlock();
   const DeFiat = useDeFiat();
 
@@ -60,8 +62,8 @@ export const useAnyStakeV2 = () => {
         account
       ),
       totalPoolsStakedAnyStake(AnyStakeV2, Pools[chainId], account),
-      // totalPendingVirtualAnyStake(AnyStakeV2, Pools[chainId], account, block),
-      totalPendingAnyStake(AnyStakeV2, Pools[chainId], account),
+      totalPendingVirtualAnyStakeV2(AnyStakeV2, Vault, Pools[chainId], account, block, chainId, DeFiat, ethereum),
+      //totalPendingAnyStake(AnyStakeV2, Pools[chainId], account),
       totalValueStakedAllPoolsAnyStake(
         Vault,
         DeFiat,
