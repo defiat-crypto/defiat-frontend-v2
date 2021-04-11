@@ -1,10 +1,9 @@
-import { Value } from "components/Value";
 import Addresses from "constants/addresses";
 import { Pools, StakingPool } from "constants/pools";
 import { TransactionReceipt } from "web3-core";
 import { Contract } from "web3-eth-contract";
-import { BigNumber, getTetherAddress } from ".";
-import { debug, getBalance, getDisplayBalance } from "../utils";
+import { BigNumber } from ".";
+import { debug } from "../utils";
 import { DeFiat } from "./DeFiat";
 import { ProcessedRewards } from "./lib/processedRewards";
 import {
@@ -522,6 +521,16 @@ export const totalPendingVirtualAnyStake = async (
   }
 };
 
+export const totalPendingAnyStakeV2 = async (AnyStakeV2: Contract) => {
+  try {
+  } catch (e) {}
+};
+
+export const pendingAnyStakeV2 = async (AnyStakeV2: Contract, pid: number) => {
+  try {
+  } catch (e) {}
+};
+
 export const totalPendingRewardsAnyStake = async (AnyStake: Contract) => {
   try {
     const result = await AnyStake.methods.pendingRewards().call();
@@ -576,7 +585,7 @@ export const pendingVirtualAnyStake = async (
       .times(userInfo.amount)
       .div(poolInfo.totalStaked);
     const result = pending.plus(virtualPending);
-    return result;
+    return result.isNaN() ? new BigNumber("0") : result;
   } catch (e) {
     debug(e);
     return new BigNumber("0");
@@ -646,8 +655,7 @@ export const getPoolApr = async (
       .times(new BigNumber(2073600))
       .times(1e2);
     const apy = rewardsPerYear.div(poolValue);
-    // console.log(apy.toString());
-    return apy;
+    return apy.isNaN() ? new BigNumber("0") : apy;
   } catch (e) {
     console.log("APR", e);
     return new BigNumber("0");

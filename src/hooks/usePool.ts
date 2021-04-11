@@ -15,6 +15,7 @@ import {
   getCircleAddress,
   getCircleLpAddress,
   getPoolApr,
+  pendingAnyStake,
 } from "defiat";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useWallet } from "use-wallet";
@@ -81,7 +82,8 @@ export const usePool = (pid: number) => {
       totalStakedAnyStake(AnyStake, pid),
       stakingFeeAnyStake(AnyStake, pid),
       stakedAnyStake(AnyStake, pid, account),
-      pendingVirtualAnyStake(AnyStake, pid, account, block),
+      pendingAnyStake(AnyStake, pid, account),
+      // pendingVirtualAnyStake(AnyStake, pid, account, block),
       vipAmountAnyStake(AnyStake, pid),
       stakedAnyStake(AnyStake, 0, account),
       AnyStake.methods.poolInfo(pid).call(),

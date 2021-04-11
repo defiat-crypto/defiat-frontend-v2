@@ -33,6 +33,7 @@ export const PoolSummary = () => {
             }
             endSymbol={symbol}
             name="Total Tokens Staked"
+            tooltip={`The token amount of ${symbol} staked in AnyStake`}
             icon={anystake128}
           />
         </Grid>
@@ -41,6 +42,7 @@ export const PoolSummary = () => {
             value={data ? getDisplayBalance(data.tokenPrice) : `0.00`}
             startSymbol="$"
             name={`${symbol} Price`}
+            tooltip={`The price of ${symbol} on Uniswap in USDC`}
             icon={logo}
           />
         </Grid>
@@ -48,16 +50,18 @@ export const PoolSummary = () => {
           <ValueCard
             value={data ? `${data.apr}` : "0.00"}
             endSymbol="%"
-            name="APR in USDC"
+            name="Estimated APR"
+            tooltip="APR is estimated based on activity from the past 50K blocks (~1 week) in USDC. Rewards are volume-based, meaning they are not distributed linearly over time. Our calculation: (Avg DFT Rewards/Block over last 50K blocks) * (DFT Price) * (1 year in blocks) / (Pool TVL) * 100"
             icon={logo192}
           />
         </Grid>
         <Grid item md={6} xs={12}>
           <ValueCard
             value={data ? data.priceMultiplier : ""}
+            icon={logo192}
             endSymbol="x"
             name="Pool Reward Multiplier"
-            icon={logo192}
+            tooltip="Rewards that this pool receives relative to other pools"
           />
         </Grid>
       </Grid>

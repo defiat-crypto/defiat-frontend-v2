@@ -1,16 +1,16 @@
 import { Pools } from "constants/pools";
 import {
   getDeFiatAddress,
-  getAnyStakeContract,
   totalValueStakedAllPoolsAnyStake,
   totalValueStakedAnyStake,
   totalPoolsStakedAnyStake,
-  totalPendingVirtualAnyStake,
+  // totalPendingVirtualAnyStake,
   getVaultContract,
   getVaultPrice,
   getDeFiatLpAddress,
   getCircleLpAddress,
   getCircleAddress,
+  getAnyStakeV2Contract,
   totalPendingAnyStake,
 } from "defiat";
 import { useEffect, useMemo } from "react";
@@ -28,7 +28,7 @@ interface AnyStakeData {
   totalStakes: string;
 }
 
-export const useAnyStake = () => {
+export const useAnyStakeV2 = () => {
   const [data, setData] = useState<AnyStakeData>();
   const {
     account,
@@ -37,7 +37,7 @@ export const useAnyStake = () => {
   const block = useBlock();
   const DeFiat = useDeFiat();
 
-  const AnyStake = useMemo(() => getAnyStakeContract(DeFiat), [DeFiat]);
+  const AnyStakeV2 = useMemo(() => getAnyStakeV2Contract(DeFiat), [DeFiat]);
   const Vault = useMemo(() => getVaultContract(DeFiat), [DeFiat]);
 
   const getData = useCallback(async () => {
@@ -55,14 +55,19 @@ export const useAnyStake = () => {
       totalValueStakedAnyStake(
         Vault,
         DeFiat,
-        AnyStake,
+        AnyStakeV2,
         Pools[chainId],
         account
       ),
-      totalPoolsStakedAnyStake(AnyStake, Pools[chainId], account),
-      totalPendingAnyStake(AnyStake, Pools[chainId], account),
-      // totalPendingVirtualAnyStake(AnyStake, Pools[chainId], account, block),
-      totalValueStakedAllPoolsAnyStake(Vault, DeFiat, AnyStake, Pools[chainId]),
+      totalPoolsStakedAnyStake(AnyStakeV2, Pools[chainId], account),
+      // totalPendingVirtualAnyStake(AnyStakeV2, Pools[chainId], account, block),
+      totalPendingAnyStake(AnyStakeV2, Pools[chainId], account),
+      totalValueStakedAllPoolsAnyStake(
+        Vault,
+        DeFiat,
+        AnyStakeV2,
+        Pools[chainId]
+      ),
     ]);
 
     const tokenPrice = values[0].times(1e18).div(values[1]);
@@ -78,7 +83,7 @@ export const useAnyStake = () => {
       totalValueStaked: getDisplayBalance(totalValueStaked),
       totalStakes,
     });
-  }, [account, chainId, DeFiat, AnyStake, Vault, block]);
+  }, [account, chainId, DeFiat, AnyStakeV2, Vault]);
 
   useEffect(() => {
     if (!!account && !!DeFiat) {
