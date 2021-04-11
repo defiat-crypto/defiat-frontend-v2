@@ -10,8 +10,10 @@ import SecondChanceToken from "../../constants/abi/SecondChance.json";
 import RugSanctuaryPool from "../../constants/abi/RugSanctuary.json";
 import UniswapOracle from "../../constants/abi/Uni_Price_v2.json";
 import AnyStakeAbi from "../../constants/abi/AnyStake.json";
+import AnyStakeV2Abi from "../../constants/abi/AnyStakeV2.json";
 import RegulatorAbi from "../../constants/abi/AnyStakeRegulator.json";
 import VaultAbi from "../../constants/abi/AnyStakeVault.json";
+import VaultV2Abi from "../../constants/abi/AnyStakeVaultV2.json";
 
 export class Contracts {
   web3: Web3;
@@ -29,8 +31,10 @@ export class Contracts {
   RugSanctuary: Contract;
   Oracle: Contract;
   AnyStake: Contract;
+  AnyStakeV2: Contract;
   Regulator: Contract;
   Vault: Contract;
+  VaultV2: Contract;
 
   constructor(provider: any, networkId: number, web3: Web3, options: any) {
     this.web3 = web3;
@@ -69,6 +73,10 @@ export class Contracts {
       AnyStakeAbi as AbiItem[],
       Addresses.AnyStake[networkId]
     );
+    this.AnyStakeV2 = new this.web3.eth.Contract(
+      AnyStakeV2Abi as AbiItem[],
+      Addresses.AnyStakeV2[networkId]
+    );
     this.Regulator = new this.web3.eth.Contract(
       RegulatorAbi as AbiItem[],
       Addresses.Regulator[networkId]
@@ -77,31 +85,35 @@ export class Contracts {
       VaultAbi as AbiItem[],
       Addresses.Vault[networkId]
     );
+    this.VaultV2 = new this.web3.eth.Contract(
+      VaultV2Abi as AbiItem[],
+      Addresses.VaultV2[networkId]
+    );
 
     // this.setProvider(provider, networkId)
     this.setDefaultAccount(this.web3.eth.defaultAccount!);
   }
 
-  setProvider(provider: any, networkId: number) {
-    const setProvider = (contract: Contract, address: string) => {
-      // contract.setProvider(provider)
-      if (address) {
-        contract.options.address = address;
-      } else {
-        console.error("Contract address not found in network", networkId);
-      }
-    };
+  // setProvider(provider: any, networkId: number) {
+  //   const setProvider = (contract: Contract, address: string) => {
+  //     // contract.setProvider(provider)
+  //     if (address) {
+  //       contract.options.address = address;
+  //     } else {
+  //       console.error("Contract address not found in network", networkId);
+  //     }
+  //   };
 
-    setProvider(this.DeFiat, Addresses.DeFiat[networkId]);
-    setProvider(this.Points, Addresses.Points[networkId]);
-    setProvider(this.Governance, Addresses.Governance[networkId]);
-    setProvider(this.Second, Addresses.Second[networkId]);
-    setProvider(this.RugSanctuary, Addresses.RugSanctuary[networkId]);
-    setProvider(this.Oracle, Addresses.Second[networkId]);
-    setProvider(this.AnyStake, Addresses.RugSanctuary[networkId]);
-    setProvider(this.Regulator, Addresses.Second[networkId]);
-    setProvider(this.Vault, Addresses.RugSanctuary[networkId]);
-  }
+  //   setProvider(this.DeFiat, Addresses.DeFiat[networkId]);
+  //   setProvider(this.Points, Addresses.Points[networkId]);
+  //   setProvider(this.Governance, Addresses.Governance[networkId]);
+  //   setProvider(this.Second, Addresses.Second[networkId]);
+  //   setProvider(this.RugSanctuary, Addresses.RugSanctuary[networkId]);
+  //   setProvider(this.Oracle, Addresses.Second[networkId]);
+  //   setProvider(this.AnyStake, Addresses.RugSanctuary[networkId]);
+  //   setProvider(this.Regulator, Addresses.Second[networkId]);
+  //   setProvider(this.Vault, Addresses.RugSanctuary[networkId]);
+  // }
 
   setDefaultAccount(account: string) {
     this.DeFiat.options.from = account;

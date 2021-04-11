@@ -1,8 +1,6 @@
 import { Display } from "components/Display";
 import anystakeBrand from "assets/img/anystakeBrand.png";
-import { Box, makeStyles, Typography } from "@material-ui/core";
-import { SocialMediaButtons } from "components/SocialMediaButtons";
-import { isTestnet } from "utils";
+import { Box, makeStyles } from "@material-ui/core";
 import { Flex } from "components/Flex";
 import { StakingSummary } from "./components/StakingSummary";
 import { StakingPoolList } from "./components/StakingPoolList";

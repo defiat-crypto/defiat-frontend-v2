@@ -35,6 +35,10 @@ const Addresses: { [key: string]: { [networkId: number]: string } } = {
     1: "0x95EF77772BdAEF25B56ec5f210e02BdaAc40D144",
     4: "0x9b90eF849E9B07b3f7cab85A4b44925511cB27cF",
   },
+  AnyStakeV2: {
+    1: "",
+    4: "0xC8168df116690D1BEB93DA42Cf645D70825eEd4b",
+  },
   Regulator: {
     1: "0xbb10bC5a825F3F6b148bF83ED4b679c88ab27B54",
     4: "0x43E042290c18d8Ae0B0F05355fC82e477f1579a9",
@@ -42,6 +46,10 @@ const Addresses: { [key: string]: { [networkId: number]: string } } = {
   Vault: {
     1: "0xDcD7CA4a0feBBF5dcF91499b603c1C073916f9a3",
     4: "0x7b213Ee4ec0f3441926155716d683dc8b3a87aE3",
+  },
+  VaultV2: {
+    1: "",
+    4: "0x06A38AD939Cc766669A148e03c20832cE1A957fa",
   },
   Oracle: {
     1: "0x3fc37DC74BA34b261f95EC44ED6756D6D4D98591",
@@ -53,11 +61,11 @@ const Addresses: { [key: string]: { [networkId: number]: string } } = {
   },
   Circle: {
     1: "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
-    // 4: "0x3B00Ef435fA4FcFF5C209a37d1f3dcff37c705aD",
+    4: "0x4dbcdf9b62e891a7cec5a2568c3f4faf9e8abe2b",
   },
   CircleLp: {
     1: "0xB4e16d0168e52d35CaCD2c6185b44281Ec28C9Dc",
-    // 4: "0x3B00Ef435fA4FcFF5C209a37d1f3dcff37c705aD",
+    4: "0x78AB2e85EAf22Dc7B6981E54432e17521BdadC23",
   },
   EIGHT: {
     4: "0xD5D087d31dDcc58c70d0441554dff9C9874c882F",

@@ -1,10 +1,9 @@
-import { Value } from "components/Value";
 import Addresses from "constants/addresses";
 import { Pools, StakingPool } from "constants/pools";
 import { TransactionReceipt } from "web3-core";
 import { Contract } from "web3-eth-contract";
-import { BigNumber, getTetherAddress } from ".";
-import { debug, getBalance, getDisplayBalance } from "../utils";
+import { BigNumber } from ".";
+import { debug } from "../utils";
 import { DeFiat } from "./DeFiat";
 import { ProcessedRewards } from "./lib/processedRewards";
 import {
@@ -520,6 +519,16 @@ export const totalPendingVirtualAnyStake = async (
   } catch (e) {
     return new BigNumber("0");
   }
+};
+
+export const totalPendingAnyStakeV2 = async (AnyStakeV2: Contract) => {
+  try {
+  } catch (e) {}
+};
+
+export const pendingAnyStakeV2 = async (AnyStakeV2: Contract, pid: number) => {
+  try {
+  } catch (e) {}
 };
 
 export const totalPendingRewardsAnyStake = async (AnyStake: Contract) => {
