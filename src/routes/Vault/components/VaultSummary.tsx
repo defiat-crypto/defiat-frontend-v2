@@ -27,11 +27,12 @@ const useStyles = makeStyles((theme) => ({
 
 function getBuyBackToken(params: GridValueGetterParams) {
   return `${params.getValue("amountToken")
-      ? getDisplayBalance(
-        new BigNumber(params.getValue("amountToken").toString())
-      )
-      : ""
-    } ${params.getValue("symbolToken") ?? ""}`;
+    ? getDisplayBalance(
+
+      new BigNumber(params.getValue("amountToken").toString()), +params.getValue("decimals")
+    )
+    : ""
+    } ${params.getValue("symbolToken") ?? ""} `;
 }
 
 export const VaultSummary = () => {

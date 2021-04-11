@@ -920,6 +920,7 @@ export const getIncomingRewardsVault = async (
           rewards.returnValues["buybackAmount"],
           rewards.returnValues["tokenAmount"],
           getSymbol(rewards.returnValues["token"], chainid),
+          getDecimals(rewards.returnValues["token"], chainid),
           rewards.transactionHash,
           "DeFiat Buyback",
           "In"
@@ -940,6 +941,7 @@ export const getIncomingRewardsVault = async (
             rewards.returnValues["tokenAmount"],
             rewards.returnValues["buybackAmount"],
             getSymbol(rewards.returnValues["token"], chainid),
+            getDecimals(rewards.returnValues["token"], chainid),
             rewards.transactionHash,
             "Points Buyback",
             "Out"
@@ -961,6 +963,7 @@ export const getIncomingRewardsVault = async (
           rewards.returnValues["amount"],
           undefined,
           undefined,
+          undefined,
           rewards.transactionHash,
           "Claimed Rewards",
           "Out"
@@ -978,6 +981,7 @@ export const getIncomingRewardsVault = async (
           id++,
           rewards.blockNumber,
           rewards.returnValues["amount"],
+          undefined,
           undefined,
           undefined,
           rewards.transactionHash,
@@ -1005,6 +1009,7 @@ export const getIncomingRewardsVault = async (
             rewards.returnValues.value,
             undefined,
             undefined,
+            undefined,
             rewards.transactionHash,
             "Transfer Fee",
             "In"
@@ -1024,6 +1029,14 @@ function getSymbol(address: string, chainId: number) {
   if (Addresses.DeFiat[chainId].toLowerCase() === address.toLowerCase()) return "DFTPv2";
   const pools: StakingPool[] = Pools[chainId];
   return pools.find((x) => x.address.toLowerCase() === address.toLowerCase())?.symbol;
+}
+
+function getDecimals(address: string, chainId: number) {
+  console.log(address);
+  if (Addresses.Points[chainId].toLowerCase() === address.toLowerCase()) return 18;
+  if (Addresses.DeFiat[chainId].toLowerCase() === address.toLowerCase()) return 18;
+  const pools: StakingPool[] = Pools[chainId];
+  return pools.find((x) => x.address.toLowerCase() === address.toLowerCase())?.decimals;
 }
 
 
