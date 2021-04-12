@@ -4,7 +4,6 @@ import {
   totalValueStakedAllPoolsAnyStake,
   totalValueStakedAnyStake,
   totalPoolsStakedAnyStake,
-  getVaultContract,
   getVaultPrice,
   getDeFiatLpAddress,
   getCircleLpAddress,
@@ -12,6 +11,7 @@ import {
   getAnyStakeV2Contract,
   totalPendingAnyStake,
   totalPendingVirtualAnyStakeV2,
+  getVaultV2Contract,
 } from "defiat";
 import { useEffect, useMemo } from "react";
 import { useCallback, useState } from "react";
@@ -40,32 +40,32 @@ export const useAnyStakeV2 = () => {
   const DeFiat = useDeFiat();
 
   const AnyStakeV2 = useMemo(() => getAnyStakeV2Contract(DeFiat), [DeFiat]);
-  const Vault = useMemo(() => getVaultContract(DeFiat), [DeFiat]);
+  const VaultV2 = useMemo(() => getVaultV2Contract(DeFiat), [DeFiat]);
 
   const getData = useCallback(async () => {
     const values = await Promise.all([
       getVaultPrice(
-        Vault,
+        VaultV2,
         getDeFiatAddress(DeFiat),
         getDeFiatLpAddress(DeFiat)
       ),
       getVaultPrice(
-        Vault,
+        VaultV2,
         getCircleAddress(DeFiat),
         getCircleLpAddress(DeFiat)
       ),
       totalValueStakedAnyStake(
-        Vault,
+        VaultV2,
         DeFiat,
         AnyStakeV2,
         Pools[chainId],
         account
       ),
       totalPoolsStakedAnyStake(AnyStakeV2, Pools[chainId], account),
-      totalPendingVirtualAnyStakeV2(AnyStakeV2, Vault, Pools[chainId], account, block, chainId, DeFiat, ethereum),
+      totalPendingVirtualAnyStakeV2(AnyStakeV2, VaultV2, Pools[chainId], account, block, chainId, DeFiat, ethereum),
       //totalPendingAnyStake(AnyStakeV2, Pools[chainId], account),
       totalValueStakedAllPoolsAnyStake(
-        Vault,
+        VaultV2,
         DeFiat,
         AnyStakeV2,
         Pools[chainId]
@@ -85,7 +85,7 @@ export const useAnyStakeV2 = () => {
       totalValueStaked: getDisplayBalance(totalValueStaked),
       totalStakes,
     });
-  }, [account, chainId, DeFiat, AnyStakeV2, Vault]);
+  }, [account, chainId, DeFiat, AnyStakeV2, VaultV2]);
 
   useEffect(() => {
     if (!!account && !!DeFiat) {

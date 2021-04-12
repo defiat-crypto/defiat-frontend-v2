@@ -3,7 +3,7 @@ import { Flex } from "components/Flex";
 import logo192 from "assets/img/logo192.png";
 import anystake128 from "assets/img/anystake128.png";
 import spinner256 from "assets/img/spinner256.png";
-import { useAnyStake } from "hooks/useAnyStake";
+import { useAnyStakeV2 } from "hooks/useAnyStakeV2";
 import { ValueCard } from "components/ValueCard";
 import { formatAddress, getEtherscanAddress } from "utils";
 import { LaunchRounded } from "@material-ui/icons";
@@ -11,7 +11,7 @@ import { useWallet } from "use-wallet";
 import addresses from "constants/addresses";
 
 export const StakingSummary = () => {
-  const { data } = useAnyStake();
+  const { data } = useAnyStakeV2();
   const { chainId } = useWallet();
 
   return (

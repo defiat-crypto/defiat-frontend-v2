@@ -6,6 +6,7 @@ import { Flex } from "components/Flex";
 import { Card } from "components/Card";
 import { StakingPool } from "constants/pools";
 import { usePoolCard } from "hooks/usePoolCard";
+import { usePoolCardV2 } from "hooks/usePoolCardV2";
 
 interface StakingPoolCardProps {
   pool: StakingPool;
@@ -20,10 +21,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export const StakingPoolCard: React.FC<StakingPoolCardProps> = ({ pool, cards }) => {
+export const StakingPoolCardV2: React.FC<StakingPoolCardProps> = ({ pool, cards }) => {
   const history = useHistory();
   const { pid, logo, name, symbol } = pool;
-  const { data } = usePoolCard(pid);
+  const { data } = usePoolCardV2(pid);
   const classes = useStyles();
 
   return (
@@ -65,7 +66,7 @@ export const StakingPoolCard: React.FC<StakingPoolCardProps> = ({ pool, cards })
         </Box>
       </Flex>
       <Button
-        onClick={() => history.push(`/staking/${pid}`)}
+        onClick={() => history.push(`/anystake/${pid}`)}
         color="primary"
         variant="contained"
         fullWidth

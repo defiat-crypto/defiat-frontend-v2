@@ -18,6 +18,7 @@ import { useModal } from "../hooks/useModal";
 import { DisclaimerModal } from "../components/DisclaimerModal";
 import { Regulator } from "./Regulator";
 import { Pool } from "./Pool";
+import { PoolV2 } from "./PoolV2";
 import { Vault } from "./Vault";
 
 export const Routes = () => {
@@ -37,6 +38,8 @@ export const Routes = () => {
       <Container maxWidth="lg">
         <Switch>
           <Route exact path="/" component={Home} />
+          <Route path="/anystake/:pid" component={PoolV2} />
+          <Route path="/anystake" component={Staking} />
           <Route path="/dashboard" component={Dashboard} />
           <Route path="/faq" component={FAQ} />
           <Route path="/legal" component={Legal} />
@@ -45,7 +48,6 @@ export const Routes = () => {
           <Route path="/second/pool" component={SecondPool} />
           <Route path="/second" component={SecondRecycler} />
           <Route path="/staking/:pid" component={Pool} />
-          <Route path="/staking" component={Staking} />
           <Route path="/vault" component={Vault} />
           <Route component={NoMatch} />
         </Switch>
