@@ -3,7 +3,6 @@ import { Flex } from "components/Flex";
 import { Pools, StakingPool } from "constants/pools";
 import { useState } from "react";
 import { useWallet } from "use-wallet";
-import { isTestnet } from "utils";
 import { StakingPoolCard } from "./StakingPoolCard";
 import { StakingPoolCardV2 } from "./StakingPoolCardV2";
 
@@ -37,34 +36,21 @@ export const StakingPoolList = () => {
         </Typography> */}
       </Box>
       <Grid container spacing={2}>
-        {isTestnet() ? (
+        {live ? (
           <>
-            {live ? (
-              <>
-                {chainId &&
-                  Pools[chainId].map((pool: StakingPool, i: number) => (
-                    <Grid item md={6} xs={12} key={i}>
-                      <StakingPoolCardV2 pool={pool} cards={cards} />
-                    </Grid>
-                  ))}
-              </>
-            ) : (
-              <>
-                {chainId &&
-                  Pools[chainId].map((pool: StakingPool, i: number) => (
-                    <Grid item md={6} xs={12} key={i}>
-                      <StakingPoolCard pool={pool} cards={cards} />
-                    </Grid>
-                  ))}
-              </>
-            )}
+            {chainId &&
+              Pools[chainId].map((pool: StakingPool, i: number) => (
+                <Grid item md={6} xs={12} key={i}>
+                  <StakingPoolCardV2 pool={pool} cards={cards} />
+                </Grid>
+              ))}
           </>
         ) : (
           <>
             {chainId &&
               Pools[chainId].map((pool: StakingPool, i: number) => (
                 <Grid item md={6} xs={12} key={i}>
-                  {i < 21 && <StakingPoolCard pool={pool} cards={cards} />}
+                  <StakingPoolCard pool={pool} cards={cards} />
                 </Grid>
               ))}
           </>
