@@ -11,6 +11,7 @@ interface ValueCardProps {
   endSymbol?: string;
   icon: string;
   tooltip?: string;
+  button?: React.ReactNode;
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -31,7 +32,8 @@ export const ValueCard: React.FC<ValueCardProps> = ({
   startSymbol,
   endSymbol,
   icon,
-  tooltip
+  tooltip,
+  button,
 }) => {
   const classes = useStyles();
 
@@ -40,20 +42,24 @@ export const ValueCard: React.FC<ValueCardProps> = ({
       <Tooltip title={tooltip ?? ""} placement="top-end">
         <Box>
           <Flex column justify="space-between">
-            <Flex align="center">
-              <Box mr={2}>
-                <img src={icon} height="36px" width="auto" alt={name} />
-              </Box>
-              <Flex align="flex-end">
-                {!!startSymbol && (
-                  <Typography variant="body1">{startSymbol}</Typography>
-                )}
-                <Typography variant="h5">{value}</Typography>
-                {!!endSymbol && (
-                  <Typography variant="body1">{endSymbol}</Typography>
-                )}
+            <Flex justify="space-between" align="center">
+              <Flex align="center">
+                <Box mr={2}>
+                  <img src={icon} height="36px" width="auto" alt={name} />
+                </Box>
+                <Flex align="flex-end">
+                  {!!startSymbol && (
+                    <Typography variant="body1">{startSymbol}</Typography>
+                  )}
+                  <Typography variant="h5">{value}</Typography>
+                  {!!endSymbol && (
+                    <Typography variant="body1">{endSymbol}</Typography>
+                  )}
+                </Flex>
               </Flex>
+              <Box>{button}</Box>
             </Flex>
+
             <TextDecoration width="100%" />
             <Typography variant="body2" color="textSecondary" align="left">
               {name}
@@ -61,6 +67,6 @@ export const ValueCard: React.FC<ValueCardProps> = ({
           </Flex>
         </Box>
       </Tooltip>
-    </Card >
+    </Card>
   );
 };

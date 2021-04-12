@@ -36,7 +36,7 @@ const Addresses: { [key: string]: { [networkId: number]: string } } = {
     4: "0x9b90eF849E9B07b3f7cab85A4b44925511cB27cF",
   },
   AnyStakeV2: {
-    1: "",
+    1: "0xD28D60E238E1575D850c3b9FB44700B63F4F95Eb",
     4: "0xFF91d39D4a2aE172EE7f06E6673cf5b783EC1Ebe",
   },
   Regulator: {
@@ -48,7 +48,7 @@ const Addresses: { [key: string]: { [networkId: number]: string } } = {
     4: "0x7b213Ee4ec0f3441926155716d683dc8b3a87aE3",
   },
   VaultV2: {
-    1: "",
+    1: "0x138393F7201ecB72654C3fFAe017F634942B5fb8",
     4: "0x06A38AD939Cc766669A148e03c20832cE1A957fa",
   },
   Oracle: {

@@ -20,6 +20,7 @@ import {
   getCircleLpAddress,
   getPointsLpAddress,
   getDeFiatLpAddress,
+  getVaultV2Contract,
 } from "defiat";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useWallet } from "use-wallet";
@@ -54,7 +55,7 @@ export const useRegulator = () => {
   const DeFiat = useDeFiat();
 
   const Regulator = useMemo(() => getRegulatorContract(DeFiat), [DeFiat]);
-  const Vault = useMemo(() => getVaultContract(DeFiat), [DeFiat]);
+  const VaultV2 = useMemo(() => getVaultV2Contract(DeFiat), [DeFiat]);
 
   const handleClaim = useCallback(async () => {
     const txHash = await claimRegulator(Regulator, account);
@@ -83,23 +84,23 @@ export const useRegulator = () => {
       totalStakedRegulator(Regulator),
       multiplierRegulator(Regulator),
       stakedRegulator(Regulator, account),
-      getRegulatorApr(DeFiat, Vault, Regulator),
+      getRegulatorApr(DeFiat, VaultV2, Regulator),
       buybackRegulator(Regulator),
       isAbovePeg(Regulator),
       pendingRegulator(Regulator, account),
       pendingTotalRegulator(Regulator),
       getVaultPrice(
-        Vault,
+        VaultV2,
         getPointsAddress(DeFiat),
         getPointsLpAddress(DeFiat)
       ),
       getVaultPrice(
-        Vault,
+        VaultV2,
         getDeFiatAddress(DeFiat),
         getDeFiatLpAddress(DeFiat)
       ),
       getVaultPrice(
-        Vault,
+        VaultV2,
         getCircleAddress(DeFiat),
         getCircleLpAddress(DeFiat)
       ),
@@ -137,7 +138,7 @@ export const useRegulator = () => {
       buybackBalance,
       isAbovePeg: abovePeg,
     });
-  }, [account, ethereum, DeFiat, Vault, Regulator]);
+  }, [account, ethereum, DeFiat, VaultV2, Regulator]);
 
   useEffect(() => {
     if (!!account && !!DeFiat) {

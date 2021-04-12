@@ -15,6 +15,9 @@ export const PoolHeader = () => {
 
   return (
     <Flex center column>
+      <Typography variant="subtitle1" color="textPrimary" gutterBottom>
+        AnyStake V1 is inactive. Please withdraw all funds.
+      </Typography>
       <Box m={2}>
         <img src={logo} alt={symbol} height="192px" width="auto" />
       </Box>

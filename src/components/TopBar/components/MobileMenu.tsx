@@ -11,7 +11,6 @@ import { Flex } from "../../Flex";
 import MenuIcon from "@material-ui/icons/Menu";
 import { Web3ConnectButton } from "../../Web3ConnectButton";
 import { useHistory } from "react-router-dom";
-import { isTestnet } from "utils";
 
 interface MobileMenuProps {
   anchorRef: any;
@@ -56,11 +55,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ anchorRef }) => {
         <MenuItem onClick={() => handleClose("/news")}>News</MenuItem>
         <MenuItem onClick={() => handleClose("/dashboard")}>Dashboard</MenuItem>
         <ListSubheader>Services</ListSubheader>
-        <MenuItem
-          onClick={() => handleClose(isTestnet() ? "/anystake" : "/staking")}
-        >
-          AnyStake
-        </MenuItem>
+        <MenuItem onClick={() => handleClose("/anystake")}>AnyStake</MenuItem>
         <MenuItem onClick={() => handleClose("/regulator")}>Regulator</MenuItem>
         <MenuItem onClick={() => handleClose("/vault")}>Vault</MenuItem>
         <MenuItem onClick={() => handleClose("/second")}>2ND Chance</MenuItem>
