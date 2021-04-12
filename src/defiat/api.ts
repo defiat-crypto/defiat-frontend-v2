@@ -1,11 +1,9 @@
-import { Value } from "components/Value";
 import addresses from "constants/addresses";
-import Addresses from "constants/addresses";
 import { Pools, StakingPool } from "constants/pools";
 import { provider, TransactionReceipt } from "web3-core";
 import { Contract } from "web3-eth-contract";
-import { BigNumber, getTetherAddress } from ".";
-import { debug, getBalance, getDisplayBalance } from "../utils";
+import { BigNumber } from ".";
+import { debug, getBalance } from "../utils";
 import { DeFiat } from "./DeFiat";
 import { ProcessedRewards } from "./lib/processedRewards";
 import {
@@ -523,6 +521,16 @@ export const totalPendingVirtualAnyStake = async (
   }
 };
 
+export const totalPendingAnyStakeV2 = async (AnyStakeV2: Contract) => {
+  try {
+  } catch (e) { }
+};
+
+export const pendingAnyStakeV2 = async (AnyStakeV2: Contract, pid: number) => {
+  try {
+  } catch (e) { }
+};
+
 export const totalPendingRewardsAnyStake = async (AnyStake: Contract) => {
   try {
     const result = await AnyStake.methods.pendingRewards().call();
@@ -577,7 +585,7 @@ export const pendingVirtualAnyStake = async (
       .times(userInfo.amount)
       .div(poolInfo.totalStaked);
     const result = pending.plus(virtualPending);
-    return result;
+    return result.isNaN() ? new BigNumber("0") : result;
   } catch (e) {
     debug(e);
     return new BigNumber("0");
@@ -647,8 +655,7 @@ export const getPoolApr = async (
       .times(new BigNumber(2073600))
       .times(1e2);
     const apy = rewardsPerYear.div(poolValue);
-    // console.log(apy.toString());
-    return apy;
+    return apy.isNaN() ? new BigNumber("0") : apy;
   } catch (e) {
     console.log("APR", e);
     return new BigNumber("0");
@@ -933,7 +940,7 @@ export const getIncomingRewardsVault = async (
       toBlock: blockNumber,
     });
     await asyncForEach(pointsBuyBacks, async (rewards) => {
-      if (rewards.returnValues["token"] === Addresses.DeFiat[chainid]) {
+      if (rewards.returnValues["token"] === addresses.DeFiat[chainid]) {
         rewardsData.push(
           new ProcessedRewards(
             id++,
@@ -994,7 +1001,7 @@ export const getIncomingRewardsVault = async (
     const incomingTransfers = await DeFiatToken.getPastEvents("Transfer", {
       fromBlock: blockNumber - 5760,
       toBlock: blockNumber,
-      filter: { to: Addresses.Vault[chainid] },
+      filter: { to: addresses.Vault[chainid] },
     });
     await asyncForEach(incomingTransfers, async (rewards) => {
       if (
@@ -1025,16 +1032,16 @@ export const getIncomingRewardsVault = async (
 };
 
 function getSymbol(address: string, chainId: number) {
-  if (Addresses.Points[chainId].toLowerCase() === address.toLowerCase()) return "DFTPv2";
-  if (Addresses.DeFiat[chainId].toLowerCase() === address.toLowerCase()) return "DFTPv2";
+  if (addresses.Points[chainId].toLowerCase() === address.toLowerCase()) return "DFTPv2";
+  if (addresses.DeFiat[chainId].toLowerCase() === address.toLowerCase()) return "DFTPv2";
   const pools: StakingPool[] = Pools[chainId];
   return pools.find((x) => x.address.toLowerCase() === address.toLowerCase())?.symbol;
 }
 
 function getDecimals(address: string, chainId: number) {
   console.log(address);
-  if (Addresses.Points[chainId].toLowerCase() === address.toLowerCase()) return 18;
-  if (Addresses.DeFiat[chainId].toLowerCase() === address.toLowerCase()) return 18;
+  if (addresses.Points[chainId].toLowerCase() === address.toLowerCase()) return 18;
+  if (addresses.DeFiat[chainId].toLowerCase() === address.toLowerCase()) return 18;
   const pools: StakingPool[] = Pools[chainId];
   return pools.find((x) => x.address.toLowerCase() === address.toLowerCase())?.decimals;
 }

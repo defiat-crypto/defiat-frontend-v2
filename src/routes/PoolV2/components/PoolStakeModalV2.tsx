@@ -8,11 +8,11 @@ import { Flex } from "components/Flex";
 import { MaxInputAdornment } from "components/MaxInputAdornment";
 import { Modal, ModalProps } from "components/Modal";
 import { Pools } from "constants/pools";
-import { BigNumber, getAnyStakeAddress } from "defiat";
+import { BigNumber, getAnyStakeV2Address } from "defiat";
 import { useApprove } from "hooks/useApprove";
 import { useDeFiat } from "hooks/useDeFiat";
 import { useNotifications } from "hooks/useNotifications";
-import { usePool } from "hooks/usePool";
+import { usePoolV2 } from "hooks/usePoolV2";
 import React, { useCallback, useState } from "react";
 import { useWallet } from "use-wallet";
 import { getDisplayBalance, getFullDisplayBalance } from "utils";
@@ -21,7 +21,7 @@ interface PoolStakeModalProps extends ModalProps {
   pid: number;
 }
 
-export const PoolStakeModal: React.FC<PoolStakeModalProps> = ({
+export const PoolStakeModalV2: React.FC<PoolStakeModalProps> = ({
   pid,
   isOpen,
   onDismiss,
@@ -30,10 +30,10 @@ export const PoolStakeModal: React.FC<PoolStakeModalProps> = ({
   const { symbol, address, decimals } = Pools[chainId][pid];
   const notify = useNotifications();
   const DeFiat = useDeFiat();
-  const { data, deposit, withdraw } = usePool(pid);
+  const { data, deposit, withdraw } = usePoolV2(pid);
   const { approve, allowance } = useApprove(
     address,
-    getAnyStakeAddress(DeFiat)
+    getAnyStakeV2Address(DeFiat)
   );
 
   const [depositInput, setDepositInput] = useState<string>();
@@ -160,16 +160,16 @@ export const PoolStakeModal: React.FC<PoolStakeModalProps> = ({
             color="primary"
             fullWidth
             onClick={handleDeposit}
-            disabled={true
-              // !data ||
-              // isDepositing ||
-              // isWithdrawing ||
-              // data.tokenBalance.eq(0) ||
-              // !depositInput ||
-              // new BigNumber(depositInput).lte(0) ||
-              // new BigNumber(depositInput)
-              //   .times(new BigNumber(10).pow(decimals))
-              //   .gt(data.tokenBalance)
+            disabled={
+              !data ||
+              isDepositing ||
+              isWithdrawing ||
+              data.tokenBalance.eq(0) ||
+              !depositInput ||
+              new BigNumber(depositInput).lte(0) ||
+              new BigNumber(depositInput)
+                .times(new BigNumber(10).pow(decimals))
+                .gt(data.tokenBalance)
             }
           >
             {allowance?.eq(0) ? 'Approve' : 'Stake'} {symbol}
@@ -249,13 +249,13 @@ export const PoolStakeModal: React.FC<PoolStakeModalProps> = ({
         </Flex>
       </Flex>
       <Flex mt={2} column>
-        {data && data.stakingFee && (
+        {data && data.stakingFee ? (
           <Typography variant="h6" gutterBottom align="center">
             <b>
               Unstaking {symbol} incurs a {data.stakingFee}% fee to buyback DFT
             </b>
           </Typography>
-        )}
+        ) : <></> }
         <Typography align="center">
           Staking / Unstaking automatically claim pending rewards
         </Typography>

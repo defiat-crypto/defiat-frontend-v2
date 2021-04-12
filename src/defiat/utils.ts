@@ -44,6 +44,10 @@ export const getAnyStakeAddress = (DeFiat?: DeFiat) => {
   return DeFiat && DeFiat.AnyStakeAddress;
 };
 
+export const getAnyStakeV2Address = (DeFiat?: DeFiat) => {
+  return DeFiat && DeFiat.AnyStakeV2Address;
+};
+
 export const getRegulatorAddress = (DeFiat?: DeFiat) => {
   return DeFiat && DeFiat.RegulatorAddress;
 };
@@ -76,10 +80,18 @@ export const getAnyStakeContract = (DeFiat?: DeFiat) => {
   return DeFiat && DeFiat.contracts && DeFiat.contracts.AnyStake;
 };
 
+export const getAnyStakeV2Contract = (DeFiat?: DeFiat) => {
+  return DeFiat && DeFiat.contracts && DeFiat.contracts.AnyStakeV2;
+};
+
 export const getRegulatorContract = (DeFiat?: DeFiat) => {
   return DeFiat && DeFiat.contracts && DeFiat.contracts.Regulator;
 };
 
 export const getVaultContract = (DeFiat?: DeFiat) => {
   return DeFiat && DeFiat.contracts && DeFiat.contracts.Vault;
+};
+
+export const getVaultV2Contract = (DeFiat?: DeFiat) => {
+  return DeFiat && DeFiat.contracts && DeFiat.contracts.VaultV2;
 };

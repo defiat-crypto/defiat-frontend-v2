@@ -16,6 +16,8 @@ import {
   getCircleLpAddress,
   getPoolApr,
   pendingAnyStake,
+  getAnyStakeV2Contract,
+  getVaultV2Contract,
 } from "defiat";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useWallet } from "use-wallet";
@@ -38,7 +40,7 @@ interface StakingPoolData {
   priceMultiplier: string;
 }
 
-export const usePool = (pid: number) => {
+export const usePoolV2 = (pid: number) => {
   const [data, setData] = useState<StakingPoolData>();
 
   const {
@@ -49,45 +51,45 @@ export const usePool = (pid: number) => {
   const block = useBlock();
   const DeFiat = useDeFiat();
 
-  const AnyStake = useMemo(() => getAnyStakeContract(DeFiat), [DeFiat]);
-  const Vault = useMemo(() => getVaultContract(DeFiat), [DeFiat]);
+  const AnyStakeV2 = useMemo(() => getAnyStakeV2Contract(DeFiat), [DeFiat]);
+  const VaultV2 = useMemo(() => getVaultV2Contract(DeFiat), [DeFiat]);
 
   const handleClaim = useCallback(
     async (pid: number) => {
-      const txHash = await claimAnyStake(AnyStake, account, pid);
+      const txHash = await claimAnyStake(AnyStakeV2, account, pid);
       return txHash;
     },
-    [account, AnyStake]
+    [account, AnyStakeV2]
   );
 
   const handleDeposit = useCallback(
     async (amount: string) => {
-      const txHash = await depositAnyStake(AnyStake, account, pid, amount);
+      const txHash = await depositAnyStake(AnyStakeV2, account, pid, amount);
       return txHash;
     },
-    [account, AnyStake, pid]
+    [account, AnyStakeV2, pid]
   );
 
   const handleWithdraw = useCallback(
     async (amount: string) => {
-      const txHash = await withdrawAnyStake(AnyStake, account, pid, amount);
+      const txHash = await withdrawAnyStake(AnyStakeV2, account, pid, amount);
       return txHash;
     },
-    [account, AnyStake, pid]
+    [account, AnyStakeV2, pid]
   );
 
   const getData = useCallback(async () => {
     const values = await Promise.all([
       getBalance(Pools[chainId][pid].address, account, ethereum),
-      totalStakedAnyStake(AnyStake, pid),
-      stakingFeeAnyStake(AnyStake, pid),
-      stakedAnyStake(AnyStake, pid, account),
-      pendingAnyStake(AnyStake, pid, account),
+      totalStakedAnyStake(AnyStakeV2, pid),
+      stakingFeeAnyStake(AnyStakeV2, pid),
+      stakedAnyStake(AnyStakeV2, pid, account),
+      pendingAnyStake(AnyStakeV2, pid, account),
       // pendingVirtualAnyStake(AnyStake, pid, account, block),
-      vipAmountAnyStake(AnyStake, pid),
-      stakedAnyStake(AnyStake, 0, account),
-      AnyStake.methods.poolInfo(pid).call(),
-      getPoolApr(DeFiat, Vault, AnyStake, Pools[chainId][pid], pid),
+      vipAmountAnyStake(AnyStakeV2, pid),
+      stakedAnyStake(AnyStakeV2, 0, account),
+      AnyStakeV2.methods.poolInfo(pid).call(),
+      getPoolApr(DeFiat, VaultV2, AnyStakeV2, Pools[chainId][pid], pid),
     ]);
 
     const tokenBalance = values[0];
@@ -103,11 +105,11 @@ export const usePool = (pid: number) => {
 
     const prices = await Promise.all([
       getVaultPrice(
-        Vault,
+        VaultV2,
         getCircleAddress(DeFiat),
         getCircleLpAddress(DeFiat)
       ),
-      getVaultPrice(Vault, poolInfo.stakedToken, poolInfo.lpToken),
+      getVaultPrice(VaultV2, poolInfo.stakedToken, poolInfo.lpToken),
     ]);
 
     const tokenPrice = prices[1].times(1e18).div(prices[0]);
@@ -128,7 +130,7 @@ export const usePool = (pid: number) => {
       apr,
       priceMultiplier,
     });
-  }, [account, chainId, pid, ethereum, Vault, AnyStake, DeFiat, block]);
+  }, [account, chainId, pid, ethereum, VaultV2, AnyStakeV2, DeFiat]);
 
   useEffect(() => {
     if (!!account && !!DeFiat) {

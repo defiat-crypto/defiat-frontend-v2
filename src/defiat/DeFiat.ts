@@ -23,6 +23,8 @@ export class DeFiat {
   AnyStakeAddress: string;
   RegulatorAddress: string;
   VaultAddress: string;
+  AnyStakeV2Address: string;
+  VaultV2Address: string;
 
   constructor(provider: provider, networkId: number, options?: any) {
     var realProvider: any;
@@ -61,8 +63,10 @@ export class DeFiat {
     this.OracleAddress = Addresses.Oracle[networkId];
     this.TetherAddress = Addresses.USDT[networkId];
     this.AnyStakeAddress = Addresses.AnyStake[networkId];
+    this.AnyStakeV2Address = Addresses.AnyStakeV2[networkId];
     this.RegulatorAddress = Addresses.Regulator[networkId];
     this.VaultAddress = Addresses.Vault[networkId];
+    this.VaultV2Address = Addresses.VaultV2[networkId];
     this.CircleAddress = Addresses.Circle[networkId];
     this.CircleLpAddress = Addresses.CircleLp[networkId];
   }
@@ -73,7 +77,7 @@ export class DeFiat {
 
   setProvider(provider: any, networkId: number) {
     this.web3.setProvider(provider);
-    this.contracts.setProvider(provider, networkId);
+    // this.contracts.setProvider(provider, networkId);
     // this.operation.setNetworkId(networkId)
   }
 
