@@ -9,17 +9,17 @@ import {
   getDeFiatAddress,
   multiplierRegulator,
   stakedRegulator,
-  pendingRegulator,
   getRegulatorApr,
   getVaultContract,
   buybackRegulator,
   isAbovePeg,
-  pendingTotalRegulator,
   getVaultPrice,
   getCircleAddress,
   getCircleLpAddress,
   getPointsLpAddress,
   getDeFiatLpAddress,
+  pendingVirtualRegulator,
+  getVaultV2Contract,
 } from "defiat";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useWallet } from "use-wallet";
@@ -48,13 +48,14 @@ export const useRegulator = () => {
 
   const {
     account,
-    ethereum,
-  }: { account: string; ethereum: provider } = useWallet();
+    chainId,
+    ethereum
+  }: { account: string; chainId: number, ethereum: provider } = useWallet();
   const block = useBlock();
   const DeFiat = useDeFiat();
 
   const Regulator = useMemo(() => getRegulatorContract(DeFiat), [DeFiat]);
-  const Vault = useMemo(() => getVaultContract(DeFiat), [DeFiat]);
+  const Vault = useMemo(() => getVaultV2Contract(DeFiat), [DeFiat]);
 
   const handleClaim = useCallback(async () => {
     const txHash = await claimRegulator(Regulator, account);
@@ -86,8 +87,7 @@ export const useRegulator = () => {
       getRegulatorApr(DeFiat, Vault, Regulator),
       buybackRegulator(Regulator),
       isAbovePeg(Regulator),
-      pendingRegulator(Regulator, account),
-      pendingTotalRegulator(Regulator),
+      pendingVirtualRegulator(Regulator, Vault, DeFiat, chainId, ethereum, block, account),
       getVaultPrice(
         Vault,
         getPointsAddress(DeFiat),
@@ -113,13 +113,8 @@ export const useRegulator = () => {
     const buybackBalance = values[5];
     const abovePeg = values[6];
     const pending = new BigNumber(values[7]);
-    const pendingTotal = values[8];
-    const pointsPrice = values[9].times(1e18).div(values[11]);
-    const tokenPrice = values[10].times(1e18).div(values[11]);
-
-    const pendingRewards = pending.plus(
-      stakedBalance.div(totalLocked).times(pendingTotal)
-    );
+    const pointsPrice = values[8].times(1e18).div(values[10]);
+    const tokenPrice = values[9].times(1e18).div(values[10]);
     const totalValueLocked = pointsPrice.times(totalLocked).div(1e18);
     const ratio = tokenPrice.div(pointsPrice);
 
@@ -131,13 +126,13 @@ export const useRegulator = () => {
       tokenBalance,
       peg,
       ratio,
-      pendingRewards: pendingRewards,
+      pendingRewards: pending,
       stakedBalance,
       apr: apr,
       buybackBalance,
       isAbovePeg: abovePeg,
     });
-  }, [account, ethereum, DeFiat, Vault, Regulator]);
+  }, [account, ethereum, DeFiat, Vault, Regulator, block, chainId]);
 
   useEffect(() => {
     if (!!account && !!DeFiat) {

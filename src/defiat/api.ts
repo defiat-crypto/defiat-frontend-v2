@@ -1,9 +1,9 @@
-import Addresses from "constants/addresses";
+import addresses from "constants/addresses";
 import { Pools, StakingPool } from "constants/pools";
-import { TransactionReceipt } from "web3-core";
+import { provider, TransactionReceipt } from "web3-core";
 import { Contract } from "web3-eth-contract";
 import { BigNumber } from ".";
-import { debug } from "../utils";
+import { debug, getBalance } from "../utils";
 import { DeFiat } from "./DeFiat";
 import { ProcessedRewards } from "./lib/processedRewards";
 import {
@@ -523,12 +523,12 @@ export const totalPendingVirtualAnyStake = async (
 
 export const totalPendingAnyStakeV2 = async (AnyStakeV2: Contract) => {
   try {
-  } catch (e) {}
+  } catch (e) { }
 };
 
 export const pendingAnyStakeV2 = async (AnyStakeV2: Contract, pid: number) => {
   try {
-  } catch (e) {}
+  } catch (e) { }
 };
 
 export const totalPendingRewardsAnyStake = async (AnyStake: Contract) => {
@@ -843,6 +843,45 @@ export const isAbovePeg = async (Regulator: Contract) => {
   }
 };
 
+export const pendingVirtualRegulator = async (Regulator: Contract, Vault: Contract, DeFiat: DeFiat, chainId: number, ethereum: provider, block: number, address: string) => {
+  try {
+    const userPendingRegulator = await pendingRegulator(Regulator, address);
+    if (block === 0) {
+      return userPendingRegulator;
+    }
+
+    const values = await Promise.all([
+      getBalance(getDeFiatAddress(DeFiat), addresses.VaultV2[chainId], ethereum),
+      Vault.methods.pendingRewards().call(),
+      Vault.methods.bondedRewards().call(),
+      Vault.methods.lastDistributionBlock().call(),
+      Vault.methods.bondedRewardsPerBlock().call(),
+      Vault.methods.distributionRate().call(),
+      Regulator.methods.buybackRate().call(),
+      getBalance(getPointsAddress(DeFiat), addresses.Regulator[chainId], ethereum),
+      stakedRegulator(Regulator, address),
+    ]);
+
+
+    const vaultBalance = values[0];
+    const pendingRewardsVault = values[1];
+    const bondedRewards = values[2];
+    const lastDistributionBlock = values[3];
+    const bondedRewardsPerBlock = values[4];
+    const bondedAmount = bondedRewards === 0 ? 0 : new BigNumber(block - lastDistributionBlock).times(bondedRewardsPerBlock);
+    const feeRewards = vaultBalance.minus(bondedRewards).minus(pendingRewardsVault);
+    const totalRewardsSinceLastUpdate = feeRewards.plus(bondedAmount);
+    const regulatorPendingRewards = totalRewardsSinceLastUpdate.times((1000 - values[5]) / 1000).times((1000 - values[6]) / 1000);
+    const regulatorBalance = values[7];
+    const staked = values[8];
+    const virtualPending = userPendingRegulator.plus(staked.div(regulatorBalance).times(regulatorPendingRewards))
+    return virtualPending;
+  } catch (e) {
+    return new BigNumber("0");
+  }
+};
+
+
 // Vault
 export const getBondedRewards = async (Vault: Contract) => {
   try {
@@ -881,14 +920,14 @@ export const getIncomingRewardsVault = async (
     });
     let id: number = 0;
     await asyncForEach(incomingBuyBacks, async (rewards) => {
-      const block = await DeFiat.web3.eth.getBlock(rewards.blockNumber);
       rewardsData.push(
         new ProcessedRewards(
           id++,
-          timeConverter(block.timestamp),
+          rewards.blockNumber,
           rewards.returnValues["buybackAmount"],
           rewards.returnValues["tokenAmount"],
           getSymbol(rewards.returnValues["token"], chainid),
+          getDecimals(rewards.returnValues["token"], chainid),
           rewards.transactionHash,
           "DeFiat Buyback",
           "In"
@@ -901,15 +940,15 @@ export const getIncomingRewardsVault = async (
       toBlock: blockNumber,
     });
     await asyncForEach(pointsBuyBacks, async (rewards) => {
-      if (rewards.returnValues["token"] === Addresses.DeFiat[chainid]) {
-        const block = await DeFiat.web3.eth.getBlock(rewards.blockNumber);
+      if (rewards.returnValues["token"] === addresses.DeFiat[chainid]) {
         rewardsData.push(
           new ProcessedRewards(
             id++,
-            timeConverter(block.timestamp),
+            rewards.blockNumber,
             rewards.returnValues["tokenAmount"],
             rewards.returnValues["buybackAmount"],
             getSymbol(rewards.returnValues["token"], chainid),
+            getDecimals(rewards.returnValues["token"], chainid),
             rewards.transactionHash,
             "Points Buyback",
             "Out"
@@ -924,12 +963,12 @@ export const getIncomingRewardsVault = async (
     });
 
     await asyncForEach(outgoingClaims, async (rewards) => {
-      const block = await DeFiat.web3.eth.getBlock(rewards.blockNumber);
       rewardsData.push(
         new ProcessedRewards(
           id++,
-          timeConverter(block.timestamp),
+          rewards.blockNumber,
           rewards.returnValues["amount"],
+          undefined,
           undefined,
           undefined,
           rewards.transactionHash,
@@ -944,12 +983,12 @@ export const getIncomingRewardsVault = async (
       toBlock: blockNumber,
     });
     await asyncForEach(outgoingClaimsRegulator, async (rewards) => {
-      const block = await DeFiat.web3.eth.getBlock(rewards.blockNumber);
       rewardsData.push(
         new ProcessedRewards(
           id++,
-          timeConverter(block.timestamp),
+          rewards.blockNumber,
           rewards.returnValues["amount"],
+          undefined,
           undefined,
           undefined,
           rewards.transactionHash,
@@ -962,10 +1001,9 @@ export const getIncomingRewardsVault = async (
     const incomingTransfers = await DeFiatToken.getPastEvents("Transfer", {
       fromBlock: blockNumber - 5760,
       toBlock: blockNumber,
-      filter: { to: Addresses.Vault[chainid] },
+      filter: { to: addresses.Vault[chainid] },
     });
     await asyncForEach(incomingTransfers, async (rewards) => {
-      const block = await DeFiat.web3.eth.getBlock(rewards.blockNumber);
       if (
         rewardsData.find(
           (x) => x.transactionHash === rewards.transactionHash
@@ -974,8 +1012,9 @@ export const getIncomingRewardsVault = async (
         rewardsData.push(
           new ProcessedRewards(
             id++,
-            timeConverter(block.timestamp),
+            rewards.blockNumber,
             rewards.returnValues.value,
+            undefined,
             undefined,
             undefined,
             rewards.transactionHash,
@@ -985,7 +1024,7 @@ export const getIncomingRewardsVault = async (
         );
       }
     });
-    rewardsData.sort((one, two) => (one.timestamp > two.timestamp ? -1 : 1));
+    rewardsData.sort((one, two) => (one.blocknumber > two.blocknumber ? -1 : 1));
     return rewardsData;
   } catch (e) {
     return [];
@@ -993,23 +1032,20 @@ export const getIncomingRewardsVault = async (
 };
 
 function getSymbol(address: string, chainId: number) {
-  if (Addresses.DeFiat[chainId] === address) return "DFTPv2";
+  if (addresses.Points[chainId].toLowerCase() === address.toLowerCase()) return "DFTPv2";
+  if (addresses.DeFiat[chainId].toLowerCase() === address.toLowerCase()) return "DFTPv2";
   const pools: StakingPool[] = Pools[chainId];
-  return pools.find((x) => x.address === address).symbol;
+  return pools.find((x) => x.address.toLowerCase() === address.toLowerCase())?.symbol;
 }
 
-function timeConverter(UNIX_timestamp) {
-  var a = new Date(UNIX_timestamp * 1000);
-  var year = a.getFullYear();
-  var month = a.getMonth() + 1;
-  var date = a.getDate();
-  var hour = a.getHours().toString().padStart(2, "0");
-  var min = a.getMinutes().toString().padStart(2, "0");
-  var sec = a.getSeconds().toString().padStart(2, "0");
-  var time =
-    year + "-" + month + "-" + date + " " + hour + ":" + min + ":" + sec;
-  return time;
+function getDecimals(address: string, chainId: number) {
+  console.log(address);
+  if (addresses.Points[chainId].toLowerCase() === address.toLowerCase()) return 18;
+  if (addresses.DeFiat[chainId].toLowerCase() === address.toLowerCase()) return 18;
+  const pools: StakingPool[] = Pools[chainId];
+  return pools.find((x) => x.address.toLowerCase() === address.toLowerCase())?.decimals;
 }
+
 
 export async function asyncForEach<T>(
   array: Array<T>,

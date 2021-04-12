@@ -11,7 +11,7 @@ import {
   getRegulatorContract,
   getTetherAddress,
   getTokenPrice,
-  getVaultContract,
+  getVaultV2Contract,
 } from "defiat";
 import { ProcessedRewards } from "defiat/lib/processedRewards";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -40,7 +40,7 @@ export const useVault = () => {
   const block = useBlock();
   const DeFiat = useDeFiat();
   const Oracle = useMemo(() => getOracle(DeFiat), [DeFiat]);
-  const Vault = useMemo(() => getVaultContract(DeFiat), [DeFiat]);
+  const Vault = useMemo(() => getVaultV2Contract(DeFiat), [DeFiat]);
   const AnyStake = useMemo(() => getAnyStakeContract(DeFiat), [DeFiat]);
   const Regulator = useMemo(() => getRegulatorContract(DeFiat), [DeFiat]);
   const Token = useMemo(() => getDeFiatContract(DeFiat), [DeFiat]);

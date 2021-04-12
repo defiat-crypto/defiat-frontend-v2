@@ -22,35 +22,20 @@ export const Vault = () => {
   const classes = useStyles();
 
   return (
-    <Display column offset={isTestnet()} center={!isTestnet()}>
-      {isTestnet() ? (
-        <Box>
-          <Flex center>
-            <img
-              src={vault256}
-              className={classes.image}
-              alt="anystake-brand"
-            />
-          </Flex>
-          <Box my={2}>
-            <VaultSummary />
-          </Box>
+    <Display column>
+      <Box>
+        <Flex center>
+          <img
+            src={vault256}
+            className={classes.image}
+            alt="Vault"
+          />
+        </Flex>
+        <Box my={2}>
+          <VaultSummary />
         </Box>
-      ) : (
-        <Box>
-          <Flex center>
-            <img src={vault256} className={classes.image} alt="vault-brand" />
-          </Flex>
-          <Typography variant="h4" color="primary" align="center">
-            Coming Soon
-          </Typography>
-          <Typography variant="subtitle1" color="textSecondary" align="center">
-            The future of DeFi ERC20 Staking will be here soon. Join our
-            communities for more news and developments.
-          </Typography>
-          <SocialMediaButtons center />
-        </Box>
-      )}
+      </Box>
+
     </Display>
   );
 };
