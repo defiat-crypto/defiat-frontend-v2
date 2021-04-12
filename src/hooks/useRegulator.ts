@@ -19,6 +19,7 @@ import {
   getPointsLpAddress,
   getDeFiatLpAddress,
   pendingVirtualRegulator,
+  getVaultV2Contract,
 } from "defiat";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useWallet } from "use-wallet";
@@ -54,7 +55,7 @@ export const useRegulator = () => {
   const DeFiat = useDeFiat();
 
   const Regulator = useMemo(() => getRegulatorContract(DeFiat), [DeFiat]);
-  const Vault = useMemo(() => getVaultContract(DeFiat), [DeFiat]);
+  const Vault = useMemo(() => getVaultV2Contract(DeFiat), [DeFiat]);
 
   const handleClaim = useCallback(async () => {
     const txHash = await claimRegulator(Regulator, account);

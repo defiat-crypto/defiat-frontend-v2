@@ -851,7 +851,7 @@ export const pendingVirtualRegulator = async (Regulator: Contract, Vault: Contra
     }
 
     const values = await Promise.all([
-      getBalance(getDeFiatAddress(DeFiat), addresses.Vault[chainId], ethereum),
+      getBalance(getDeFiatAddress(DeFiat), addresses.VaultV2[chainId], ethereum),
       Vault.methods.pendingRewards().call(),
       Vault.methods.bondedRewards().call(),
       Vault.methods.lastDistributionBlock().call(),
