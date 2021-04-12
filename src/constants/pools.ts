@@ -9,7 +9,6 @@ import usdcLogo from "assets/img/usdc256.png";
 import tokenLpLogo from "assets/img/defiatLp512.png";
 import pointsLpLogo from "assets/img/pointsLp512.png";
 import mkrLogo from "assets/img/maker256.png";
-import treasuryLogo from "assets/img/treasury256.png";
 import wbtcLogo from "assets/img/wbtc256.png";
 import farmLogo from "assets/img/harvest256.png";
 import erowanLogo from "assets/img/erowan256.png";
@@ -23,6 +22,8 @@ import zeroLogo from "assets/img/zero256.png";
 import daiLogo from "assets/img/dai256.png";
 import kineLogo from "assets/img/kine256.png";
 import mirLogo from "assets/img/mirror256.png";
+import cvtLogo from "assets/img/civitas256.png";
+import ultraLogo from "assets/img/ultra256.png";
 
 export interface StakingPool {
   pid: number;
@@ -203,6 +204,14 @@ export const Pools = {
       address: "0x62359ed7505efc61ff1d56fef82158ccaffa23d7",
       decimals: 18,
     },
+    {
+      pid: 21,
+      logo: ultraLogo,
+      name: "Ultra",
+      symbol: "UOS",
+      address: "0x62359ed7505efc61ff1d56fef82158ccaffa23d7",
+      decimals: 18,
+    },
   ],
   4: [
     {
@@ -243,6 +252,14 @@ export const Pools = {
       name: "1% Fee Token",
       symbol: "1FEE",
       address: "0x549D392c89ee87C35A75808208b0C8F383AD8B01",
+      decimals: 18,
+    },
+    {
+      pid: 5,
+      logo: cvtLogo,
+      name: "Civitas",
+      symbol: "CVT",
+      address: "0x88930072F583936F506CE1f1d5Fe69290C2D6A2a",
       decimals: 18,
     },
   ],
