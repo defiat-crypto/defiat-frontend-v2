@@ -529,7 +529,7 @@ const GetAnyStakePendingRewardsVault = async (
 ) => {
   try {
     const values = await Promise.all([
-      getBalance(getDeFiatAddress(DeFiat), addresses.Vault[chainId], ethereum),
+      getBalance(getDeFiatAddress(DeFiat), addresses.VaultV2[chainId], ethereum),
       VaultV2.methods.pendingRewards().call(),
       VaultV2.methods.bondedRewards().call(),
       VaultV2.methods.lastDistributionBlock().call(),
@@ -598,7 +598,6 @@ export const totalPendingVirtualAnyStakeV2 = async (
       return totalPending;
     }
     const anyStakePendingRewards = await GetAnyStakePendingRewardsVault(VaultV2, block, chainId, DeFiat, ethereum);
-    console.log(anyStakePendingRewards.toString());
     for (const pool of pools) {
       const result = await GetAnyStakePendingRewardsPool(
         AnyStakeV2,
@@ -607,7 +606,6 @@ export const totalPendingVirtualAnyStakeV2 = async (
         anyStakePendingRewards
       );
       totalPending = totalPending.plus(result);
-      console.log(result.toString());
     }
     return new BigNumber(totalPending);
   } catch (e) {
@@ -635,7 +633,6 @@ export const pendingVirtualAnyStakeV2 = async (
     }
     const anyStakePendingRewards = await GetAnyStakePendingRewardsVault(VaultV2, block, chainId, DeFiat, ethereum);
     const result = await GetAnyStakePendingRewardsPool(AnyStakeV2, pid, account, anyStakePendingRewards);
-    //console.log(result.toString());
     return result.isNaN() ? new BigNumber("0") : result;
   } catch (e) {
     debug(e);

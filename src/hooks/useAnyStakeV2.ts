@@ -9,7 +9,6 @@ import {
   getCircleLpAddress,
   getCircleAddress,
   getAnyStakeV2Contract,
-  totalPendingAnyStake,
   totalPendingVirtualAnyStakeV2,
   getVaultV2Contract,
 } from "defiat";
@@ -85,7 +84,7 @@ export const useAnyStakeV2 = () => {
       totalValueStaked: getDisplayBalance(totalValueStaked),
       totalStakes,
     });
-  }, [account, chainId, DeFiat, AnyStakeV2, VaultV2]);
+  }, [account, chainId, DeFiat, AnyStakeV2, VaultV2, block, ethereum]);
 
   useEffect(() => {
     if (!!account && !!DeFiat) {

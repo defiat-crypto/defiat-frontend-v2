@@ -9,7 +9,6 @@ import {
   stakingFeeAnyStake,
   withdrawAnyStake,
   vipAmountAnyStake,
-  pendingVirtualAnyStake,
   getVaultContract,
   getVaultPrice,
   getCircleAddress,
@@ -128,7 +127,7 @@ export const usePool = (pid: number) => {
       apr,
       priceMultiplier,
     });
-  }, [account, chainId, pid, ethereum, Vault, AnyStake, DeFiat, block]);
+  }, [account, chainId, pid, ethereum, Vault, AnyStake, DeFiat]);
 
   useEffect(() => {
     if (!!account && !!DeFiat) {
