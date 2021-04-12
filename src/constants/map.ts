@@ -26,7 +26,7 @@ const SiteMap = {
   services: [
     {
       name: "AnyStake",
-      path: "/staking",
+      path: "/anystake",
     },
     {
       name: "2ND Chance",

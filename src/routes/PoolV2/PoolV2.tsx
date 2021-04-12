@@ -3,11 +3,11 @@ import { ChevronLeftRounded } from "@material-ui/icons";
 import { Display } from "components/Display";
 import { Flex } from "components/Flex";
 import { useHistory } from "react-router";
-import { PoolCard } from "./components/PoolCard";
-import { PoolHeader } from "./components/PoolHeader";
-import { PoolSummary } from "./components/PoolSummary";
+import { PoolCardV2 } from "./components/PoolCardV2";
+import { PoolHeaderV2 } from "./components/PoolHeaderV2";
+import { PoolSummaryV2 } from "./components/PoolSummaryV2";
 
-export const Pool = () => {
+export const PoolV2 = () => {
   const history = useHistory();
 
   return (
@@ -22,12 +22,12 @@ export const Pool = () => {
           Go Back
         </Button>
       </Flex>
-      <PoolHeader />
+      <PoolHeaderV2 />
       <Box mt={2}>
-        <PoolSummary />
+        <PoolSummaryV2 />
       </Box>
       <Box mt={2}>
-        <PoolCard />
+        <PoolCardV2 />
       </Box>
     </Display>
   );
