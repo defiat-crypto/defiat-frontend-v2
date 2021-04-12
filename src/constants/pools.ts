@@ -209,7 +209,7 @@ export const Pools = {
       logo: ultraLogo,
       name: "Ultra",
       symbol: "UOS",
-      address: "0x62359ed7505efc61ff1d56fef82158ccaffa23d7",
+      address: "0xd13c7342e1ef687c5ad21b27c2b65d772cab5c8c",
       decimals: 18,
     },
   ],
