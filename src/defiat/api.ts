@@ -1,9 +1,10 @@
+import addresses from "constants/addresses";
 import Addresses from "constants/addresses";
 import { Pools, StakingPool } from "constants/pools";
-import { TransactionReceipt } from "web3-core";
+import { provider, TransactionReceipt } from "web3-core";
 import { Contract } from "web3-eth-contract";
 import { BigNumber } from ".";
-import { debug } from "../utils";
+import { debug, getBalance, getDisplayBalance } from "../utils";
 import { DeFiat } from "./DeFiat";
 import { ProcessedRewards } from "./lib/processedRewards";
 import {
@@ -508,37 +509,16 @@ export const totalPendingAnyStake = async (
   }
 };
 
-export const totalPendingVirtualAnyStake = async (
-  AnyStake: Contract,
-  pools: StakingPool[],
-  account: string,
-  block: number
-) => {
-  try {
-    var totalPending: BigNumber = new BigNumber(0);
-    for (const pool of pools) {
-      const result = await pendingVirtualAnyStake(
-        AnyStake,
-        pool.pid,
-        account,
-        block
-      );
-      totalPending = totalPending.plus(result);
-    }
-    return new BigNumber(totalPending);
-  } catch (e) {
-    return new BigNumber("0");
-  }
-};
+
 
 export const totalPendingAnyStakeV2 = async (AnyStakeV2: Contract) => {
   try {
-  } catch (e) {}
+  } catch (e) { }
 };
 
 export const pendingAnyStakeV2 = async (AnyStakeV2: Contract, pid: number) => {
   try {
-  } catch (e) {}
+  } catch (e) { }
 };
 
 export const totalPendingRewardsAnyStake = async (AnyStake: Contract) => {
@@ -550,51 +530,119 @@ export const totalPendingRewardsAnyStake = async (AnyStake: Contract) => {
   }
 };
 
-export const pendingVirtualAnyStake = async (
-  AnyStake: Contract,
+const GetAnyStakePendingRewardsVault = async (
+  VaultV2: Contract,
+  block: number,
+  chainId: number,
+  DeFiat: DeFiat,
+  ethereum: provider
+) => {
+  try {
+    const values = await Promise.all([
+      getBalance(getDeFiatAddress(DeFiat), addresses.VaultV2[chainId], ethereum),
+      VaultV2.methods.pendingRewards().call(),
+      VaultV2.methods.bondedRewards().call(),
+      VaultV2.methods.lastDistributionBlock().call(),
+      VaultV2.methods.bondedRewardsPerBlock().call(),
+      VaultV2.methods.distributionRate().call(),
+    ]);
+
+    const vaultBalance = values[0];
+    const pendingRewardsVault = values[1];
+    const bondedRewards = values[2];
+    const lastDistributionBlock = values[3];
+    const bondedRewardsPerBlock = values[4];
+    const bondedAmount = bondedRewards === 0 ? 0 : new BigNumber(block - lastDistributionBlock).times(bondedRewardsPerBlock);
+    const feeRewards = vaultBalance.minus(bondedRewards).minus(pendingRewardsVault);
+    const totalRewardsSinceLastUpdate = feeRewards.plus(bondedAmount);
+    const anyStakePendingRewards = totalRewardsSinceLastUpdate.times(values[5] / 1000);
+    return anyStakePendingRewards;
+
+  } catch (e) {
+    return new BigNumber("0");
+  }
+};
+
+const GetAnyStakePendingRewardsPool = async (
+  AnyStakeV2: Contract,
   pid: number,
   account: string,
-  block: number
+  anyStakePendingRewards: BigNumber
+) => {
+  try {
+    const values = await Promise.all([
+      AnyStakeV2.methods.rewardsPerAllocPoint().call(),
+      AnyStakeV2.methods.totalAllocPoint().call(),
+      AnyStakeV2.methods.poolInfo(pid).call(),
+      AnyStakeV2.methods.userInfo(pid, account).call(),
+      AnyStakeV2.methods.pending(pid, account).call(),
+    ]);
+    const rewardsPerAllocPoint = new BigNumber(values[0]).plus((anyStakePendingRewards).times(1e18).div(values[1]));
+    const poolInfo = values[2];
+    const poolRewards = rewardsPerAllocPoint.times(poolInfo.allocPoint).div(1e18).minus(poolInfo.rewardDebt);
+    if (poolRewards.isZero()) return;
+    const poolRewardsPerShare = poolRewards.times(1e18).div(poolInfo.totalStaked);
+    const userInfo = values[3];
+    const pending = new BigNumber(values[4]);
+    const virtualPending = poolRewardsPerShare.times(userInfo.amount).div(1e18);
+    const result = pending.plus(virtualPending);
+    return result.isNaN() ? new BigNumber("0") : result;
+  } catch (e) {
+    return new BigNumber("0");
+  }
+}
+
+export const totalPendingVirtualAnyStakeV2 = async (
+  AnyStakeV2: Contract,
+  VaultV2: Contract,
+  pools: StakingPool[],
+  account: string,
+  block: number,
+  chainId: number,
+  DeFiat: DeFiat,
+  ethereum: provider
+) => {
+  try {
+    var totalPending: BigNumber = new BigNumber(0);
+    if (block === 0) {
+      return totalPending;
+    }
+    const anyStakePendingRewards = await GetAnyStakePendingRewardsVault(VaultV2, block, chainId, DeFiat, ethereum);
+    for (const pool of pools) {
+      const result = await GetAnyStakePendingRewardsPool(
+        AnyStakeV2,
+        pool.pid,
+        account,
+        anyStakePendingRewards
+      );
+      totalPending = totalPending.plus(result);
+    }
+    return new BigNumber(totalPending);
+  } catch (e) {
+    return new BigNumber("0");
+  }
+};
+
+export const pendingVirtualAnyStakeV2 = async (
+  AnyStakeV2: Contract,
+  VaultV2: Contract,
+  pid: number,
+  account: string,
+  block: number,
+  chainId: number,
+  DeFiat: DeFiat,
+  ethereum: provider
 ) => {
   try {
     if (block === 0) {
       return new BigNumber("0");
     }
-
-    const values = await Promise.all([
-      AnyStake.methods.poolInfo(pid).call(),
-      AnyStake.methods.totalBlockDelta().call(),
-      AnyStake.methods.pendingRewards().call(),
-      AnyStake.methods.totalEligiblePools().call(),
-      AnyStake.methods.lastRewardBlock().call(),
-      AnyStake.methods.totalAllocPoint().call(),
-      AnyStake.methods.userInfo(pid, account).call(),
-      AnyStake.methods.pending(pid, account).call(),
-    ]);
-
-    const poolInfo = values[0];
-    const totalBlockDelta = new BigNumber(values[1]);
-    const pendingRewards = new BigNumber(values[2]);
-    const totalEligiblePools = new BigNumber(values[3]);
-    const lastRewardBlock = +values[4];
-    const totalAlloc = +values[5];
-    const userInfo = values[6];
-    const pending = new BigNumber(values[7]);
-
-    const poolBlockDelta = new BigNumber(block - +poolInfo.lastRewardBlock);
-    const currentTotalBlockDelta = totalBlockDelta.plus(
-      totalEligiblePools.times(block - lastRewardBlock)
-    );
-
-    const poolRewards = pendingRewards
-      .times(poolBlockDelta)
-      .div(currentTotalBlockDelta)
-      .times(poolInfo.allocPoint)
-      .div(totalAlloc);
-    const virtualPending = poolRewards
-      .times(userInfo.amount)
-      .div(poolInfo.totalStaked);
-    const result = pending.plus(virtualPending);
+    const userPendingAnyStake = await pendingAnyStake(AnyStakeV2, pid, account);
+    if (block === 0) {
+      return userPendingAnyStake;
+    }
+    const anyStakePendingRewards = await GetAnyStakePendingRewardsVault(VaultV2, block, chainId, DeFiat, ethereum);
+    const result = await GetAnyStakePendingRewardsPool(AnyStakeV2, pid, account, anyStakePendingRewards);
     return result.isNaN() ? new BigNumber("0") : result;
   } catch (e) {
     debug(e);

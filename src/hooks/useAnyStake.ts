@@ -5,7 +5,7 @@ import {
   totalValueStakedAllPoolsAnyStake,
   totalValueStakedAnyStake,
   totalPoolsStakedAnyStake,
-  totalPendingVirtualAnyStake,
+  // totalPendingVirtualAnyStake,
   getVaultContract,
   getVaultPrice,
   getDeFiatLpAddress,
