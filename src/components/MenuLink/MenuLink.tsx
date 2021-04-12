@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { Flex } from "../Flex";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import { useHistory } from "react-router-dom";
-import { isTestnet } from "../../utils";
 
 const useStyles = makeStyles((theme) => ({
   link: {

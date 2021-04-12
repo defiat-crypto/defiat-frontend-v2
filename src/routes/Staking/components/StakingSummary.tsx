@@ -42,10 +42,10 @@ export const StakingSummary = () => {
         variant="text"
         color="primary"
         endIcon={<LaunchRounded />}
-        href={getEtherscanAddress(chainId, addresses.AnyStake[chainId])}
+        href={getEtherscanAddress(chainId, addresses.AnyStakeV2[chainId])}
         target="_blank"
       >
-        {formatAddress(addresses.AnyStake[chainId])}
+        {formatAddress(addresses.AnyStakeV2[chainId])}
       </Button>
       <Box pb={2}>
         <Typography variant="h4" align="center">
