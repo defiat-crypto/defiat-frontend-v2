@@ -37,7 +37,7 @@ const Addresses: { [key: string]: { [networkId: number]: string } } = {
   },
   AnyStakeV2: {
     1: "",
-    4: "0xC8168df116690D1BEB93DA42Cf645D70825eEd4b",
+    4: "0xFF91d39D4a2aE172EE7f06E6673cf5b783EC1Ebe",
   },
   Regulator: {
     1: "0xbb10bC5a825F3F6b148bF83ED4b679c88ab27B54",

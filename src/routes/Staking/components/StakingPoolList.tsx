@@ -3,6 +3,7 @@ import { Flex } from "components/Flex";
 import { Pools, StakingPool } from "constants/pools";
 import { useState } from "react";
 import { useWallet } from "use-wallet";
+import { isTestnet } from "utils";
 import { StakingPoolCard } from "./StakingPoolCard";
 import { StakingPoolCardV2 } from "./StakingPoolCardV2";
 
@@ -17,8 +18,18 @@ export const StakingPoolList = () => {
       <Box my={2}>
         <Flex center>
           <ButtonGroup>
-            <Button color={live ? "default" : "primary"} onClick={() => setLive(true)}>{live ? <b>Live</b> : "Live"}</Button>
-            <Button color={live ? "primary" : "default"} onClick={() => setLive(false)}>{live ? "Inactive" : <b>Inactive</b>}</Button>
+            <Button
+              color={live ? "default" : "primary"}
+              onClick={() => setLive(true)}
+            >
+              {live ? <b>Live</b> : "Live"}
+            </Button>
+            <Button
+              color={live ? "primary" : "default"}
+              onClick={() => setLive(false)}
+            >
+              {live ? "Inactive" : <b>Inactive</b>}
+            </Button>
           </ButtonGroup>
         </Flex>
         {/* <Typography variant="h4" align="center">
@@ -26,21 +37,36 @@ export const StakingPoolList = () => {
         </Typography> */}
       </Box>
       <Grid container spacing={2}>
-        {live ? (
+        {isTestnet() ? (
           <>
-            {chainId && Pools[chainId].map((pool: StakingPool, i: number) => (
-              <Grid item md={6} xs={12} key={i}>
-                <StakingPoolCardV2 pool={pool} cards={cards} />
-              </Grid>
-            ))}
+            {live ? (
+              <>
+                {chainId &&
+                  Pools[chainId].map((pool: StakingPool, i: number) => (
+                    <Grid item md={6} xs={12} key={i}>
+                      <StakingPoolCardV2 pool={pool} cards={cards} />
+                    </Grid>
+                  ))}
+              </>
+            ) : (
+              <>
+                {chainId &&
+                  Pools[chainId].map((pool: StakingPool, i: number) => (
+                    <Grid item md={6} xs={12} key={i}>
+                      <StakingPoolCard pool={pool} cards={cards} />
+                    </Grid>
+                  ))}
+              </>
+            )}
           </>
         ) : (
           <>
-            {chainId && Pools[chainId].map((pool: StakingPool, i: number) => (
-              <Grid item md={6} xs={12} key={i}>
-                <StakingPoolCard pool={pool} cards={cards} />
-              </Grid>
-            ))}
+            {chainId &&
+              Pools[chainId].map((pool: StakingPool, i: number) => (
+                <Grid item md={6} xs={12} key={i}>
+                  {i < 21 && <StakingPoolCard pool={pool} cards={cards} />}
+                </Grid>
+              ))}
           </>
         )}
       </Grid>
