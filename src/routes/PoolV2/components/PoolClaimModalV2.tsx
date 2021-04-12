@@ -38,7 +38,7 @@ export const PoolClaimModalV2: React.FC<PoolClaimModalProps> = ({
       }
     } catch {
       notify(
-        `Encountered an error while claiming DFT rewards from Regulator for ${symbol} Pool.`,
+        `Encountered an error while claiming DFT rewards from AnyStake for ${symbol} Pool.`,
         "error"
       );
     }

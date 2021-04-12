@@ -11,6 +11,7 @@ import {
   getAnyStakeV2Contract,
   totalPendingVirtualAnyStakeV2,
   getVaultV2Contract,
+  claimAllAnyStake,
 } from "defiat";
 import { useEffect, useMemo } from "react";
 import { useCallback, useState } from "react";
@@ -40,6 +41,11 @@ export const useAnyStakeV2 = () => {
 
   const AnyStakeV2 = useMemo(() => getAnyStakeV2Contract(DeFiat), [DeFiat]);
   const VaultV2 = useMemo(() => getVaultV2Contract(DeFiat), [DeFiat]);
+
+  const handleClaiAll = useCallback(async () => {
+    const txHash = await claimAllAnyStake(AnyStakeV2, account);
+    return txHash;
+  }, [account, AnyStakeV2]);
 
   const getData = useCallback(async () => {
     const values = await Promise.all([
@@ -94,5 +100,6 @@ export const useAnyStakeV2 = () => {
 
   return {
     data,
+    claimAll: handleClaiAll,
   };
 };
