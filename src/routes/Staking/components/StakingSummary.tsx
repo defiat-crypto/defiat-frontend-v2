@@ -9,10 +9,32 @@ import { formatAddress, getEtherscanAddress } from "utils";
 import { LaunchRounded } from "@material-ui/icons";
 import { useWallet } from "use-wallet";
 import addresses from "constants/addresses";
+import { useCallback, useState } from "react";
+import { useNotifications } from "hooks/useNotifications";
 
 export const StakingSummary = () => {
-  const { data } = useAnyStakeV2();
+  const { data, claimAll } = useAnyStakeV2();
   const { chainId } = useWallet();
+  const notify = useNotifications();
+
+  const [isTransacting, setIsTransacting] = useState<boolean>(false);
+  const handleClaimAll = useCallback(async () => {
+    setIsTransacting(true);
+    try {
+      const txHash = await claimAll();
+      if (!!txHash) {
+        notify(
+          `Claimed all DFT rewards from AnyStake`,
+          "success",
+          txHash,
+          chainId
+        );
+      }
+    } catch {
+      notify(`Encountered an error while claiming all DFT rewards`, "error");
+    }
+    setIsTransacting(false);
+  }, [chainId, claimAll, notify]);
 
   return (
     <Flex center direction="column">
@@ -34,15 +56,6 @@ export const StakingSummary = () => {
         </Typography>
       </Box>
 
-      <Box pb={2}>
-        <Typography variant="h4" align="center">
-          Migration Event Has Started
-        </Typography>
-        <Typography variant="subtitle2" align="center">
-          Please unstake all funds from AnyStake
-        </Typography>
-      </Box>
-
       <Grid container spacing={2}>
         <Grid item md={6} xs={12}>
           <ValueCard
@@ -60,6 +73,16 @@ export const StakingSummary = () => {
             endSymbol="DFT"
             tooltip="My total pending rewards across all of AnyStake. Note: total pending rewards is virtually calculated to give a real-time estimate of your pending DFT rewards. This figure will always be most accurate after a recent interaction with the given pool"
             icon={logo192}
+            button={
+              <Button
+                color="primary"
+                // variant="contained"
+                onClick={handleClaimAll}
+                disabled={!data || data.totalStakes === "0" || isTransacting}
+              >
+                Claim All
+              </Button>
+            }
           />
         </Grid>
         <Grid item md={6} xs={12}>

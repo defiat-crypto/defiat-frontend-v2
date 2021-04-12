@@ -22,13 +22,13 @@ export const StakingPoolList = () => {
               color={live ? "default" : "primary"}
               onClick={() => setLive(true)}
             >
-              {live ? <b>Live</b> : "Live"}
+              {live ? <b>AnyStake V2</b> : "AnyStake V2"}
             </Button>
             <Button
               color={live ? "primary" : "default"}
               onClick={() => setLive(false)}
             >
-              {live ? "Inactive" : <b>Inactive</b>}
+              {live ? "AnyStake V1" : <b>AnyStake V1</b>}
             </Button>
           </ButtonGroup>
         </Flex>

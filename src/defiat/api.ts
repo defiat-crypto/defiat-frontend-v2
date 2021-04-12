@@ -279,6 +279,16 @@ export const claimAnyStake = async (
     });
 };
 
+export const claimAllAnyStake = async (AnyStake: Contract, account: string) => {
+  return await AnyStake.methods
+    .claimAll()
+    .send({ from: account })
+    .on("transactionHash", (tx: TransactionReceipt) => {
+      debug(tx);
+      return tx.transactionHash;
+    });
+};
+
 export const depositAnyStake = async (
   AnyStake: Contract,
   account: string,
@@ -636,7 +646,7 @@ export const getPoolApr = async (
     const earliestBlock = rewardsDistributed[0].blockNumber;
 
     //skip rewards from earliestblock, they fall outside the delta.
-    rewardsDistributed.shift();
+    // rewardsDistributed.shift();
     const delta = latestDistributionBlock.minus(earliestBlock);
     let rewardsSum = new BigNumber("0");
     //count all rewards between latestDistributionBlock and earliestBlock
