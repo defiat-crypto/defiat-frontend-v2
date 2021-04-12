@@ -49,7 +49,7 @@ export const MenuLink = () => {
         autoFocus={false}
         onClose={() => handleClose()}
       >
-        <MenuItem onClick={() => handleClose("/staking")}>AnyStake</MenuItem>
+        <MenuItem onClick={() => handleClose("/anystake")}>AnyStake</MenuItem>
         <MenuItem onClick={() => handleClose("/regulator")}>Regulator</MenuItem>
         <MenuItem onClick={() => handleClose("/vault")}>Vault</MenuItem>
         <MenuItem onClick={() => handleClose("/second")}>2nd Chance</MenuItem>

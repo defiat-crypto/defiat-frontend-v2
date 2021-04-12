@@ -52,7 +52,7 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({
         <MenuItem onClick={() => handleClose('/news')}>News</MenuItem>
         <MenuItem onClick={() => handleClose('/dashboard')}>Dashboard</MenuItem>
         <ListSubheader>Services</ListSubheader>
-        <MenuItem onClick={() => handleClose('/staking')}>AnyStake</MenuItem>
+        <MenuItem onClick={() => handleClose('/anystake')}>AnyStake</MenuItem>
         <MenuItem onClick={() => handleClose('/regulator')}>Regulator</MenuItem>
         <MenuItem onClick={() => handleClose('/vault')}>Vault</MenuItem>
         <MenuItem onClick={() => handleClose('/second')}>2ND Chance</MenuItem>

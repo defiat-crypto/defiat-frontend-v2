@@ -4,16 +4,16 @@ import logo192 from "assets/img/logo192.png";
 import { useWallet } from "use-wallet";
 import { useParams } from "react-router";
 import { Pools } from "constants/pools";
-import { usePool } from "hooks/usePool";
+import { usePoolV2 } from "hooks/usePoolV2";
 import { ValueCard } from "components/ValueCard";
 import { getDisplayBalance } from "utils";
 
-export const PoolSummary = () => {
+export const PoolSummaryV2 = () => {
   const { chainId } = useWallet();
   const { pid } = useParams<{ pid: string }>();
   const { logo, symbol, decimals } = Pools[chainId][pid];
 
-  const { data } = usePool(+pid);
+  const { data } = usePoolV2(+pid);
 
   return (
     <Box>
