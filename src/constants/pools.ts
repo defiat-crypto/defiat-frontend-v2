@@ -210,7 +210,7 @@ export const Pools = {
       name: "Ultra",
       symbol: "UOS",
       address: "0xd13c7342e1ef687c5ad21b27c2b65d772cab5c8c",
-      decimals: 18,
+      decimals: 4,
     },
   ],
   4: [
