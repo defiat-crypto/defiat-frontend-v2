@@ -10,8 +10,8 @@ import { Box } from "@material-ui/core";
 
 export const Regulator = () => {
   return (
-    <Display offset column>
-      <Web3ConnectView>
+    <Web3ConnectView>
+      <Display offset column>
         <Flex center>
           <HorizontalImage image={regulator} alt={"Regulator"} />
         </Flex>
@@ -21,7 +21,7 @@ export const Regulator = () => {
         <Box mt={2}>
           <RegulatorCard />
         </Box>
-      </Web3ConnectView>
-    </Display>
+      </Display>
+    </Web3ConnectView>
   );
 };

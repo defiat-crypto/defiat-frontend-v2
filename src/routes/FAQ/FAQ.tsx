@@ -7,6 +7,7 @@ import logo192 from "../../assets/img/logo192.png";
 import points256 from "../../assets/img/points256.png";
 import governance256 from "../../assets/img/governance256.png";
 import second256 from "../../assets/img/second256.png";
+import anystake128 from "../../assets/img/anystake128.png";
 
 export const FAQ = () => {
   return (
@@ -45,11 +46,10 @@ export const FAQ = () => {
         </Grid>
         <Grid item>
           <FAQCard
-            question="What are DeFiat Points (DFTP)?"
-            answer="DFT-P is the secondary token of the DeFiat ecosystem. One can earn DFT-P by transacting DFT
-            on the open market, voting within the governance of the platform or by staking DFT in the
-            staking pool; Points Palace. DFT-P benefits users by giving discount levels at certain thresholds
-            of interaction. Users can achieve discounts rate on future transactions and burn fee's."
+            question="What are DeFiat Points v2 (DFTPv2)?"
+            answer="DFTPv2 is the secondary token of the DeFiat ecosystem. One can earn DFTPv2 by transacting DFT
+            on the open market, using AnyStake, or voting within the governance of the platform. DFTPv2 benefits users by giving discount levels at certain thresholds
+            of interaction. Users can achieve discounts rate on future transaction and burn fees."
             endImage={points256}
           />
         </Grid>
@@ -74,9 +74,15 @@ export const FAQ = () => {
         </Grid>
         <Grid item>
           <FAQCard
+            question="How do I purchase DeFiat (DFT) Tokens?"
+            answer="Since DeFiat charges 2.5% fees on transfers, you should set your slippage to at least 3% on Uniswap when making trades with whole numbers. If you choose to purchase an amount of tokens with decimals, it is recommended to use 4% slippage."
+          />
+        </Grid>
+        <Grid item>
+          <FAQCard
             question="What are DeFiat Services?"
             answer="DeFiat Services are Decentralized Apps built on top of the DeFiat network. 
-              The core services that DeFiat aims to provide are Staking, 2nd Chance, and AnyStake.
+              The core services that DeFiat aims to provide are AnyStake, Regulator, and 2nd Chance.
               Each of these services use the elements of the DeFiat Ecosystem in a unique way to participate
               in the overall DeFi ecosystem."
           />
@@ -86,7 +92,15 @@ export const FAQ = () => {
             question="What is AnyStake?"
             answer="AnyStake, initially started as Unified-Staking Protocol, is a DeFiat Service that
               allows members of the DFT ecosystem to stake any ERC-20 token and be rewarded with yield
-              in the form of DFT. AnyStake is currently under development by the DeFiat Team and about to enter the testnet phase."
+              in the form of DFT."
+            endImage={anystake128}
+          />
+        </Grid>
+        <Grid item>
+          <FAQCard
+            question="What is Regulator?"
+            answer="Regulator is a DeFiat Service that allows members of the DFT ecosystem to stake DFTPv2 tokens and be rewarded with yield
+              in the form of DFT. Regulator works to stabilize the price ratio of DFTPv2 to DFT by performing swaps on Uniswap."
           />
         </Grid>
         <Grid item>
@@ -96,7 +110,7 @@ export const FAQ = () => {
               from projects that have rugged on their users to be rewarded with 2ND ERC-20 tokens. 2ND maintains a dynamic
               transaction fee and burn to maintain its price. Users who provide liquidity to 2ND can farm these transaction
               fees in a staking pool, the Rug Sanctuary."
-            endImage={second256}
+            startImage={second256}
           />
         </Grid>
         <Grid item>

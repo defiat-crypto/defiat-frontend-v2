@@ -12,6 +12,7 @@ import { getDisplayBalance } from "utils";
 import { PoolClaimModalV2 } from "./PoolClaimModalV2";
 import { PoolStakeModalV2 } from "./PoolStakeModalV2";
 import vault256 from "assets/img/vault256.png";
+import { Flex } from "components/Flex";
 
 export const PoolCardV2 = () => {
   const { chainId } = useWallet();
@@ -24,18 +25,22 @@ export const PoolCardV2 = () => {
   const [onPresentClaim] = useModal(<PoolClaimModalV2 pid={+pid} />);
   return (
     <Card>
-
-      <Grid container spacing={2} >
-        {data && data.vipAmountUser.isLessThan(data.vipAmount) ?
-          <Grid item container spacing={2} >
+      <Grid container spacing={2}>
+        {data && data.vipAmountUser.isLessThan(data.vipAmount) ? (
+          <Grid item container spacing={2}>
             <Grid item spacing={2}>
               <img src={vault256} alt="VIP" height="64" width="64" />
             </Grid>
-            <Grid item container spacing={2} >
+            <Grid item container spacing={2}>
               <Grid item xs={12}>
-                <Typography variant="h6">VIP Pool: {getDisplayBalance(data.vipAmount)} DFT Stake Required to Enter</Typography>
-                <Typography variant="h6" >
-                  <b>VIP Balance: {getDisplayBalance(data.vipAmountUser, 18)}&nbsp;{symbolVIP}
+                <Typography variant="h6">
+                  VIP Pool: {getDisplayBalance(data.vipAmount)} DFT Stake
+                  Required to Enter
+                </Typography>
+                <Typography variant="h6">
+                  <b>
+                    VIP Balance: {getDisplayBalance(data.vipAmountUser, 18)}
+                    &nbsp;{symbolVIP}
                   </b>
                 </Typography>
                 <Button
@@ -45,14 +50,16 @@ export const PoolCardV2 = () => {
                   fullWidth
                 >
                   Go To VIP Pool
-                 </Button>
+                </Button>
               </Grid>
               <Grid item xs={12}>
                 <TextDecoration width="100%" />
               </Grid>
             </Grid>
           </Grid>
-          : ""}
+        ) : (
+          ""
+        )}
         <Grid item md={6} xs={12}>
           <Typography variant="h4" align="center">
             <b>{data ? getDisplayBalance(data.pendingRewards) : "0.00"}</b>
@@ -80,7 +87,8 @@ export const PoolCardV2 = () => {
           </Typography>
           <Button
             variant="contained"
-            color="primary" disabled={data?.vipAmountUser.isLessThan(data.vipAmount)}
+            color="primary"
+            disabled={data?.vipAmountUser.isLessThan(data.vipAmount)}
             onClick={onPresentStake}
             fullWidth
           >
@@ -104,6 +112,22 @@ export const PoolCardV2 = () => {
             Get {symbol} on Uniswap
           </Button>
         </Grid>
+
+        {pid === "0" && (
+          <Grid item xs={12}>
+            <Flex column center>
+              <Typography gutterBottom variant="h6">
+                IMPORTANT
+              </Typography>
+              <Typography align="center">
+                If purchasing DFT from Uniswap to access VIP Pools, make sure to
+                purchase at least 53 DFT to cover the 2.5% transfer fees.
+                <br />
+                Otherwise, you will receive less than the required 50 tokens.
+              </Typography>
+            </Flex>
+          </Grid>
+        )}
       </Grid>
     </Card>
   );

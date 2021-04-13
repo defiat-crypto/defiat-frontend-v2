@@ -4,6 +4,7 @@ import { Box, makeStyles } from "@material-ui/core";
 import { Flex } from "components/Flex";
 import { StakingSummary } from "./components/StakingSummary";
 import { StakingPoolList } from "./components/StakingPoolList";
+import { Web3ConnectView } from "components/Web3ConnectView";
 
 const useStyles = makeStyles((theme) => ({
   image: {
@@ -21,19 +22,20 @@ export const Staking = () => {
   const classes = useStyles();
 
   return (
-    <Display column offset>
-      <Box>
-        <Flex center>
-          <img
-            src={anystakeBrand}
-            className={classes.image}
-            alt="anystake-brand"
-          />
-        </Flex>
-        <StakingSummary />
-        <StakingPoolList />
-      </Box>
-      {/* <Box>
+    <Web3ConnectView>
+      <Display column offset>
+        <Box>
+          <Flex center>
+            <img
+              src={anystakeBrand}
+              className={classes.image}
+              alt="anystake-brand"
+            />
+          </Flex>
+          <StakingSummary />
+          <StakingPoolList />
+        </Box>
+        {/* <Box>
           <Flex center>
             <img
               src={anystakeBrand}
@@ -50,6 +52,7 @@ export const Staking = () => {
           </Typography>
           <SocialMediaButtons center />
         </Box> */}
-    </Display>
+      </Display>
+    </Web3ConnectView>
   );
 };
