@@ -147,7 +147,7 @@ export const useRegulator = () => {
     const totalVaultPending = vaultPending.times(distributionRate);
     const poolVaultRewards = totalVaultPending.times(buybackRate);
     const poolRewards = pendingTotal
-      .add(poolVaultRewards)
+      .plus(poolVaultRewards)
       .times(stakedBalance)
       .div(totalLocked);
     const pendingRewards = pending.plus(poolRewards);
