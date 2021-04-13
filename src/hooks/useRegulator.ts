@@ -21,6 +21,7 @@ import {
   getPointsLpAddress,
   getDeFiatLpAddress,
   getVaultV2Contract,
+  getVaultV2Address,
 } from "defiat";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useWallet } from "use-wallet";
@@ -104,6 +105,13 @@ export const useRegulator = () => {
         getCircleAddress(DeFiat),
         getCircleLpAddress(DeFiat)
       ),
+      getBalance(getDeFiatAddress(DeFiat), getVaultV2Address(DeFiat), ethereum),
+      VaultV2.methods.pendingRewards().call(),
+      VaultV2.methods.bondedRewards().call(),
+      VaultV2.methods.lastDistributionBlock().call(),
+      VaultV2.methods.bondedRewardsPerBlock().call(),
+      VaultV2.methods.distributionRate().call(),
+      Regulator.methods.buybackRate().call(),
     ]);
 
     const tokenBalance = values[0];
@@ -118,9 +126,32 @@ export const useRegulator = () => {
     const pointsPrice = values[9].times(1e18).div(values[11]);
     const tokenPrice = values[10].times(1e18).div(values[11]);
 
-    const pendingRewards = pending.plus(
-      stakedBalance.div(totalLocked).times(pendingTotal)
-    );
+    const vaultBalance = new BigNumber(values[12]);
+    const pendingRewardsVault = new BigNumber(values[13]);
+    const bondedRewards = new BigNumber(values[14]);
+    const lastDistributionBlock = new BigNumber(values[15]);
+    const bondedRewardsPerBlock = new BigNumber(values[16]);
+    const distributionRate = new BigNumber(1000).minus(values[17]).div(1000);
+    const buybackRate = new BigNumber(1000).minus(values[18]).div(1000);
+
+    // find the rewards that are waiting on the vault to be distributed
+    const bondedAmount = bondedRewards.eq(0)
+      ? 0
+      : new BigNumber(block)
+          .minus(lastDistributionBlock)
+          .times(bondedRewardsPerBlock);
+    const feeRewards = vaultBalance
+      .minus(bondedRewards)
+      .minus(pendingRewardsVault);
+    const vaultPending = feeRewards.plus(bondedAmount);
+    const totalVaultPending = vaultPending.times(distributionRate);
+    const poolVaultRewards = totalVaultPending.times(buybackRate);
+    const poolRewards = pendingTotal
+      .add(poolVaultRewards)
+      .times(stakedBalance)
+      .div(totalLocked);
+    const pendingRewards = pending.plus(poolRewards);
+
     const totalValueLocked = pointsPrice.times(totalLocked).div(1e18);
     const ratio = tokenPrice.div(pointsPrice);
 
@@ -138,7 +169,7 @@ export const useRegulator = () => {
       buybackBalance,
       isAbovePeg: abovePeg,
     });
-  }, [account, ethereum, DeFiat, VaultV2, Regulator]);
+  }, [account, ethereum, DeFiat, VaultV2, Regulator, block]);
 
   useEffect(() => {
     if (!!account && !!DeFiat) {
