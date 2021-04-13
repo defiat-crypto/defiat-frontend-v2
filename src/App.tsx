@@ -13,7 +13,7 @@ const App = () => {
 
   return (
     <UseWalletProvider
-      chainId={1}
+      chainId={chainId}
       connectors={{
         walletconnect: { rpcUrl: "https://mainnet.eth.aragon.network/" },
       }}

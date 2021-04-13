@@ -1,9 +1,9 @@
 import Addresses from "constants/addresses";
 import { Pools, StakingPool } from "constants/pools";
-import { TransactionReceipt } from "web3-core";
+import { provider, TransactionReceipt } from "web3-core";
 import { Contract } from "web3-eth-contract";
 import { BigNumber } from ".";
-import { debug } from "../utils";
+import { debug, getBalance } from "../utils";
 import { DeFiat } from "./DeFiat";
 import { ProcessedRewards } from "./lib/processedRewards";
 import {
@@ -13,6 +13,7 @@ import {
   getDeFiatLpAddress,
   getPointsAddress,
   getPointsLpAddress,
+  getVaultV2Address,
 } from "./utils";
 
 // Token
@@ -531,6 +532,35 @@ export const totalPendingVirtualAnyStake = async (
   }
 };
 
+export const totalPendingVirtualAnyStakeV2 = async (
+  AnyStakeV2: Contract,
+  VaultV2: Contract,
+  DeFiat: DeFiat,
+  ethereum: provider,
+  pools: StakingPool[],
+  account: string,
+  block: number
+) => {
+  try {
+    var totalPending: BigNumber = new BigNumber(0);
+    for (const pool of pools) {
+      const result = await pendingVirtualAnyStakeV2(
+        AnyStakeV2,
+        VaultV2,
+        DeFiat,
+        ethereum,
+        pool.pid,
+        account,
+        block
+      );
+      totalPending = totalPending.plus(result);
+    }
+    return new BigNumber(totalPending);
+  } catch (e) {
+    return new BigNumber("0");
+  }
+};
+
 export const totalPendingAnyStakeV2 = async (AnyStakeV2: Contract) => {
   try {
   } catch (e) {}
@@ -594,6 +624,82 @@ export const pendingVirtualAnyStake = async (
     const virtualPending = poolRewards
       .times(userInfo.amount)
       .div(poolInfo.totalStaked);
+    const result = pending.plus(virtualPending);
+    return result.isNaN() ? new BigNumber("0") : result;
+  } catch (e) {
+    debug(e);
+    return new BigNumber("0");
+  }
+};
+
+export const pendingVirtualAnyStakeV2 = async (
+  AnyStakeV2: Contract,
+  VaultV2: Contract,
+  DeFiat: DeFiat,
+  ethereum: provider,
+  pid: number,
+  account: string,
+  block: number
+) => {
+  try {
+    if (block === 0) {
+      return new BigNumber("0");
+    }
+
+    const values = await Promise.all([
+      AnyStakeV2.methods.poolInfo(pid).call(),
+      AnyStakeV2.methods.userInfo(pid, account).call(),
+      AnyStakeV2.methods.pending(pid, account).call(),
+      AnyStakeV2.methods.rewardsPerAllocPoint().call(),
+      AnyStakeV2.methods.totalAllocPoint().call(),
+      getBalance(getDeFiatAddress(DeFiat), getVaultV2Address(DeFiat), ethereum),
+      VaultV2.methods.pendingRewards().call(),
+      VaultV2.methods.bondedRewards().call(),
+      VaultV2.methods.lastDistributionBlock().call(),
+      VaultV2.methods.bondedRewardsPerBlock().call(),
+      VaultV2.methods.distributionRate().call(),
+    ]);
+
+    const poolInfo = values[0];
+    const userInfo = values[1];
+    const pending = new BigNumber(values[2]);
+    const rewardsPerAllocPoint = new BigNumber(values[3]);
+    const totalAllocPoint = new BigNumber(values[4]);
+
+    const vaultBalance = new BigNumber(values[5]);
+    const pendingRewardsVault = new BigNumber(values[6]);
+    const bondedRewards = new BigNumber(values[7]);
+    const lastDistributionBlock = new BigNumber(values[8]);
+    const bondedRewardsPerBlock = new BigNumber(values[9]);
+    const distributionRate = new BigNumber(values[10]).div(1000);
+
+    // find the rewards that are waiting on the vault to be distributed
+    const bondedAmount = bondedRewards.eq(0)
+      ? 0
+      : new BigNumber(block)
+          .minus(lastDistributionBlock)
+          .times(bondedRewardsPerBlock);
+    const feeRewards = vaultBalance
+      .minus(bondedRewards)
+      .minus(pendingRewardsVault);
+    const vaultPending = feeRewards.plus(bondedAmount);
+    const totalVaultPending = vaultPending.times(distributionRate);
+    const poolVaultRewards = totalVaultPending
+      .times(poolInfo.allocPoint)
+      .div(totalAllocPoint);
+
+    // find rewards updated on anystake but not accrued into the pool
+    const poolRewards = rewardsPerAllocPoint
+      .times(poolInfo.allocPoint)
+      .div(1e18)
+      .minus(poolInfo.rewardDebt);
+
+    // find the rewards with respect to user stake
+    const virtualPending = poolRewards
+      .plus(poolVaultRewards)
+      .times(userInfo.amount)
+      .div(poolInfo.totalStaked);
+
     const result = pending.plus(virtualPending);
     return result.isNaN() ? new BigNumber("0") : result;
   } catch (e) {

@@ -52,6 +52,10 @@ export const getRegulatorAddress = (DeFiat?: DeFiat) => {
   return DeFiat && DeFiat.RegulatorAddress;
 };
 
+export const getVaultV2Address = (DeFiat?: DeFiat) => {
+  return DeFiat && DeFiat.VaultV2Address;
+};
+
 export const getDeFiatContract = (DeFiat?: DeFiat) => {
   return DeFiat && DeFiat.contracts && DeFiat.contracts.DeFiat;
 };

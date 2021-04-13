@@ -14,11 +14,13 @@ import {
   totalPendingAnyStake,
   getVaultV2Contract,
   claimAllAnyStake,
+  totalPendingVirtualAnyStakeV2,
 } from "defiat";
 import { useEffect, useMemo } from "react";
 import { useCallback, useState } from "react";
 import { useWallet } from "use-wallet";
 import { getDisplayBalance } from "utils";
+import { provider } from "web3-core";
 import { useBlock } from "./useBlock";
 import { useDeFiat } from "./useDeFiat";
 
@@ -35,7 +37,8 @@ export const useAnyStakeV2 = () => {
   const {
     account,
     chainId,
-  }: { account: string; chainId: number } = useWallet();
+    ethereum,
+  }: { account: string; chainId: number; ethereum: provider } = useWallet();
   const block = useBlock();
   const DeFiat = useDeFiat();
 
@@ -68,7 +71,16 @@ export const useAnyStakeV2 = () => {
       ),
       totalPoolsStakedAnyStake(AnyStakeV2, Pools[chainId], account),
       // totalPendingVirtualAnyStake(AnyStakeV2, Pools[chainId], account, block),
-      totalPendingAnyStake(AnyStakeV2, Pools[chainId], account),
+      // totalPendingAnyStake(AnyStakeV2, Pools[chainId], account),
+      totalPendingVirtualAnyStakeV2(
+        AnyStakeV2,
+        VaultV2,
+        DeFiat,
+        ethereum,
+        Pools[chainId],
+        account,
+        block
+      ),
       totalValueStakedAllPoolsAnyStake(
         VaultV2,
         DeFiat,
@@ -90,7 +102,7 @@ export const useAnyStakeV2 = () => {
       totalValueStaked: getDisplayBalance(totalValueStaked),
       totalStakes,
     });
-  }, [account, chainId, DeFiat, AnyStakeV2, VaultV2]);
+  }, [account, chainId, DeFiat, AnyStakeV2, VaultV2, ethereum, block]);
 
   useEffect(() => {
     if (!!account && !!DeFiat) {

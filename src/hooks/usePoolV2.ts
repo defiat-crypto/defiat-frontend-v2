@@ -18,6 +18,7 @@ import {
   pendingAnyStake,
   getAnyStakeV2Contract,
   getVaultV2Contract,
+  pendingVirtualAnyStakeV2,
 } from "defiat";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useWallet } from "use-wallet";
@@ -84,8 +85,16 @@ export const usePoolV2 = (pid: number) => {
       totalStakedAnyStake(AnyStakeV2, pid),
       stakingFeeAnyStake(AnyStakeV2, pid),
       stakedAnyStake(AnyStakeV2, pid, account),
-      pendingAnyStake(AnyStakeV2, pid, account),
-      // pendingVirtualAnyStake(AnyStake, pid, account, block),
+      // pendingAnyStake(AnyStakeV2, pid, account),
+      pendingVirtualAnyStakeV2(
+        AnyStakeV2,
+        VaultV2,
+        DeFiat,
+        ethereum,
+        pid,
+        account,
+        block
+      ),
       vipAmountAnyStake(AnyStakeV2, pid),
       stakedAnyStake(AnyStakeV2, 0, account),
       AnyStakeV2.methods.poolInfo(pid).call(),
@@ -130,7 +139,7 @@ export const usePoolV2 = (pid: number) => {
       apr,
       priceMultiplier,
     });
-  }, [account, chainId, pid, ethereum, VaultV2, AnyStakeV2, DeFiat]);
+  }, [account, chainId, pid, ethereum, VaultV2, AnyStakeV2, DeFiat, block]);
 
   useEffect(() => {
     if (!!account && !!DeFiat) {
